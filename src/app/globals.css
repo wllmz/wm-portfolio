@@ -398,13 +398,10 @@ body::after {
   color: var(--color-burgundy);
   cursor: pointer;
   opacity: 0.65;
-  transition:
-    opacity 0.2s,
-    rotate 0.3s var(--ease-boing);
+  transition: opacity 0.2s;
 }
 .face-card .fc-close:hover {
   opacity: 1;
-  rotate: 90deg;
 }
 .face-card .fc-close:focus-visible {
   outline: 2px dashed var(--color-burgundy);
