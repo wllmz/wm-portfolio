@@ -1,97 +1,131 @@
 import { Reveal } from "@/components/reveal";
+import type { FaceKey } from "@/components/cube/cube-data";
+
+const ALL_FACES: FaceKey[] = ["design", "front", "mobile", "api", "data", "deploy"];
 
 type Project = {
+  num: string;
   title: string;
-  tag: string;
-  description: string;
-  result: string;
-  stack: string[];
+  desc: React.ReactNode;
+  faces: FaceKey[];
+  card: { label: string; hint: string; variant: "navy" | "burgundy" | "line" };
 };
 
-// ⚠️ Contenu placeholder — à remplacer par tes vrais projets.
-// Garde le format description + résultat chiffré : c'est lui qui vend.
 const projects: Project[] = [
   {
-    title: "SaaS Dashboard",
-    tag: "Web app",
-    description:
-      "Pilotage d'activité temps réel pour une PME — authentification, rôles, data-viz.",
-    result: "−6 h de reporting manuel / semaine",
-    stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
+    num: "01",
+    title: "Dernier Mot",
+    desc: (
+      <>
+        Jeu mobile de mots au tour par tour,{" "}
+        <strong>multijoueur temps réel</strong>. Conçu, développé et déployé en
+        solo — les six faces d&apos;un coup.
+      </>
+    ),
+    faces: ["design", "front", "mobile", "api", "data", "deploy"],
+    card: { label: "dernier mot", hint: "mockup de l'app ici", variant: "navy" },
   },
   {
-    title: "App e-commerce",
-    tag: "Mobile",
-    description:
-      "Application React Native avec catalogue, panier et paiement intégré, publiée sur les stores.",
-    result: "+30 % de commandes au premier trimestre",
-    stack: ["React Native", "Expo", "Zustand", "Stripe"],
+    num: "02",
+    title: "Freïa Paris",
+    desc: (
+      <>
+        E-commerce d&apos;une marque de sacs artisanaux : front sur mesure et{" "}
+        <strong>toute l&apos;infra derrière</strong> — VPS, Traefik, Docker. Un
+        vrai site marchand.
+      </>
+    ),
+    faces: ["design", "front", "data", "deploy"],
+    card: { label: "freïa", hint: "screenshot du site ici", variant: "burgundy" },
   },
   {
-    title: "MVP marketplace",
-    tag: "MVP",
-    description:
-      "MVP full stack livré en 6 semaines : annonces, messagerie, back-office.",
-    result: "Concept validé → levée de fonds réussie",
-    stack: ["Next.js", "Fastify", "Drizzle", "Zod"],
+    num: "03",
+    title: "Mellis",
+    desc: (
+      <>
+        Marque fictive de cosmétiques au miel : identité, packaging et
+        packshots <strong>générés par IA</strong>. Mon terrain de jeu direction
+        artistique.
+      </>
+    ),
+    faces: ["design"],
+    card: { label: "mellis", hint: "packshots ici", variant: "line" },
   },
 ];
 
-function ProjectRow({ project, index }: { project: Project; index: number }) {
-  return (
-    <article className="group border-t border-line transition-colors duration-400 last:border-b hover:bg-ink">
-      <div className="mx-auto grid max-w-6xl gap-x-8 gap-y-3 px-6 py-10 md:grid-cols-[3.5rem_1fr_auto] md:items-center md:py-12">
-        <span className="font-mono text-sm text-mute transition-colors duration-400 group-hover:text-paper/50">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-
-        <div>
-          <h3 className="font-display text-3xl font-bold uppercase tracking-tight transition-colors duration-400 group-hover:text-paper sm:text-4xl lg:text-5xl">
-            {project.title}
-          </h3>
-          <p className="mt-2 max-w-xl text-mute transition-colors duration-400 group-hover:text-paper/70">
-            {project.description}
-          </p>
-          <p className="mt-1 font-medium text-accent transition-colors duration-400 group-hover:text-accent-light">
-            {project.result}
-          </p>
-        </div>
-
-        <div className="flex flex-row items-center gap-3 md:flex-col md:items-end">
-          <span className="rounded-full border border-ink/20 px-3 py-1 font-mono text-[10px] tracking-widest text-ink uppercase transition-colors duration-400 group-hover:border-paper/40 group-hover:text-paper">
-            {project.tag}
-          </span>
-          <span className="hidden font-mono text-[11px] text-mute transition-colors duration-400 group-hover:text-paper/50 md:block md:text-right">
-            {project.stack.join(" · ")}
-          </span>
-        </div>
-      </div>
-    </article>
-  );
-}
+const cardVariants = {
+  navy: "bg-navy text-cream shadow-[0_18px_44px_rgba(35,43,78,0.16)]",
+  burgundy: "bg-burgundy text-cream shadow-[0_18px_44px_rgba(35,43,78,0.16)]",
+  line: "border-[1.5px] border-navy/35 text-navy",
+};
 
 export function Projects() {
   return (
-    <section id="projets" className="relative py-28">
-      <div className="mx-auto max-w-6xl px-6">
-        <Reveal>
-          <p className="font-mono text-xs tracking-[0.3em] text-mute uppercase">
-            Projets sélectionnés
-          </p>
-          <h2 className="mt-4 mb-14 font-display text-3xl font-bold uppercase tracking-tight sm:text-5xl">
-            Des résultats, pas juste du code
-            <span className="text-accent">.</span>
-          </h2>
-        </Reveal>
-      </div>
+    <section id="projets" className="relative pb-32 pt-[4vh]">
+      <div className="mx-auto max-w-[1100px] px-9">
+        {projects.map((project, i) => (
+          <article
+            key={project.num}
+            className="grid items-center gap-9 border-navy/15 py-14 md:grid-cols-[1.05fr_1fr] md:gap-16 md:py-19 [&+&]:border-t-[1.5px]"
+          >
+            <Reveal className={i % 2 === 1 ? "md:order-2" : undefined}>
+              <span
+                aria-hidden="true"
+                className="mb-2.5 block font-hand text-[clamp(3rem,6vw,5rem)] leading-none text-burgundy opacity-80"
+              >
+                {project.num}
+              </span>
+              <h3 className="mb-3 font-round text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold tracking-tight">
+                {project.title}
+              </h3>
+              <p className="mb-6 max-w-[42ch] leading-[1.65] text-ink-soft [&_strong]:font-semibold [&_strong]:text-navy">
+                {project.desc}
+              </p>
+              <div
+                className="mb-7 flex flex-wrap gap-[7px]"
+                aria-label="Faces couvertes par ce projet"
+              >
+                {ALL_FACES.map((face) => {
+                  const on = project.faces.includes(face);
+                  return (
+                    <span
+                      key={face}
+                      className={`rounded-full border-[1.5px] px-3 py-1.5 text-[0.68rem] font-semibold tracking-[0.14em] uppercase ${
+                        on
+                          ? "border-burgundy bg-burgundy text-cream"
+                          : "border-navy/20 text-navy/40"
+                      }`}
+                    >
+                      {face}
+                    </span>
+                  );
+                })}
+              </div>
+              {/* TODO: liens vers les pages case study quand elles existeront */}
+              <span className="inline-flex items-center gap-2 font-round text-navy/50">
+                Case study en préparation
+              </span>
+            </Reveal>
 
-      <Reveal>
-        <div>
-          {projects.map((project, i) => (
-            <ProjectRow key={project.title} project={project} index={i} />
-          ))}
-        </div>
-      </Reveal>
+            <Reveal
+              delay={0.1}
+              className={i % 2 === 1 ? "md:order-1" : undefined}
+            >
+              <div
+                className={`relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[18px] transition-transform duration-500 [transition-timing-function:var(--ease-out)] hover:-translate-y-1.5 hover:-rotate-[0.5deg] ${cardVariants[project.card.variant]}`}
+              >
+                <span className="font-hand text-[clamp(1.8rem,3.6vw,3rem)] font-bold tracking-tight opacity-90">
+                  {project.card.label}
+                </span>
+                {/* TODO: remplacer par un vrai visuel (mockup / screenshot) */}
+                <span className="absolute bottom-3.5 text-[0.66rem] font-semibold tracking-[0.18em] uppercase opacity-40">
+                  {project.card.hint}
+                </span>
+              </div>
+            </Reveal>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }

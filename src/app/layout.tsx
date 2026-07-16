@@ -1,31 +1,33 @@
 import type { Metadata } from "next";
-import { Syne, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Gluten, Fredoka, Hanken_Grotesk } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
-import { Cursor } from "@/components/cursor";
 import "./globals.css";
 
-const syne = Syne({
+const gluten = Gluten({
   subsets: ["latin"],
-  variable: "--font-syne",
+  weight: "700",
+  variable: "--font-gluten",
   display: "swap",
 });
 
-const instrument = Instrument_Sans({
+const fredoka = Fredoka({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  weight: ["500", "600"],
+  variable: "--font-fredoka",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  weight: ["500", "600"],
+  variable: "--font-hanken",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "William Martinez — Développeur Full Stack Freelance",
+  title: "wm — William Martinez, fullstack freelance",
   description:
-    "Je conçois et développe des produits web & mobile qui convertissent. Next.js, React Native, Node.js. Disponible pour vos projets.",
+    "Développeur full stack freelance. Un projet, six faces, zéro angle mort : design, front, mobile, api, data, deploy. Disponible pour vos projets web & mobile.",
 };
 
 export default function RootLayout({
@@ -36,10 +38,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${syne.variable} ${instrument.variable} ${jetbrains.variable} antialiased`}
+        className={`${gluten.variable} ${fredoka.variable} ${hanken.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
-        <Cursor />
       </body>
     </html>
   );

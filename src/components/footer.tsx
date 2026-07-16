@@ -1,18 +1,19 @@
 export function Footer() {
   return (
-    <footer className="bg-ink text-paper/50">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-paper/10 px-6 py-8 sm:flex-row">
-        <p className="font-mono text-xs">
-          © {new Date().getFullYear()} William Martinez — Développeur full
-          stack freelance
+    <footer className="px-6 sm:px-9">
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/60 sm:flex-row">
+        <p>
+          © {new Date().getFullYear()}{" "}
+          <span className="font-hand text-[1rem] text-navy">wm</span> — William
+          Martinez, fullstack freelance
         </p>
-        <div className="flex gap-6 font-mono text-xs">
+        <div className="flex gap-6">
           {/* TODO: remplace par tes vrais liens */}
           <a
             href="https://github.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-light"
+            className="transition-colors hover:text-burgundy focus-visible:rounded focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-burgundy"
           >
             GitHub
           </a>
@@ -20,7 +21,7 @@ export function Footer() {
             href="https://www.linkedin.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-light"
+            className="transition-colors hover:text-burgundy focus-visible:rounded focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-burgundy"
           >
             LinkedIn
           </a>
