@@ -70,18 +70,6 @@ body::after {
   z-index: 5;
 }
 
-/* desktop : le cadre et les coins deviennent le HUD permanent du
-   site — ils suivent le scroll sur toutes les sections */
-@media (min-width: 821px) {
-  .frame,
-  .corner {
-    position: fixed;
-  }
-  .corner {
-    pointer-events: none;
-  }
-}
-
 /* angles */
 .corner {
   position: absolute;
