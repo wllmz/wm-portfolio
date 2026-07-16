@@ -265,10 +265,10 @@ body::after {
 .face-card {
   /* carré strict, centré horizontalement, remonté pour ne jamais être
      coupé en bas (le texte vit en bas de la carte) */
-  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 56vh);
+  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 52vh);
   position: absolute;
   left: 50%;
-  top: 44%;
+  top: 38%;
   translate: -50% -50%;
   z-index: 8;
   width: var(--card);
