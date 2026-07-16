@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Gluten, Fredoka, Hanken_Grotesk } from "next/font/google";
+import { Shantell_Sans, Fredoka, Hanken_Grotesk } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-const gluten = Gluten({
+const shantell = Shantell_Sans({
   subsets: ["latin"],
   weight: "700",
-  variable: "--font-gluten",
+  variable: "--font-shantell",
   display: "swap",
 });
 
@@ -19,7 +19,7 @@ const fredoka = Fredoka({
 
 const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-hanken",
   display: "swap",
 });
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${gluten.variable} ${fredoka.variable} ${hanken.variable}`}
+        className={`${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
       </body>
