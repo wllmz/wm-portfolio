@@ -83,8 +83,8 @@ body::after {
   color: var(--color-navy);
   opacity: 0;
   transition:
-    opacity 0.8s ease 2.2s,
-    transform 0.8s var(--ease-out) 2.2s;
+    opacity 0.6s ease 0.4s,
+    transform 0.6s var(--ease-out) 0.4s;
   transform: translateY(8px);
   line-height: 1.7;
 }
@@ -229,22 +229,22 @@ body::after {
 }
 
 .stage.loaded .face.f-front {
-  transition-delay: 0.15s;
+  transition-delay: 0.05s;
 }
 .stage.loaded .face.f-right {
-  transition-delay: 0.3s;
+  transition-delay: 0.12s;
 }
 .stage.loaded .face.f-top {
-  transition-delay: 0.45s;
+  transition-delay: 0.19s;
 }
 .stage.loaded .face.f-left {
-  transition-delay: 0.6s;
+  transition-delay: 0.26s;
 }
 .stage.loaded .face.f-bottom {
-  transition-delay: 0.75s;
+  transition-delay: 0.33s;
 }
 .stage.loaded .face.f-back {
-  transition-delay: 0.9s;
+  transition-delay: 0.4s;
 }
 .stage.interacting .face,
 .stage.scrolling .face {
@@ -451,7 +451,7 @@ body::after {
   flex-wrap: wrap;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.8s ease 2.4s;
+  transition: opacity 0.6s ease 0.6s;
 }
 .stage.loaded .facenav {
   opacity: 1;
@@ -501,7 +501,7 @@ body::after {
   background: rgba(45, 54, 96, 0.22);
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.8s ease 2.7s;
+  transition: opacity 0.6s ease 0.8s;
 }
 .stage.loaded .scroll-line {
   opacity: 1;

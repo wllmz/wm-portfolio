@@ -80,7 +80,7 @@ export function CubeStage() {
     my: 0,
     cmx: 0,
     cmy: 0,
-    exp: 2.6,
+    exp: 1.7,
     cur: 0,
     dim: 1,
     started: false,
@@ -202,7 +202,7 @@ export function CubeStage() {
     const reduceMotion = reduceRef.current;
     if (reduceMotion) s.exp = 1;
 
-    const startTimer = window.setTimeout(() => (s.started = true), 350);
+    const startTimer = window.setTimeout(() => (s.started = true), 80);
 
     const stage = stageRef.current;
     const cube = cubeRef.current;
@@ -234,9 +234,9 @@ export function CubeStage() {
          Une face ouverte déstructure aussi le cube (plus doucement) pour
          venir seule au premier plan. */
       let expTarget = 1 + p * 8;
-      if (!s.started) expTarget = 2.6;
+      if (!s.started) expTarget = 1.7;
       if (openKeyRef.current) expTarget = Math.max(expTarget, 1.55);
-      s.exp += (expTarget - s.exp) * 0.09;
+      s.exp += (expTarget - s.exp) * 0.13;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
       /* le cube s'estompe légèrement pendant qu'une face est ouverte,
