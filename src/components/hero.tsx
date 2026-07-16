@@ -1,133 +1,112 @@
 "use client";
 
-import { useRef } from "react";
-import dynamic from "next/dynamic";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { Magnetic } from "@/components/magnetic";
 
-// La scène 3D est chargée uniquement côté client, avec un fallback statique
-// élégant pendant le chargement (et pour les GPU faibles).
-const HeroScene = dynamic(() => import("@/components/scene/hero-scene"), {
-  ssr: false,
-  loading: () => <SceneFallback />,
-});
+/** Ligne de titre révélée derrière un masque, façon rideau. */
+function MaskedLine({
+  children,
+  delay,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay: number;
+  className?: string;
+}) {
+  const reduce = useReducedMotion();
 
-function SceneFallback() {
   return (
-    <div
-      aria-hidden
-      className="absolute inset-0 [background:radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--color-ink)_6%,transparent),transparent_65%)]"
-    />
+    <span className="block overflow-hidden">
+      <motion.span
+        className={`block ${className}`}
+        initial={reduce ? false : { y: "110%" }}
+        animate={{ y: 0 }}
+        transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {children}
+      </motion.span>
+    </span>
   );
 }
 
-const container = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 28 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
-  },
-};
-
 export function Hero() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Le hero est épinglé sur 160svh : pendant le scroll, l'orbe se
-  // disloque doucement (voir hero-scene) et le texte s'efface.
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-  const textOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
-  const textY = useTransform(scrollYProgress, [0, 0.45], [0, -60]);
 
   return (
-    <section ref={sectionRef} className="relative h-[160svh]">
-      <div className="sticky top-0 flex min-h-svh items-center overflow-hidden">
-        {/* Scène 3D en fond */}
-        <div className="absolute inset-0" aria-hidden>
-          <HeroScene />
-        </div>
-
-        {/* Voile de lisibilité en bas du hero */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-paper to-transparent"
-        />
-
-        <motion.div
-          className="relative z-10 mx-auto w-full max-w-6xl px-6"
-          style={reduce ? undefined : { opacity: textOpacity, y: textY }}
-          variants={container}
-          initial={reduce ? false : "hidden"}
-          animate="show"
+    <section className="relative flex min-h-svh flex-col justify-between overflow-hidden pt-24">
+      <div className="mx-auto w-full max-w-6xl grow px-6">
+        <motion.p
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mt-10 font-mono text-xs tracking-[0.3em] text-mute uppercase"
         >
+          William Martinez — basé sur le web, disponible partout
+        </motion.p>
+
+        <h1 className="mt-8 font-display text-[clamp(3.4rem,12.5vw,10.5rem)] font-extrabold uppercase leading-[0.92] tracking-tight">
+          <MaskedLine delay={0.15}>Développeur</MaskedLine>
+          <MaskedLine delay={0.28} className="text-outline">
+            Full stack
+          </MaskedLine>
+          <MaskedLine delay={0.41}>
+            Freelance<span className="text-accent">.</span>
+          </MaskedLine>
+        </h1>
+
+        <div className="mt-12 flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <motion.p
-            variants={item}
-            className="mb-6 font-mono text-xs tracking-[0.3em] text-mute uppercase"
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-md text-lg leading-relaxed text-mute"
           >
-            Développeur full stack — freelance
+            Je transforme vos idées en produits web & mobile qui convertissent
+            — de la conception à la mise en production.
           </motion.p>
 
-          <motion.h1
-            variants={item}
-            className="max-w-4xl font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-wrap items-center gap-4"
           >
-            Je transforme vos idées en{" "}
-            <span className="text-accent">produits web & mobile</span> qui
-            convertissent.
-          </motion.h1>
-
-          <motion.p
-            variants={item}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-mute"
-          >
-            William Martinez — je conçois, développe et livre des applications
-            Next.js et React Native, de l&apos;idée à la mise en production.
-          </motion.p>
-
-          <motion.div variants={item} className="mt-10 flex flex-wrap gap-4">
-            <a
-              href="#contact"
-              className="group rounded-full bg-ink px-7 py-3.5 font-medium text-paper transition-all duration-300 hover:shadow-[0_12px_32px_-12px_rgba(17,17,19,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            >
-              Discutons de votre projet
-              <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </a>
-            <a
-              href="#projets"
-              className="rounded-full border border-line px-7 py-3.5 text-ink transition-colors duration-300 hover:border-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            >
-              Voir mes projets
-            </a>
+            <Magnetic>
+              <a
+                href="#contact"
+                className="group inline-block rounded-full bg-ink px-7 py-3.5 font-medium text-paper transition-shadow duration-300 hover:shadow-[0_12px_32px_-12px_rgba(17,17,19,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                Discutons de votre projet
+                <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.25}>
+              <a
+                href="#projets"
+                className="inline-block rounded-full border border-line px-7 py-3.5 text-ink transition-colors duration-300 hover:border-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                Voir mes projets
+              </a>
+            </Magnetic>
           </motion.div>
-        </motion.div>
-
-        {/* Indicateur de scroll */}
-        <motion.div
-          aria-hidden
-          style={reduce ? undefined : { opacity: textOpacity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.3em] text-mute uppercase"
-        >
-          scroll
-          <span className="mx-auto mt-2 block h-8 w-px animate-pulse bg-gradient-to-b from-ink to-transparent" />
-        </motion.div>
+        </div>
       </div>
+
+      {/* Barre de pied de hero — détail éditorial */}
+      <motion.div
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="mx-auto mt-16 w-full max-w-6xl px-6"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line py-5 font-mono text-[11px] tracking-[0.2em] text-mute uppercase">
+          <span>© 2026</span>
+          <span className="hidden sm:inline">Next.js ✦ React Native ✦ Node.js</span>
+          <span aria-hidden>Scroll ↓</span>
+        </div>
+      </motion.div>
     </section>
   );
 }

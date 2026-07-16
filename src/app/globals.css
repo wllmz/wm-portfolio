@@ -9,6 +9,7 @@
   --color-ink: #111113;
   --color-mute: #6e6e76;
   --color-accent: #c93400;
+  --color-accent-light: #ff6a3d;
 
   /* Typo */
   --font-display: var(--font-syne);
@@ -17,6 +18,14 @@
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee 28s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 html {
@@ -61,27 +70,15 @@ body::after {
   background: var(--color-mute);
 }
 
-/* Spotlight des cartes projet — suit la souris via --x / --y */
-.spotlight-card {
-  position: relative;
-  overflow: hidden;
+/* Titres en contour — la signature typographique */
+.text-outline {
+  -webkit-text-stroke: 2px var(--color-ink);
+  color: transparent;
 }
-.spotlight-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.4s var(--ease-out-expo);
-  background: radial-gradient(
-    480px circle at var(--x, 50%) var(--y, 50%),
-    color-mix(in srgb, var(--color-accent) 7%, transparent),
-    transparent 65%
-  );
-  pointer-events: none;
-}
-.spotlight-card:hover::before {
-  opacity: 1;
+@media (max-width: 640px) {
+  .text-outline {
+    -webkit-text-stroke-width: 1.2px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

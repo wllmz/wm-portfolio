@@ -1,8 +1,8 @@
 export function Footer() {
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
-        <p className="font-mono text-xs text-mute">
+    <footer className="bg-ink text-paper/50">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-paper/10 px-6 py-8 sm:flex-row">
+        <p className="font-mono text-xs">
           © {new Date().getFullYear()} William Martinez — Développeur full
           stack freelance
         </p>
@@ -12,7 +12,7 @@ export function Footer() {
             href="https://github.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mute transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="transition-colors hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-light"
           >
             GitHub
           </a>
@@ -20,7 +20,7 @@ export function Footer() {
             href="https://www.linkedin.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mute transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="transition-colors hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-light"
           >
             LinkedIn
           </a>
