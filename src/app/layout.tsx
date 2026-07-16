@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { Shantell_Sans, Fredoka, Hanken_Grotesk } from "next/font/google";
+import { Gluten, Shantell_Sans, Fredoka, Hanken_Grotesk } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
+
+// Gluten ne sert que pour le logo "wm" — la signature d'origine.
+const gluten = Gluten({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-gluten",
+  display: "swap",
+});
 
 const shantell = Shantell_Sans({
   subsets: ["latin"],
@@ -38,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
+        className={`${gluten.variable} ${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
       </body>

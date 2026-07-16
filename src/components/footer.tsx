@@ -4,7 +4,9 @@ export function Footer() {
       <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/60 sm:flex-row">
         <p>
           © {new Date().getFullYear()}{" "}
-          <span className="font-hand text-[1rem] text-navy">wm</span> — William
+          <span className="text-[1rem] text-navy [font-family:var(--font-gluten)]">
+            wm
+          </span> — William
           Martinez, fullstack freelance
         </p>
         <div className="flex gap-6">
