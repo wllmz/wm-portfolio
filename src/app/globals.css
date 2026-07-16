@@ -50,10 +50,11 @@ body::after {
 }
 
 /* ══════════════ LE HERO ══════════════
-   Un écran plein : le cube reste assemblé en permanence,
-   le scroll mène directement aux projets. */
+   Un écran plein, ÉPINGLÉ : le contenu suivant glisse par-dessus
+   comme une feuille (sections empilées). */
 .stage {
-  position: relative;
+  position: sticky;
+  top: 0;
 }
 .hero {
   position: relative;

@@ -8,6 +8,12 @@ import {
   type PointerEvent,
 } from "react";
 import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import {
   FACES,
   FACE_LAYOUT,
   NAV_ORDER,
@@ -57,6 +63,13 @@ export function CubeStage() {
 
   const openKeyRef = useRef<PanelKey | null>(null);
   const reduceRef = useRef(false);
+
+  /* pendant que la feuille des projets recouvre le hero épinglé,
+     celui-ci rétrécit et s'estompe — effet pile de sections */
+  const reduce = useReducedMotion();
+  const { scrollY } = useScroll();
+  const heroScale = useTransform(scrollY, [0, 900], [1, 0.94]);
+  const heroFade = useTransform(scrollY, [0, 900], [1, 0.4]);
 
   const state = useRef<CubeState>({
     rotX: -12,
@@ -272,7 +285,11 @@ export function CubeStage() {
       className={`stage${loaded ? " loaded" : ""}`}
       id="stage"
     >
-      <section className="hero" aria-label="William Martinez — fullstack">
+      <motion.section
+        className="hero"
+        aria-label="William Martinez — fullstack"
+        style={reduce ? undefined : { scale: heroScale, opacity: heroFade }}
+      >
         <div className="frame" aria-hidden="true" />
 
         <p className="corner tl">
@@ -362,7 +379,7 @@ export function CubeStage() {
             <p className="fc-ex">{FACES[activeKey].ex}</p>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
