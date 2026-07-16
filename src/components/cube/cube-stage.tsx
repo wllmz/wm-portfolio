@@ -98,7 +98,7 @@ export function CubeStage() {
     window.clearTimeout(panelTimerRef.current);
     panelTimerRef.current = window.setTimeout(
       () => setPanelOpen(true),
-      reduceRef.current ? 0 : 300
+      reduceRef.current ? 0 : 300,
     );
   }, []);
 
@@ -117,7 +117,7 @@ export function CubeStage() {
       if (openKeyRef.current === key) closeFace();
       else openFace(key);
     },
-    [openFace, closeFace]
+    [openFace, closeFace],
   );
 
   /* ── drag du cube ── */
@@ -172,7 +172,7 @@ export function CubeStage() {
   /* ── listeners globaux ── */
   useEffect(() => {
     reduceRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const onMouseMove = (e: MouseEvent) => {
@@ -387,7 +387,10 @@ export function CubeStage() {
           ))}
         </nav>
 
-        <aside className={`panel${panelOpen ? " open" : ""}`} aria-live="polite">
+        <aside
+          className={`panel${panelOpen ? " open" : ""}`}
+          aria-live="polite"
+        >
           <button className="close" aria-label="Fermer" onClick={closeFace}>
             ✕
           </button>
@@ -400,12 +403,6 @@ export function CubeStage() {
           </div>
           <p className="ex">{panel.ex}</p>
         </aside>
-
-        <p className="tagline" ref={taglineRef}>
-          <span>un projet,</span>
-          <span>six faces,</span>
-          <span className="g">zéro angle mort.</span>
-        </p>
 
         <div className="scroll-line" ref={scrollLineRef} aria-hidden="true" />
       </section>
