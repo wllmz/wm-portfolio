@@ -75,7 +75,7 @@ export function Projects() {
               >
                 {project.num}
               </span>
-              <h3 className="mb-3 font-round text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold tracking-tight">
+              <h3 className="mb-3 font-title text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold tracking-tight">
                 {project.title}
               </h3>
               <p className="mb-6 max-w-[42ch] leading-[1.65] text-ink-soft [&_strong]:font-semibold [&_strong]:text-navy">
@@ -102,7 +102,7 @@ export function Projects() {
                 })}
               </div>
               {/* TODO: liens vers les pages case study quand elles existeront */}
-              <span className="inline-flex items-center gap-2 font-round text-navy/50">
+              <span className="inline-flex items-center gap-2 font-title text-navy/50">
                 Case study en préparation
               </span>
             </Reveal>

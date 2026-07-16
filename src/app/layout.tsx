@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import {
-  Chakra_Petch,
+  Bricolage_Grotesque,
   Shantell_Sans,
-  Fredoka,
   Hanken_Grotesk,
 } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-// Chakra Petch ne sert que pour le logo "wm" — angles coupés au carré,
-// en écho aux arêtes du cube.
-const chakra = Chakra_Petch({
+// Bricolage Grotesque : logo (800) et titres (600/700) — découpes franches
+// en écho aux arêtes du cube, registre atelier contemporain.
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: "700",
-  variable: "--font-chakra",
+  weight: ["600", "700", "800"],
+  variable: "--font-bricolage",
   display: "swap",
 });
 
@@ -21,13 +20,6 @@ const shantell = Shantell_Sans({
   subsets: ["latin"],
   weight: "700",
   variable: "--font-shantell",
-  display: "swap",
-});
-
-const fredoka = Fredoka({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  variable: "--font-fredoka",
   display: "swap",
 });
 
@@ -52,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${chakra.variable} ${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
+        className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
       </body>

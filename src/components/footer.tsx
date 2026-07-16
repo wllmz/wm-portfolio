@@ -4,7 +4,7 @@ export function Footer() {
       <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/60 sm:flex-row">
         <p>
           © {new Date().getFullYear()}{" "}
-          <span className="text-[0.95rem] font-bold text-navy uppercase [font-family:var(--font-chakra)]">
+          <span className="font-logo text-[0.95rem] font-extrabold text-navy uppercase">
             wm<span className="text-burgundy">.</span>
           </span> — William
           Martinez, fullstack freelance
