@@ -289,9 +289,9 @@ body::after {
   padding: clamp(18px, 2.6vh, 24px);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 9px;
-  text-align: left;
+  text-align: center;
   box-shadow: 0 30px 70px rgba(35, 43, 78, 0.18);
   opacity: 0;
   visibility: hidden;
@@ -308,7 +308,8 @@ body::after {
 .fc-inner {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   gap: 9px;
   height: 100%;
   animation: fc-in 0.65s var(--ease-out) both;
