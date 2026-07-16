@@ -55,7 +55,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ),
   },
   quality: {
-    num: 6,
+    num: 4,
     title: "tests & sécu",
     skills: [
       "Vitest",
@@ -73,7 +73,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ),
   },
   data: {
-    num: 4,
+    num: 5,
     title: "data",
     skills: ["MongoDB", "Atlas", "Modélisation"],
     ex: (
@@ -84,7 +84,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ),
   },
   deploy: {
-    num: 5,
+    num: 6,
     title: "deploy",
     skills: ["Docker", "Traefik", "VPS", "CI"],
     ex: (
@@ -111,9 +111,9 @@ export const NAV_ORDER: FaceKey[] = [
   "design",
   "front",
   "api",
+  "quality",
   "data",
   "deploy",
-  "quality",
 ];
 
 /** Orientation [rotX, rotY] qui présente chaque face à la caméra. */

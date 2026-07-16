@@ -5,9 +5,9 @@ const ALL_FACES: FaceKey[] = [
   "design",
   "front",
   "api",
+  "quality",
   "data",
   "deploy",
-  "quality",
 ];
 
 type Project = {
