@@ -278,20 +278,15 @@ export function CubeStage() {
         title.style.opacity = String(tShow);
         title.style.transform = `translateY(${(1 - tShow) * 34}px)`;
 
-        /* l'habillage du hero s'efface */
+        /* l'habillage du hero s'efface — sauf le wm (tl), le fullstack (tr)
+           et le cadre, qui restent visibles pendant toute la déstructuration */
         const fade = Math.max(0, 0.7 - p * 1.8);
         const spread = p * 40;
         corners.forEach((c) => {
+          if (c.classList.contains("tl") || c.classList.contains("tr")) return;
           c.style.opacity = String(fade);
-          const x =
-            c.classList.contains("tl") || c.classList.contains("bl")
-              ? -spread
-              : spread;
-          const y =
-            c.classList.contains("tl") || c.classList.contains("tr")
-              ? -spread
-              : spread;
-          c.style.transform = `translate(${x}px, ${y * 0.6}px)`;
+          const x = c.classList.contains("bl") ? -spread : spread;
+          c.style.transform = `translate(${x}px, ${spread * 0.6}px)`;
         });
         if (facenav) {
           facenav.style.opacity = String(Math.max(0, 1 - p * 4));
