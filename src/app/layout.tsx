@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { Gluten, Shantell_Sans, Fredoka, Hanken_Grotesk } from "next/font/google";
+import {
+  Chakra_Petch,
+  Shantell_Sans,
+  Fredoka,
+  Hanken_Grotesk,
+} from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
-// Gluten ne sert que pour le logo "wm" — la signature d'origine.
-const gluten = Gluten({
+// Chakra Petch ne sert que pour le logo "wm" — angles coupés au carré,
+// en écho aux arêtes du cube.
+const chakra = Chakra_Petch({
   subsets: ["latin"],
   weight: "700",
-  variable: "--font-gluten",
+  variable: "--font-chakra",
   display: "swap",
 });
 
@@ -46,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${gluten.variable} ${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
+        className={`${chakra.variable} ${shantell.variable} ${fredoka.variable} ${hanken.variable}`}
       >
         <SmoothScroll>{children}</SmoothScroll>
       </body>

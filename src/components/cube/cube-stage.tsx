@@ -313,7 +313,7 @@ export function CubeStage() {
 
         <p className="corner tl">
           <span className="wm-mini" aria-label="wm">
-            wm
+            wm<span className="accent">.</span>
           </span>
           <br />
           William Martinez
