@@ -267,9 +267,11 @@ body::after {
      coupé en bas (le texte vit en bas de la carte) */
   --card: min(calc(var(--face) * 1.55), 540px, 88vw, 48vh);
   position: absolute;
+  /* chaque face a SA position d'apparition (voir .pos-* plus bas) —
+     toujours dans la moitié haute, jamais deux fois au même endroit */
   left: 50%;
-  top: 30%;
-  translate: -50% -50%;
+  top: 7%;
+  translate: -50% 0;
   z-index: 8;
   width: var(--card);
   height: var(--card);
@@ -296,6 +298,31 @@ body::after {
   opacity: 1;
   visibility: visible;
   transform: none;
+}
+/* les positions d'apparition — une par face */
+.face-card.pos-design {
+  left: 30%;
+  top: 7%;
+}
+.face-card.pos-front {
+  left: 70%;
+  top: 7%;
+}
+.face-card.pos-back {
+  left: 26%;
+  top: 17%;
+}
+.face-card.pos-quality {
+  left: 74%;
+  top: 17%;
+}
+.face-card.pos-deploy {
+  left: 40%;
+  top: 12%;
+}
+.face-card.pos-suivi {
+  left: 60%;
+  top: 12%;
 }
 .face-card .num {
   position: absolute;
@@ -498,6 +525,17 @@ body::after {
   }
   .frame {
     inset: 12px;
+  }
+  /* petit écran : la carte prend presque toute la largeur,
+     toutes les positions se recentrent en haut */
+  .face-card.pos-design,
+  .face-card.pos-front,
+  .face-card.pos-back,
+  .face-card.pos-quality,
+  .face-card.pos-deploy,
+  .face-card.pos-suivi {
+    left: 50%;
+    top: 8%;
   }
 }
 

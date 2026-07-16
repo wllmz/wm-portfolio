@@ -388,7 +388,7 @@ export function CubeStage() {
             face caméra, taille maîtrisée — elle atterrit au premier plan
             pendant que le cube se déstructure derrière */}
         <div
-          className={`face-card${openKey ? " open" : ""}`}
+          className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
           aria-live="polite"
         >
           <span className="num" aria-hidden="true">
