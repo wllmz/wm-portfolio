@@ -535,6 +535,19 @@ body::after {
     font-size: 0.68rem;
     padding: 7px 13px 8px;
   }
+  /* mobile : une seule position pour toutes les cartes — centrée en
+     haut, taille bornée, aucun débordement possible */
+  .face-card,
+  .face-card.pos-design,
+  .face-card.pos-front,
+  .face-card.pos-back,
+  .face-card.pos-quality,
+  .face-card.pos-deploy,
+  .face-card.pos-suivi {
+    --card: min(84vw, 42vh, 400px);
+    left: 50%;
+    top: 8%;
+  }
 }
 
 /* écrans courts (téléphone en paysage, petites fenêtres) :
