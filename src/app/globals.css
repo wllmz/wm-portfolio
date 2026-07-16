@@ -611,6 +611,22 @@ body::after {
     pointer-events: none;
     transition: opacity 0.25s ease;
   }
+  /* l'illusion : la carte NAÎT du cube — elle part minuscule depuis
+     sa position, laisse au cube le temps de réagir (délai), puis
+     grandit lentement jusqu'au plein écran */
+  .face-card {
+    transform: scale(0.1);
+    transform-origin: 50% 42%;
+    transition:
+      opacity 0.55s ease 0.2s,
+      transform 1.1s var(--ease-out) 0.2s,
+      visibility 0.55s 0.2s;
+  }
+  /* le contenu n'apparaît qu'une fois la carte déployée */
+  .face-card .fc-inner {
+    animation-duration: 0.7s;
+    animation-delay: 0.55s;
+  }
 }
 
 /* écrans courts (téléphone en paysage, petites fenêtres) :
