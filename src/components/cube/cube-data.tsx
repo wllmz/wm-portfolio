@@ -4,7 +4,7 @@ export type FaceKey =
   | "design"
   | "front"
   | "api"
-  | "interior"
+  | "quality"
   | "data"
   | "deploy";
 export type FacePosition = "front" | "back" | "right" | "left" | "top" | "bottom";
@@ -54,20 +54,21 @@ export const FACES: Record<FaceKey, FaceInfo> = {
       </>
     ),
   },
-  interior: {
-    num: "+",
-    title: "l'intérieur",
+  quality: {
+    num: 6,
+    title: "tests & sécu",
     skills: [
-      "Tests · Vitest",
-      "Sécurité · HTTPS, fail2ban",
+      "Vitest",
+      "HTTPS · fail2ban",
       "Perf",
       "Accessibilité",
     ],
     ex: (
       <>
-        Ce qui tient les cinq autres faces : je <strong>teste</strong> ce que
-        je livre et je <strong>sécurise</strong> ce que je déploie. Invisible
-        sur la démo, décisif en production.
+        Je <strong>teste</strong> ce que je livre et je{" "}
+        <strong>sécurise</strong> ce que je déploie — l&apos;infra de{" "}
+        <strong>Freïa Paris</strong> tourne en production derrière HTTPS,
+        fail2ban et sauvegardes.
       </>
     ),
   },
@@ -100,26 +101,26 @@ export const FACE_LAYOUT: { position: FacePosition; key: FaceKey }[] = [
   { position: "front", key: "design" },
   { position: "right", key: "front" },
   { position: "top", key: "api" },
-  { position: "left", key: "interior" },
+  { position: "left", key: "quality" },
   { position: "bottom", key: "data" },
   { position: "back", key: "deploy" },
 ];
 
-/** Ordre des boutons de navigation — l'intérieur en dernier, à part. */
+/** Ordre des boutons de navigation. */
 export const NAV_ORDER: FaceKey[] = [
   "design",
   "front",
   "api",
   "data",
   "deploy",
-  "interior",
+  "quality",
 ];
 
 /** Orientation [rotX, rotY] qui présente chaque face à la caméra. */
 export const ORIENT: Record<FaceKey, [number, number]> = {
   design: [-10, 16],
   front: [-10, -74],
-  interior: [-10, 106],
+  quality: [-10, 106],
   deploy: [-10, 196],
   api: [-80, 16],
   data: [80, 16],

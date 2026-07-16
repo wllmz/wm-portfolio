@@ -33,7 +33,7 @@ const hanken = Hanken_Grotesk({
 export const metadata: Metadata = {
   title: "wm — William Martinez, fullstack freelance",
   description:
-    "Développeur full stack freelance. Un projet, six faces, zéro angle mort : design, front, api, data, deploy — et l'intérieur. Disponible pour vos projets web & mobile.",
+    "Développeur full stack freelance. Un projet, six faces, zéro angle mort : design, front, api, data, deploy, tests & sécu. Disponible pour vos projets web & mobile.",
 };
 
 export default function RootLayout({

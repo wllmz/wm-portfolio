@@ -7,7 +7,7 @@ const ALL_FACES: FaceKey[] = [
   "api",
   "data",
   "deploy",
-  "interior",
+  "quality",
 ];
 
 type Project = {
@@ -29,7 +29,7 @@ const projects: Project[] = [
         solo — les six faces d&apos;un coup.
       </>
     ),
-    faces: ["design", "front", "api", "data", "deploy", "interior"],
+    faces: ["design", "front", "api", "data", "deploy", "quality"],
     card: { label: "dernier mot", hint: "mockup de l'app ici", variant: "navy" },
   },
   {
@@ -42,7 +42,7 @@ const projects: Project[] = [
         vrai site marchand.
       </>
     ),
-    faces: ["design", "front", "data", "deploy", "interior"],
+    faces: ["design", "front", "data", "deploy", "quality"],
     card: { label: "freïa", hint: "screenshot du site ici", variant: "burgundy" },
   },
   {

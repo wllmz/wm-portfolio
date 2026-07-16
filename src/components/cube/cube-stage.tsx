@@ -241,9 +241,6 @@ export function CubeStage() {
          en tournant chacune sur elle-même, puis s'estompent */
       let expTarget = 1 + p * 8;
       if (!s.started) expTarget = 2.6;
-      /* intérieur ouvert : le cube s'entrouvre pour laisser voir le cœur */
-      if (openKeyRef.current === "interior")
-        expTarget = Math.max(expTarget, 1.45);
       s.exp += (expTarget - s.exp) * 0.09;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
@@ -309,7 +306,7 @@ export function CubeStage() {
   return (
     <div
       ref={stageRef}
-      className={`stage${loaded ? " loaded" : ""}${openKey === "interior" ? " interior-open" : ""}`}
+      className={`stage${loaded ? " loaded" : ""}`}
       id="stage"
     >
       <section className="hero" aria-label="William Martinez — fullstack">
@@ -362,7 +359,7 @@ export function CubeStage() {
               {FACE_LAYOUT.map(({ position, key }) => (
                 <div
                   key={key}
-                  className={`face f-${position}${key === "interior" ? " face-inside" : ""}${openKey === key ? " is-open" : ""}`}
+                  className={`face f-${position}${openKey === key ? " is-open" : ""}`}
                   data-key={key}
                 >
                   <span className="num" aria-hidden="true">
@@ -372,25 +369,21 @@ export function CubeStage() {
                 </div>
               ))}
             </div>
-            {/* le cœur — visible quand on ouvre l'intérieur */}
-            <div className="core" aria-hidden="true">
-              <span />
-            </div>
           </div>
         </div>
 
         <nav
           className="facenav"
           ref={facenavRef}
-          aria-label="Explorer les six faces et l'intérieur"
+          aria-label="Explorer les six faces"
         >
           {NAV_ORDER.map((key) => (
             <button
               key={key}
-              className={`${key === "interior" ? "inside" : ""}${openKey === key ? " active" : ""}`}
+              className={openKey === key ? "active" : undefined}
               onClick={() => toggleFace(key)}
             >
-              {key === "interior" ? "+ l'intérieur" : FACES[key].title}
+              {FACES[key].title}
             </button>
           ))}
         </nav>
