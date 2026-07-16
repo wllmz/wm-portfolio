@@ -48,7 +48,6 @@ export function CubeStage() {
   const cubeRef = useRef<HTMLDivElement>(null);
   const centerRef = useRef<HTMLDivElement>(null);
   const facenavRef = useRef<HTMLElement>(null);
-  const scrollLineRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
   const [clock, setClock] = useState("--:--:--");
@@ -352,8 +351,6 @@ export function CubeStage() {
             <p className="fc-ex">{FACES[activeKey].ex}</p>
           </div>
         </div>
-
-        <div className="scroll-line" ref={scrollLineRef} aria-hidden="true" />
       </section>
     </div>
   );
