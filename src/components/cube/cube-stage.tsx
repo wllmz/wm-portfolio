@@ -241,7 +241,7 @@ export function CubeStage() {
 
       /* le cube s'estompe légèrement pendant qu'une face est ouverte,
          mais reste bien présent — retour en douceur à la fermeture */
-      s.dim += ((openKeyRef.current ? 0.6 : 1) - s.dim) * 0.08;
+      s.dim += ((openKeyRef.current ? 0.8 : 1) - s.dim) * 0.08;
 
       faces.forEach((f, i) => {
         const position = FACE_LAYOUT[i].position;
