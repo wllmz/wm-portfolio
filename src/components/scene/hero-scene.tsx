@@ -201,7 +201,7 @@ export default function HeroScene() {
       <directionalLight
         position={[-5, -2, 4]}
         intensity={0.8}
-        color="#f0ede6"
+        color="#f2f2f2"
       />
       <Scene />
     </Canvas>
