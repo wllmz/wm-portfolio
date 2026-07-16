@@ -263,17 +263,20 @@ body::after {
 /* ══ la face détachée : plate, face caméra, taille maîtrisée — même
    matière qu'une face du cube (bordure, coins, numéro) ══ */
 .face-card {
+  /* carré strict, parfaitement centré */
+  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 62vh);
   position: absolute;
   left: 50%;
   top: 50%;
   translate: -50% -50%;
   z-index: 8;
-  width: min(calc(var(--face) * 1.3), 460px, 86vw);
-  aspect-ratio: 1;
+  width: var(--card);
+  height: var(--card);
+  overflow: hidden;
   background: rgba(234, 227, 210, 0.97);
   border: 2px solid var(--color-burgundy);
   border-radius: 14px;
-  padding: clamp(20px, 3.4vh, 32px);
+  padding: clamp(20px, 3.4vh, 34px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -282,7 +285,7 @@ body::after {
   box-shadow: 0 30px 70px rgba(35, 43, 78, 0.18);
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.55) rotate(-2.5deg);
+  transform: scale(0.4);
   transition:
     opacity 0.32s ease,
     transform 0.55s var(--ease-boing),
