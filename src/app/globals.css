@@ -578,7 +578,7 @@ body::after {
     border: none;
     border-radius: 0;
     background: rgba(234, 227, 210, 0.985);
-    padding: 28px 24px;
+    padding: 40px 36px;
     justify-content: center;
     /* sous le cadre (z5), les coins (z6) et la nav (z7) */
     z-index: 4;
