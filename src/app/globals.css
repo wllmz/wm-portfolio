@@ -161,6 +161,8 @@ body::after {
   cursor: grab;
   /* le cube vit un peu au-dessus du centre de l'écran */
   translate: 0 var(--cube-shift, -5vh);
+  /* tactile : drag horizontal = tourner le cube, vertical = scroller */
+  touch-action: pan-y;
 }
 .scene:active {
   cursor: grabbing;
@@ -419,6 +421,9 @@ body::after {
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
+  /* ne déborde jamais : passe à la ligne sur écran étroit */
+  width: max-content;
+  max-width: min(94vw, 660px);
   opacity: 0;
   transition: opacity 0.6s ease 0.6s;
 }
@@ -527,6 +532,30 @@ body::after {
   .face-card.pos-suivi {
     left: 50%;
     top: 8%;
+  }
+  /* nav des faces compacte : 2 rangées max, boutons plus petits */
+  .facenav {
+    gap: 6px;
+  }
+  .facenav button {
+    font-size: 0.68rem;
+    padding: 7px 13px 8px;
+  }
+}
+
+/* écrans courts (téléphone en paysage, petites fenêtres) :
+   on épure pour que rien ne se chevauche */
+@media (max-height: 560px) {
+  .scroll-line {
+    display: none;
+  }
+  .corner.bl,
+  .corner.br {
+    display: none;
+  }
+  .facenav {
+    top: auto;
+    bottom: 14px;
   }
 }
 

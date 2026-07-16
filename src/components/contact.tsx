@@ -22,7 +22,7 @@ export function Contact() {
           <Magnetic>
             <a
               href="mailto:wiwimarti0693@gmail.com"
-              className="group mt-9 inline-block rounded-full bg-cream px-8 py-4 font-title font-semibold text-navy transition-[scale,box-shadow] duration-300 [transition-timing-function:var(--ease-boing)] hover:scale-[1.04] hover:shadow-[0_14px_34px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-4 focus-visible:outline-cream"
+              className="group mt-9 inline-block max-w-full break-all rounded-full bg-cream px-6 py-3.5 font-title text-sm font-semibold text-navy transition-[scale,box-shadow] duration-300 [transition-timing-function:var(--ease-boing)] hover:scale-[1.04] hover:shadow-[0_14px_34px_rgba(0,0,0,0.25)] focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-4 focus-visible:outline-cream sm:break-normal sm:px-8 sm:py-4 sm:text-lg"
             >
               wiwimarti0693@gmail.com
               <span className="ml-2 inline-block transition-transform duration-300 [transition-timing-function:var(--ease-boing)] group-hover:translate-x-1.5">

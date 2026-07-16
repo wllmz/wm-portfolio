@@ -69,7 +69,7 @@ const cardVariants = {
 export function Projects() {
   return (
     <section id="projets" className="relative pb-32 pt-24">
-      <div className="mx-auto max-w-[1100px] px-9">
+      <div className="mx-auto max-w-[1100px] px-6 sm:px-9">
         <Reveal>
           <header className="text-center">
             <span className="block text-[0.74rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
