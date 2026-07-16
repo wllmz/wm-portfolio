@@ -284,7 +284,7 @@ body::after {
   height: var(--card);
   overflow: hidden;
   background: rgba(234, 227, 210, 0.97);
-  border: 1.5px solid var(--color-burgundy);
+  border: 1px solid rgba(92, 14, 32, 0.45);
   border-radius: 12px;
   padding: clamp(18px, 2.6vh, 24px);
   display: flex;
