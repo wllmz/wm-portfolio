@@ -560,8 +560,10 @@ body::after {
     font-size: 0.68rem;
     padding: 7px 13px 8px;
   }
-  /* mobile UNIQUEMENT : la carte s'ouvre en PLEIN ÉCRAN —
-     le desktop garde ses positions par face */
+  /* mobile UNIQUEMENT : la carte s'ouvre en PLEIN ÉCRAN, mais SOUS
+     l'habillage — le cadre et les 4 coins (wm, fullstack, heure,
+     dispo) restent visibles par-dessus, comme pour le cube.
+     Le desktop garde ses positions par face. */
   .face-card,
   .face-card.pos-design,
   .face-card.pos-front,
@@ -579,6 +581,9 @@ body::after {
     background: rgba(234, 227, 210, 0.985);
     padding: 28px 24px;
     justify-content: center;
+    /* sous le cadre (z5), les coins (z6) et la nav (z7) */
+    z-index: 4;
+    box-shadow: none;
   }
   .face-card .fc-inner {
     justify-content: center;
@@ -589,14 +594,14 @@ body::after {
   .face-card .fc-ex {
     font-size: 1rem;
   }
+  /* le numéro doublonnerait avec le coin wm — on le masque */
   .face-card .num {
-    top: 20px;
-    left: 22px;
-    font-size: 2.2rem;
+    display: none;
   }
+  /* le ✕ se place sous le coin "fullstack" */
   .face-card .fc-close {
-    top: 16px;
-    right: 16px;
+    top: 76px;
+    right: 22px;
     font-size: 1.4rem;
   }
 }
