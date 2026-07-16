@@ -411,7 +411,8 @@ body::after {
 .facenav {
   position: absolute;
   left: 50%;
-  top: calc(50% + var(--cube-shift, -5vh) + var(--face) * 0.78);
+  /* la nav reste au centre bas, décorrélée du cube remonté */
+  top: calc(50% + var(--face) * 0.78);
   translate: -50% 0;
   z-index: 7;
   display: flex;
