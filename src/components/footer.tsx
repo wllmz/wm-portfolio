@@ -1,7 +1,9 @@
 export function Footer() {
   return (
     <footer className="px-6 sm:px-9">
-      <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/60 sm:flex-row">
+      {/* pb généreux en desktop : les coins fixes du HUD (horloge, dispo)
+          vivent en bas de l'écran */}
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/60 sm:flex-row md:pb-24">
         <p>
           © {new Date().getFullYear()}{" "}
           <span className="font-logo text-[0.95rem] font-extrabold text-navy uppercase">
