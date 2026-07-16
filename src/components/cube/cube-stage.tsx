@@ -217,7 +217,6 @@ export function CubeStage() {
     if (!stage || !cube || !center || !title) return;
 
     const faces = Array.from(cube.querySelectorAll<HTMLElement>(".face"));
-    const corners = Array.from(stage.querySelectorAll<HTMLElement>(".corner"));
     const facenav = facenavRef.current;
     const tagline = taglineRef.current;
     const scrollLine = scrollLineRef.current;
@@ -278,16 +277,8 @@ export function CubeStage() {
         title.style.opacity = String(tShow);
         title.style.transform = `translateY(${(1 - tShow) * 34}px)`;
 
-        /* l'habillage du hero s'efface — sauf le wm (tl), le fullstack (tr)
-           et le cadre, qui restent visibles pendant toute la déstructuration */
-        const fade = Math.max(0, 0.7 - p * 1.8);
-        const spread = p * 40;
-        corners.forEach((c) => {
-          if (c.classList.contains("tl") || c.classList.contains("tr")) return;
-          c.style.opacity = String(fade);
-          const x = c.classList.contains("bl") ? -spread : spread;
-          c.style.transform = `translate(${x}px, ${spread * 0.6}px)`;
-        });
+        /* l'habillage du cube s'efface — les quatre coins (wm, fullstack,
+           heure, dispo) et le cadre restent visibles */
         if (facenav) {
           facenav.style.opacity = String(Math.max(0, 1 - p * 4));
           facenav.style.pointerEvents = p > 0.1 ? "none" : "";
@@ -326,10 +317,6 @@ export function CubeStage() {
           </span>
           <br />
           William Martinez
-          <br />
-          <span className="clock" suppressHydrationWarning>
-            {clock}
-          </span>
         </p>
         <p className="corner tr">
           Fullstack
@@ -337,9 +324,9 @@ export function CubeStage() {
           <span className="accent">React · Node</span>
         </p>
         <p className="corner bl">
-          Landes, FR
-          <br />
-          43.71° N — 1.05° O
+          <span className="clock" suppressHydrationWarning>
+            {clock}
+          </span>
         </p>
         <p className="corner br">
           <span className="dot-live" aria-hidden="true" />
