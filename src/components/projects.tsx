@@ -4,10 +4,10 @@ import { FACES, type FaceKey } from "@/components/cube/cube-data";
 const ALL_FACES: FaceKey[] = [
   "design",
   "front",
-  "api",
+  "back",
   "quality",
-  "data",
   "deploy",
+  "suivi",
 ];
 
 type Project = {
@@ -29,7 +29,7 @@ const projects: Project[] = [
         solo — les six faces d&apos;un coup.
       </>
     ),
-    faces: ["design", "front", "api", "data", "deploy", "quality"],
+    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
     card: { label: "dernier mot", hint: "mockup de l'app ici", variant: "navy" },
   },
   {
@@ -42,7 +42,7 @@ const projects: Project[] = [
         vrai site marchand.
       </>
     ),
-    faces: ["design", "front", "data", "deploy", "quality"],
+    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
     card: { label: "freïa", hint: "screenshot du site ici", variant: "burgundy" },
   },
   {
