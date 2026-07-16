@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Halo lumineux qui suit la souris (desktop uniquement).
- * Le curseur système reste visible : le halo est un accent, pas un remplacement.
+ * Ombre douce qui suit la souris (desktop uniquement).
+ * Le curseur système reste visible : c'est un accent très subtil.
  */
 export function Cursor() {
   const glowRef = useRef<HTMLDivElement>(null);
@@ -50,7 +50,7 @@ export function Cursor() {
     <div
       ref={glowRef}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[70] hidden size-[400px] rounded-full opacity-[0.13] mix-blend-screen [background:radial-gradient(circle,var(--color-electric)_0%,transparent_60%)] md:block"
+      className="pointer-events-none fixed left-0 top-0 z-[70] hidden size-[400px] rounded-full opacity-[0.05] mix-blend-multiply [background:radial-gradient(circle,var(--color-ink)_0%,transparent_60%)] md:block"
     />
   );
 }

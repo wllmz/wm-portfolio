@@ -40,11 +40,11 @@ export function Projects() {
   return (
     <section id="projets" className="relative mx-auto max-w-6xl px-6 py-28">
       <Reveal>
-        <p className="font-mono text-xs tracking-[0.3em] text-neon uppercase">
+        <p className="font-mono text-xs tracking-[0.3em] text-mute uppercase">
           Projets sélectionnés
         </p>
         <h2 className="mt-4 font-display text-3xl font-bold sm:text-5xl">
-          Des résultats, pas juste du code<span className="text-electric">.</span>
+          Des résultats, pas juste du code<span className="text-accent">.</span>
         </h2>
       </Reveal>
 

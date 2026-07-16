@@ -12,7 +12,7 @@ export function Footer() {
             href="https://github.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mute transition-colors hover:text-fog focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+            className="text-mute transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             GitHub
           </a>
@@ -20,7 +20,7 @@ export function Footer() {
             href="https://www.linkedin.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mute transition-colors hover:text-fog focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+            className="text-mute transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             LinkedIn
           </a>

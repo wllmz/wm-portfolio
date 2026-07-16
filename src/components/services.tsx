@@ -30,23 +30,23 @@ const steps = [
 
 export function Services() {
   return (
-    <section id="services" className="relative border-y border-line bg-surface/40">
+    <section id="services" className="relative border-y border-line bg-surface/60">
       <div className="mx-auto max-w-6xl px-6 py-28">
         <Reveal>
-          <p className="font-mono text-xs tracking-[0.3em] text-neon uppercase">
+          <p className="font-mono text-xs tracking-[0.3em] text-mute uppercase">
             Services
           </p>
           <h2 className="mt-4 font-display text-3xl font-bold sm:text-5xl">
             Ce que je peux faire pour vous
-            <span className="text-electric">.</span>
+            <span className="text-accent">.</span>
           </h2>
         </Reveal>
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3">
           {services.map((service, i) => (
             <Reveal key={service.num} delay={i * 0.1} className="h-full">
-              <div className="group h-full bg-void p-8 transition-colors duration-500 hover:bg-elevated">
-                <span className="font-mono text-sm text-electric">
+              <div className="group h-full bg-paper p-8 transition-colors duration-500 hover:bg-surface">
+                <span className="font-mono text-sm text-accent">
                   {service.num}
                 </span>
                 <h3 className="mt-4 font-display text-xl font-bold">
@@ -65,11 +65,11 @@ export function Services() {
           <ol className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
               <li key={step.num} className="flex items-start gap-4">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-electric/40 font-mono text-xs text-electric">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-accent/40 font-mono text-xs text-accent">
                   {step.num}
                 </span>
                 <div>
-                  <p className="font-medium text-fog">{step.label}</p>
+                  <p className="font-medium text-ink">{step.label}</p>
                   <p className="text-sm text-mute">{step.detail}</p>
                 </div>
               </li>

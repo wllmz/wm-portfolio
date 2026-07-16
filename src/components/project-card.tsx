@@ -27,12 +27,12 @@ export function ProjectCard({ project }: { project: Project }) {
     <article
       ref={ref}
       onMouseMove={onMouseMove}
-      className="spotlight-card group rounded-2xl border border-line bg-surface p-8 transition-all duration-500 hover:-translate-y-1 hover:border-electric/50 hover:shadow-[0_20px_60px_-24px_color-mix(in_srgb,var(--color-electric)_45%,transparent)]"
+      className="spotlight-card group rounded-2xl border border-line bg-surface p-8 transition-all duration-500 hover:-translate-y-1 hover:border-ink/30 hover:shadow-[0_24px_48px_-24px_rgba(17,17,19,0.18)]"
     >
       <div className="relative z-10">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-display text-2xl font-bold">{project.title}</h3>
-          <span className="shrink-0 rounded-full border border-neon/30 px-3 py-1 font-mono text-[10px] tracking-widest text-neon uppercase">
+          <span className="shrink-0 rounded-full border border-accent/40 px-3 py-1 font-mono text-[10px] tracking-widest text-accent uppercase">
             {project.tag}
           </span>
         </div>
@@ -42,19 +42,19 @@ export function ProjectCard({ project }: { project: Project }) {
             <dt className="font-mono text-[10px] tracking-[0.25em] text-mute uppercase">
               Problème
             </dt>
-            <dd className="mt-1 text-fog/90">{project.problem}</dd>
+            <dd className="mt-1 text-ink/85">{project.problem}</dd>
           </div>
           <div>
             <dt className="font-mono text-[10px] tracking-[0.25em] text-mute uppercase">
               Solution
             </dt>
-            <dd className="mt-1 text-fog/90">{project.solution}</dd>
+            <dd className="mt-1 text-ink/85">{project.solution}</dd>
           </div>
           <div>
             <dt className="font-mono text-[10px] tracking-[0.25em] text-mute uppercase">
               Résultat
             </dt>
-            <dd className="mt-1 font-medium text-gradient">{project.result}</dd>
+            <dd className="mt-1 font-semibold text-accent">{project.result}</dd>
           </div>
         </dl>
 
