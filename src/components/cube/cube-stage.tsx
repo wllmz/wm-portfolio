@@ -171,7 +171,15 @@ export function CubeStage() {
     const onDocPointerDown = (e: globalThis.PointerEvent) => {
       if (!openKeyRef.current) return;
       const t = e.target as HTMLElement;
-      if (t.closest(".scene") || t.closest(".facenav")) return;
+      // un tap sur la carte ne la ferme pas (fermeture : ✕, Échap,
+      // ou clic vraiment en dehors) — évite les taps qui "traversent"
+      // vers le cube et rouvrent une autre face sans le vouloir
+      if (
+        t.closest(".scene") ||
+        t.closest(".facenav") ||
+        t.closest(".face-card")
+      )
+        return;
       closeFace();
     };
 
