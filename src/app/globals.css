@@ -265,7 +265,7 @@ body::after {
 .face-card {
   /* carré strict, centré horizontalement, remonté pour ne jamais être
      coupé en bas (le texte vit en bas de la carte) */
-  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 48vh);
+  --card: min(calc(var(--face) * 1.25), 440px, 88vw, 44vh);
   position: absolute;
   /* chaque face a SA position d'apparition (voir .pos-* plus bas) —
      toujours dans la moitié haute, jamais deux fois au même endroit */
@@ -277,9 +277,9 @@ body::after {
   height: var(--card);
   overflow: hidden;
   background: rgba(234, 227, 210, 0.97);
-  border: 2px solid var(--color-burgundy);
-  border-radius: 14px;
-  padding: clamp(20px, 3.4vh, 34px);
+  border: 1.5px solid var(--color-burgundy);
+  border-radius: 12px;
+  padding: clamp(18px, 3vh, 28px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -348,11 +348,11 @@ body::after {
 }
 .face-card .num {
   position: absolute;
-  top: 16px;
-  left: 22px;
+  top: 14px;
+  left: 18px;
   font-family: var(--font-shantell);
   font-weight: 700;
-  font-size: 2.1rem;
+  font-size: 1.8rem;
   line-height: 1;
   color: var(--color-burgundy);
   opacity: 0.85;
@@ -360,11 +360,11 @@ body::after {
 .face-card .fc-title {
   font-family: var(--font-bricolage);
   font-weight: 700;
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
   line-height: 1.05;
 }
 .face-card .fc-skills {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -372,7 +372,7 @@ body::after {
 }
 .face-card .fc-ex {
   margin-top: 4px;
-  font-size: clamp(0.88rem, 1.5vw, 1rem);
+  font-size: clamp(0.84rem, 1.3vw, 0.95rem);
   line-height: 1.55;
   color: var(--color-ink-soft);
 }
