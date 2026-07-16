@@ -192,31 +192,40 @@ body::after {
 .stage.loaded .face {
   opacity: 1;
 }
-/* --exp : distance au centre (assemblage / explosion)
-   --cz  : rotation chaotique propre à chaque face pendant la déstructuration */
+/* --exp  : distance au centre (assemblage / explosion)
+   --cz   : rotation chaotique propre à chaque face pendant la déstructuration
+   --lift : détachement vers la caméra de la face ouverte
+   --zoom : agrandissement de la face ouverte */
 .face.f-front {
-  transform: translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: translateZ(
+      calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px))
+    )
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 .face.f-back {
-  transform: rotateY(180deg) translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: rotateY(180deg)
+    translateZ(calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px)))
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 .face.f-right {
-  transform: rotateY(90deg) translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: rotateY(90deg)
+    translateZ(calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px)))
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 .face.f-left {
-  transform: rotateY(-90deg) translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: rotateY(-90deg)
+    translateZ(calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px)))
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 .face.f-top {
-  transform: rotateX(90deg) translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: rotateX(90deg)
+    translateZ(calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px)))
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 .face.f-bottom {
-  transform: rotateX(-90deg) translateZ(calc(var(--face) / 2 * var(--exp, 1)))
-    rotateZ(var(--cz, 0deg));
+  transform: rotateX(-90deg)
+    translateZ(calc(var(--face) / 2 * var(--exp, 1) + var(--lift, 0px)))
+    rotateZ(var(--cz, 0deg)) scale(var(--zoom, 1));
 }
 
 .stage.loaded .face.f-front {
@@ -240,21 +249,77 @@ body::after {
 .stage.interacting .face,
 .stage.scrolling .face {
   transition-delay: 0s !important;
-  transition-duration: 0.3s;
+  transition-duration: 0.45s;
 }
 
 .face:hover {
   border-color: var(--color-burgundy);
   background: rgba(92, 14, 32, 0.045);
 }
+/* la face ouverte se détache du cube et vient au premier plan, zoomée —
+   c'est ELLE le popup, avec son contenu écrit dedans */
 .face.is-open {
+  --lift: calc(var(--face) * 0.85);
+  --zoom: 1.45;
   border-color: var(--color-burgundy);
-  border-width: 2.5px;
-  background: rgba(92, 14, 32, 0.07);
+  border-width: 2px;
+  background: rgba(234, 227, 210, 0.94);
+  cursor: pointer;
+  z-index: 2;
 }
 .face.is-open .lbl {
+  opacity: 0;
+}
+.face.is-open .num {
   opacity: 1;
+  font-size: calc(var(--face) * 0.07);
+}
+
+/* le contenu dans la face */
+.face .detail {
+  position: absolute;
+  inset: 0;
+  padding: calc(var(--face) * 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: calc(var(--face) * 0.018);
+  text-align: left;
+  backface-visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s var(--ease-out);
+}
+.face.is-open .detail {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.28s;
+}
+.face .detail .d-title {
+  font-family: var(--font-bricolage);
+  font-weight: 700;
+  font-size: calc(var(--face) * 0.058);
+  line-height: 1.05;
+}
+.face .detail .d-skills {
+  font-size: calc(var(--face) * 0.026);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-burgundy);
+}
+.face .detail .d-ex {
+  margin-top: calc(var(--face) * 0.012);
+  font-size: calc(var(--face) * 0.031);
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+.face .detail .d-ex strong {
+  color: var(--color-navy);
+  font-weight: 600;
 }
 .face .lbl {
   font-size: calc(var(--face) * 0.035);
@@ -365,120 +430,6 @@ body::after {
   color: var(--color-cream);
 }
 
-/* ══ légende du hero : tagline au repos, infos de la face sélectionnée
-   sinon — les deux couches se superposent et se fondent ══ */
-.hero-caption {
-  position: absolute;
-  left: 50%;
-  bottom: 7.5%;
-  translate: -50% 0;
-  z-index: 6;
-  width: min(680px, 92vw);
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-.hero-caption > * {
-  grid-area: 1 / 1;
-}
-
-/* tagline */
-.tagline {
-  font-family: var(--font-bricolage);
-  font-weight: 600;
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
-  white-space: nowrap;
-  display: flex;
-  gap: 0.55em;
-  overflow: hidden;
-  transition: opacity 0.35s ease;
-}
-.tagline.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* légende de face */
-.face-legend {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition:
-    opacity 0.4s ease,
-    transform 0.5s var(--ease-out),
-    visibility 0.4s;
-}
-.face-legend.open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
-.face-legend .fl-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.face-legend .fl-num {
-  font-family: var(--font-shantell);
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--color-burgundy);
-  line-height: 1;
-}
-.face-legend .fl-title {
-  font-family: var(--font-bricolage);
-  font-weight: 700;
-  font-size: 1.05rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.face-legend .fl-skills {
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
-}
-.face-legend .fl-ex {
-  margin-top: 7px;
-  font-size: 0.94rem;
-  line-height: 1.55;
-  color: var(--color-ink-soft);
-  max-width: 56ch;
-  margin-inline: auto;
-}
-.face-legend .fl-ex strong {
-  color: var(--color-navy);
-  font-weight: 600;
-}
-.tagline span {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(110%);
-  transition:
-    opacity 0.5s ease,
-    transform 0.7s var(--ease-out);
-}
-.stage.loaded .tagline span {
-  opacity: 1;
-  transform: none;
-}
-.stage.loaded .tagline span:nth-child(1) {
-  transition-delay: 2.3s;
-}
-.stage.loaded .tagline span:nth-child(2) {
-  transition-delay: 2.4s;
-}
-.stage.loaded .tagline span:nth-child(3) {
-  transition-delay: 2.5s;
-}
-.tagline .g {
-  font-family: var(--font-shantell);
-  color: var(--color-burgundy);
-}
-
 /* scroll cue */
 .scroll-line {
   position: absolute;
@@ -538,8 +489,10 @@ body::after {
   .frame {
     inset: 12px;
   }
-  .face-legend .fl-ex {
-    font-size: 0.85rem;
+  /* zoom plus contenu sur petit écran pour ne pas déborder du cadre */
+  .face.is-open {
+    --lift: calc(var(--face) * 0.5);
+    --zoom: 1.18;
   }
 }
 

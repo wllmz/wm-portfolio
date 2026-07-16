@@ -34,6 +34,7 @@ type CubeState = {
   cmy: number;
   exp: number;
   cur: number;
+  dim: number;
   started: boolean;
   orientTarget: [number, number] | null;
 };
@@ -54,14 +55,11 @@ export function CubeStage() {
   const centerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const facenavRef = useRef<HTMLElement>(null);
-  const taglineRef = useRef<HTMLDivElement>(null);
   const scrollLineRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
   const [clock, setClock] = useState("--:--:--");
   const [openKey, setOpenKey] = useState<PanelKey | null>(null);
-  // dernière face sélectionnée — garde le contenu pendant le fondu de sortie
-  const [panelKey, setPanelKey] = useState<PanelKey>("design");
 
   const openKeyRef = useRef<PanelKey | null>(null);
   const reduceRef = useRef(false);
@@ -82,6 +80,7 @@ export function CubeStage() {
     cmy: 0,
     exp: 2.6,
     cur: 0,
+    dim: 1,
     started: false,
     orientTarget: null,
   });
@@ -92,7 +91,6 @@ export function CubeStage() {
     stageRef.current?.classList.add("interacting");
     openKeyRef.current = key;
     setOpenKey(key);
-    setPanelKey(key);
     const [tx, ty] = ORIENT[key];
     s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
   }, []);
@@ -216,7 +214,6 @@ export function CubeStage() {
 
     const faces = Array.from(cube.querySelectorAll<HTMLElement>(".face"));
     const facenav = facenavRef.current;
-    const tagline = taglineRef.current;
     const scrollLine = scrollLineRef.current;
 
     let rafId: number;
@@ -235,17 +232,26 @@ export function CubeStage() {
       s.cmy += (s.my - s.cmy) * 0.06;
 
       /* LA DÉSTRUCTURATION : les faces s'éloignent du centre (jusqu'à 8x)
-         en tournant chacune sur elle-même, puis s'estompent */
+         en tournant chacune sur elle-même, puis s'estompent.
+         Une face ouverte déstructure aussi le cube (plus doucement) pour
+         venir seule au premier plan. */
       let expTarget = 1 + p * 8;
       if (!s.started) expTarget = 2.6;
+      if (openKeyRef.current) expTarget = Math.max(expTarget, 1.55);
       s.exp += (expTarget - s.exp) * 0.09;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
+      /* les faces non sélectionnées s'estompent pendant qu'une face est
+         ouverte — retour en douceur à la fermeture */
+      s.dim += ((openKeyRef.current ? 0.22 : 1) - s.dim) * 0.08;
+
       faces.forEach((f, i) => {
-        const position = FACE_LAYOUT[i].position;
+        const { position, key } = FACE_LAYOUT[i];
         f.style.setProperty("--cz", (CHAOS[position] * p).toFixed(2) + "deg");
         if (s.started) {
-          f.style.opacity = String(Math.max(0, 1 - ramp(p, 0.55, 0.92)));
+          const base = Math.max(0, 1 - ramp(p, 0.55, 0.92));
+          const selected = openKeyRef.current === key;
+          f.style.opacity = String(selected ? base : base * s.dim);
         }
       });
 
@@ -281,7 +287,6 @@ export function CubeStage() {
           facenav.style.opacity = String(Math.max(0, 1 - p * 4));
           facenav.style.pointerEvents = p > 0.1 ? "none" : "";
         }
-        if (tagline) tagline.style.opacity = String(Math.max(0, 1 - p * 3));
         if (scrollLine)
           scrollLine.style.opacity = String(Math.max(0, 1 - p * 4));
 
@@ -296,8 +301,6 @@ export function CubeStage() {
       window.clearTimeout(startTimer);
     };
   }, [closeFace]);
-
-  const panel = FACES[panelKey];
 
   return (
     <div
@@ -362,6 +365,15 @@ export function CubeStage() {
                     {FACES[key].num}
                   </span>
                   <span className="lbl">{FACES[key].title}</span>
+                  {/* le contenu écrit DANS la face — visible quand elle
+                      vient au premier plan */}
+                  <div className="detail" aria-hidden={openKey !== key}>
+                    <span className="d-title">{FACES[key].title}</span>
+                    <span className="d-skills">
+                      {FACES[key].skills.join(" · ")}
+                    </span>
+                    <p className="d-ex">{FACES[key].ex}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -383,27 +395,6 @@ export function CubeStage() {
             </button>
           ))}
         </nav>
-
-        {/* légende intégrée : la tagline laisse place aux infos de la face
-            sélectionnée — rien ne recouvre jamais la scène */}
-        <div className="hero-caption" ref={taglineRef}>
-          <p className={`tagline${openKey ? " is-hidden" : ""}`}>
-            <span>un projet,</span>
-            <span>six faces,</span>
-            <span className="g">zéro angle mort.</span>
-          </p>
-          <div
-            className={`face-legend${openKey ? " open" : ""}`}
-            aria-live="polite"
-          >
-            <p className="fl-head">
-              <span className="fl-num">{panel.num}</span>
-              <span className="fl-title">{panel.title}</span>
-              <span className="fl-skills">{panel.skills.join(" · ")}</span>
-            </p>
-            <p className="fl-ex">{panel.ex}</p>
-          </div>
-        </div>
 
         <div className="scroll-line" ref={scrollLineRef} aria-hidden="true" />
       </section>
