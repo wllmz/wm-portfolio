@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
+import Snap from "lenis/snap";
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -15,6 +16,18 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       smoothWheel: true,
     });
 
+    /* effet slider : le scroll s'aimante sur le début des sections
+       marquées data-snap (proximity : uniquement quand on en est
+       proche — le contenu long reste librement scrollable) */
+    const snap = new Snap(lenis, {
+      type: "proximity",
+      duration: 0.9,
+    });
+    snap.add(0); // le haut du hero
+    document
+      .querySelectorAll<HTMLElement>("[data-snap]")
+      .forEach((el) => snap.addElement(el, { align: ["start"] }));
+
     let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
@@ -24,6 +37,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     return () => {
       cancelAnimationFrame(rafId);
+      snap.destroy();
       lenis.destroy();
     };
   }, []);
