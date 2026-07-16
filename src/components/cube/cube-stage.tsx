@@ -54,18 +54,17 @@ export function CubeStage() {
   const centerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const facenavRef = useRef<HTMLElement>(null);
-  const taglineRef = useRef<HTMLParagraphElement>(null);
+  const taglineRef = useRef<HTMLDivElement>(null);
   const scrollLineRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
   const [clock, setClock] = useState("--:--:--");
   const [openKey, setOpenKey] = useState<PanelKey | null>(null);
+  // dernière face sélectionnée — garde le contenu pendant le fondu de sortie
   const [panelKey, setPanelKey] = useState<PanelKey>("design");
-  const [panelOpen, setPanelOpen] = useState(false);
 
   const openKeyRef = useRef<PanelKey | null>(null);
   const reduceRef = useRef(false);
-  const panelTimerRef = useRef<number>(0);
 
   const state = useRef<CubeState>({
     rotX: -12,
@@ -87,7 +86,7 @@ export function CubeStage() {
     orientTarget: null,
   });
 
-  /* ── ouverture / fermeture des faces (et de l'intérieur) ── */
+  /* ── ouverture / fermeture des faces ── */
   const openFace = useCallback((key: PanelKey) => {
     const s = state.current;
     stageRef.current?.classList.add("interacting");
@@ -96,11 +95,6 @@ export function CubeStage() {
     setPanelKey(key);
     const [tx, ty] = ORIENT[key];
     s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
-    window.clearTimeout(panelTimerRef.current);
-    panelTimerRef.current = window.setTimeout(
-      () => setPanelOpen(true),
-      reduceRef.current ? 0 : 300,
-    );
   }, []);
 
   const closeFace = useCallback(() => {
@@ -108,7 +102,6 @@ export function CubeStage() {
     const s = state.current;
     openKeyRef.current = null;
     setOpenKey(null);
-    setPanelOpen(false);
     s.orientTarget = null;
     s.idle = 0;
   }, []);
@@ -186,7 +179,11 @@ export function CubeStage() {
     const onDocPointerDown = (e: globalThis.PointerEvent) => {
       if (!openKeyRef.current) return;
       const t = e.target as HTMLElement;
-      if (t.closest(".scene") || t.closest(".panel") || t.closest(".facenav"))
+      if (
+        t.closest(".scene") ||
+        t.closest(".hero-caption") ||
+        t.closest(".facenav")
+      )
         return;
       closeFace();
     };
@@ -297,7 +294,6 @@ export function CubeStage() {
     return () => {
       cancelAnimationFrame(rafId);
       window.clearTimeout(startTimer);
-      window.clearTimeout(panelTimerRef.current);
     };
   }, [closeFace]);
 
@@ -388,22 +384,26 @@ export function CubeStage() {
           ))}
         </nav>
 
-        <aside
-          className={`panel${panelOpen ? " open" : ""}`}
-          aria-live="polite"
-        >
-          <button className="close" aria-label="Fermer" onClick={closeFace}>
-            ✕
-          </button>
-          <div className="p-num">{panel.num}</div>
-          <h3>{panel.title}</h3>
-          <div className="skills">
-            {panel.skills.map((skill) => (
-              <span key={skill}>{skill}</span>
-            ))}
+        {/* légende intégrée : la tagline laisse place aux infos de la face
+            sélectionnée — rien ne recouvre jamais la scène */}
+        <div className="hero-caption" ref={taglineRef}>
+          <p className={`tagline${openKey ? " is-hidden" : ""}`}>
+            <span>un projet,</span>
+            <span>six faces,</span>
+            <span className="g">zéro angle mort.</span>
+          </p>
+          <div
+            className={`face-legend${openKey ? " open" : ""}`}
+            aria-live="polite"
+          >
+            <p className="fl-head">
+              <span className="fl-num">{panel.num}</span>
+              <span className="fl-title">{panel.title}</span>
+              <span className="fl-skills">{panel.skills.join(" · ")}</span>
+            </p>
+            <p className="fl-ex">{panel.ex}</p>
           </div>
-          <p className="ex">{panel.ex}</p>
-        </aside>
+        </div>
 
         <div className="scroll-line" ref={scrollLineRef} aria-hidden="true" />
       </section>
