@@ -239,9 +239,9 @@ export function CubeStage() {
       s.exp += (expTarget - s.exp) * 0.09;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
-      /* les faces non sélectionnées s'estompent pendant qu'une face est
-         ouverte — retour en douceur à la fermeture */
-      s.dim += ((openKeyRef.current ? 0.22 : 1) - s.dim) * 0.08;
+      /* le cube s'estompe légèrement pendant qu'une face est ouverte,
+         mais reste bien présent — retour en douceur à la fermeture */
+      s.dim += ((openKeyRef.current ? 0.6 : 1) - s.dim) * 0.08;
 
       faces.forEach((f, i) => {
         const position = FACE_LAYOUT[i].position;
