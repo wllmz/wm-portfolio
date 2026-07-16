@@ -269,9 +269,14 @@ body::after {
      coupé en bas (le texte vit en bas de la carte) */
   --card: min(calc(var(--face) * 1.25), 440px, 88vw, 44vh);
   position: absolute;
-  /* chaque face a SA position d'apparition (voir .pos-* plus bas) —
-     toujours dans la moitié haute, jamais deux fois au même endroit */
-  left: 50%;
+  /* chaque face a SA position préférée (--want, voir .pos-* plus bas),
+     mais le clamp garantit que la carte ne sort JAMAIS de l'écran :
+     elle glisse vers l'intérieur quand la place manque */
+  left: clamp(
+    calc(var(--card) / 2 + 26px),
+    var(--want, 50%),
+    calc(100% - var(--card) / 2 - 26px)
+  );
   top: 7%;
   translate: -50% 0;
   z-index: 8;
@@ -325,27 +330,27 @@ body::after {
 }
 /* les positions d'apparition — une par face, écartées du cube */
 .face-card.pos-design {
-  left: 24%;
+  --want: 24%;
   top: 5%;
 }
 .face-card.pos-front {
-  left: 63%;
+  --want: 63%;
   top: 7%;
 }
 .face-card.pos-back {
-  left: 22%;
+  --want: 22%;
   top: 16%;
 }
 .face-card.pos-quality {
-  left: 66%;
+  --want: 66%;
   top: 17%;
 }
 .face-card.pos-deploy {
-  left: 31%;
+  --want: 31%;
   top: 11%;
 }
 .face-card.pos-suivi {
-  left: 60%;
+  --want: 60%;
   top: 12%;
 }
 .face-card .num {
@@ -521,17 +526,6 @@ body::after {
   }
   .frame {
     inset: 12px;
-  }
-  /* petit écran : la carte prend presque toute la largeur,
-     toutes les positions se recentrent en haut */
-  .face-card.pos-design,
-  .face-card.pos-front,
-  .face-card.pos-back,
-  .face-card.pos-quality,
-  .face-card.pos-deploy,
-  .face-card.pos-suivi {
-    left: 50%;
-    top: 8%;
   }
   /* nav des faces compacte : 2 rangées max, boutons plus petits */
   .facenav {
