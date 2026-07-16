@@ -377,14 +377,26 @@ body::after {
   color: var(--color-cream);
 }
 
-/* ══ l'intérieur : le cube s'entrouvre, les faces passent en plan filaire,
-   le cœur apparaît ══ */
+/* la face de l'intérieur — en pointillés, à part sur le cube */
+.face.face-inside {
+  border-style: dashed;
+}
+.face.face-inside .lbl,
+.face.face-inside .num {
+  color: var(--color-burgundy);
+}
+
+/* ══ l'intérieur ouvert : le cube s'entrouvre, les faces passent en plan
+   filaire, le cœur apparaît ══ */
 .stage.interior-open .face {
   border-style: dashed;
 }
 .stage.interior-open .face .lbl,
 .stage.interior-open .face .num {
   opacity: 0.25;
+}
+.stage.interior-open .face.face-inside .lbl {
+  opacity: 1;
 }
 .core {
   position: absolute;

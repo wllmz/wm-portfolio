@@ -1,7 +1,14 @@
 import { Reveal } from "@/components/reveal";
-import type { FaceKey } from "@/components/cube/cube-data";
+import { FACES, type FaceKey } from "@/components/cube/cube-data";
 
-const ALL_FACES: FaceKey[] = ["design", "front", "mobile", "api", "data", "deploy"];
+const ALL_FACES: FaceKey[] = [
+  "design",
+  "front",
+  "api",
+  "data",
+  "deploy",
+  "interior",
+];
 
 type Project = {
   num: string;
@@ -22,7 +29,7 @@ const projects: Project[] = [
         solo — les six faces d&apos;un coup.
       </>
     ),
-    faces: ["design", "front", "mobile", "api", "data", "deploy"],
+    faces: ["design", "front", "api", "data", "deploy", "interior"],
     card: { label: "dernier mot", hint: "mockup de l'app ici", variant: "navy" },
   },
   {
@@ -35,7 +42,7 @@ const projects: Project[] = [
         vrai site marchand.
       </>
     ),
-    faces: ["design", "front", "data", "deploy"],
+    faces: ["design", "front", "data", "deploy", "interior"],
     card: { label: "freïa", hint: "screenshot du site ici", variant: "burgundy" },
   },
   {
@@ -96,7 +103,7 @@ export function Projects() {
                           : "border-navy/20 text-navy/40"
                       }`}
                     >
-                      {face}
+                      {FACES[face].title}
                     </span>
                   );
                 })}

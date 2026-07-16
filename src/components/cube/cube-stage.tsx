@@ -13,7 +13,6 @@ import {
   FACE_LAYOUT,
   NAV_ORDER,
   ORIENT,
-  PANELS,
   type FaceKey,
   type PanelKey,
 } from "./cube-data";
@@ -95,13 +94,8 @@ export function CubeStage() {
     openKeyRef.current = key;
     setOpenKey(key);
     setPanelKey(key);
-    if (key === "interior") {
-      // pas d'orientation cible : le cube s'entrouvre et continue de tourner
-      s.orientTarget = null;
-    } else {
-      const [tx, ty] = ORIENT[key];
-      s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
-    }
+    const [tx, ty] = ORIENT[key];
+    s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
     window.clearTimeout(panelTimerRef.current);
     panelTimerRef.current = window.setTimeout(
       () => setPanelOpen(true),
@@ -310,7 +304,7 @@ export function CubeStage() {
     };
   }, [closeFace]);
 
-  const panel = PANELS[panelKey];
+  const panel = FACES[panelKey];
 
   return (
     <div
@@ -368,7 +362,7 @@ export function CubeStage() {
               {FACE_LAYOUT.map(({ position, key }) => (
                 <div
                   key={key}
-                  className={`face f-${position}${openKey === key ? " is-open" : ""}`}
+                  className={`face f-${position}${key === "interior" ? " face-inside" : ""}${openKey === key ? " is-open" : ""}`}
                   data-key={key}
                 >
                   <span className="num" aria-hidden="true">
@@ -393,18 +387,12 @@ export function CubeStage() {
           {NAV_ORDER.map((key) => (
             <button
               key={key}
-              className={openKey === key ? "active" : undefined}
+              className={`${key === "interior" ? "inside" : ""}${openKey === key ? " active" : ""}`}
               onClick={() => toggleFace(key)}
             >
-              {FACES[key].title}
+              {key === "interior" ? "+ l'intérieur" : FACES[key].title}
             </button>
           ))}
-          <button
-            className={`inside${openKey === "interior" ? " active" : ""}`}
-            onClick={() => toggleFace("interior")}
-          >
-            + l&apos;intérieur
-          </button>
         </nav>
 
         <aside

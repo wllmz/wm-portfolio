@@ -1,10 +1,15 @@
 import type { ReactNode } from "react";
 
-export type FaceKey = "design" | "front" | "api" | "mobile" | "data" | "deploy";
+export type FaceKey =
+  | "design"
+  | "front"
+  | "api"
+  | "interior"
+  | "data"
+  | "deploy";
 export type FacePosition = "front" | "back" | "right" | "left" | "top" | "bottom";
 
-/** Les 6 faces + l'intérieur (le transversal : tests, sécurité, perf). */
-export type PanelKey = FaceKey | "interior";
+export type PanelKey = FaceKey;
 
 export type FaceInfo = {
   num: number | string;
@@ -29,11 +34,12 @@ export const FACES: Record<FaceKey, FaceInfo> = {
   front: {
     num: 2,
     title: "front",
-    skills: ["React", "TypeScript", "CSS"],
+    skills: ["React", "React Native · Expo", "TypeScript"],
     ex: (
       <>
-        Le front sur mesure de <strong>Freïa Paris</strong> et ce portfolio,
-        animations comprises.
+        Le front sur mesure de <strong>Freïa Paris</strong>, l&apos;app{" "}
+        <strong>Dernier Mot</strong> (React Native, iOS & Android) et ce
+        portfolio.
       </>
     ),
   },
@@ -48,19 +54,25 @@ export const FACES: Record<FaceKey, FaceInfo> = {
       </>
     ),
   },
-  mobile: {
-    num: 4,
-    title: "mobile",
-    skills: ["React Native", "Expo", "iOS & Android"],
+  interior: {
+    num: "+",
+    title: "l'intérieur",
+    skills: [
+      "Tests · Vitest",
+      "Sécurité · HTTPS, fail2ban",
+      "Perf",
+      "Accessibilité",
+    ],
     ex: (
       <>
-        L&apos;app <strong>Dernier Mot</strong> en React Native + Expo : une
-        seule base de code pour iOS et Android.
+        Ce qui tient les cinq autres faces : je <strong>teste</strong> ce que
+        je livre et je <strong>sécurise</strong> ce que je déploie. Invisible
+        sur la démo, décisif en production.
       </>
     ),
   },
   data: {
-    num: 5,
+    num: 4,
     title: "data",
     skills: ["MongoDB", "Atlas", "Modélisation"],
     ex: (
@@ -71,7 +83,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ),
   },
   deploy: {
-    num: 6,
+    num: 5,
     title: "deploy",
     skills: ["Docker", "Traefik", "VPS", "CI"],
     ex: (
@@ -83,55 +95,31 @@ export const FACES: Record<FaceKey, FaceInfo> = {
   },
 };
 
-/**
- * L'intérieur du cube — ce qui tient les six faces.
- * Pas une 7e face : le transversal, invisible sur la démo,
- * décisif en production.
- */
-export const INTERIOR: FaceInfo = {
-  num: "+",
-  title: "l'intérieur",
-  skills: ["Tests · Vitest", "Sécurité · HTTPS, fail2ban", "Perf", "Accessibilité"],
-  ex: (
-    <>
-      Ce qui tient les six faces : je <strong>teste</strong> ce que je livre et
-      je <strong>sécurise</strong> ce que je déploie. Invisible sur la démo,
-      décisif en production.
-    </>
-  ),
-};
-
-/** Toutes les entrées du panneau : les 6 faces + l'intérieur. */
-export const PANELS: Record<PanelKey, FaceInfo> = {
-  ...FACES,
-  interior: INTERIOR,
-};
-
 /** Position géométrique de chaque face sur le cube. */
 export const FACE_LAYOUT: { position: FacePosition; key: FaceKey }[] = [
   { position: "front", key: "design" },
   { position: "right", key: "front" },
   { position: "top", key: "api" },
-  { position: "left", key: "mobile" },
+  { position: "left", key: "interior" },
   { position: "bottom", key: "data" },
   { position: "back", key: "deploy" },
 ];
 
-/** Ordre des boutons de navigation. */
+/** Ordre des boutons de navigation — l'intérieur en dernier, à part. */
 export const NAV_ORDER: FaceKey[] = [
   "design",
   "front",
-  "mobile",
   "api",
   "data",
   "deploy",
+  "interior",
 ];
 
 /** Orientation [rotX, rotY] qui présente chaque face à la caméra. */
 export const ORIENT: Record<FaceKey, [number, number]> = {
   design: [-10, 16],
   front: [-10, -74],
-  mobile: [-10, 106],
+  interior: [-10, 106],
   deploy: [-10, 196],
   api: [-80, 16],
   data: [80, 16],
