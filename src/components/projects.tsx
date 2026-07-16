@@ -68,8 +68,22 @@ const cardVariants = {
 
 export function Projects() {
   return (
-    <section id="projets" className="relative pb-32 pt-[4vh]">
+    <section id="projets" className="relative pb-32 pt-24">
       <div className="mx-auto max-w-[1100px] px-9">
+        <Reveal>
+          <header className="text-center">
+            <span className="block text-[0.74rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
+              Projets — les vrais, en prod
+            </span>
+            <h2 className="mt-4 font-title text-[clamp(2rem,5vw,3.6rem)] font-bold leading-[1.1] tracking-tight">
+              trois projets,
+              <br />
+              <span className="font-hand text-burgundy">
+                six faces couvertes.
+              </span>
+            </h2>
+          </header>
+        </Reveal>
         {projects.map((project, i) => (
           <article
             key={project.num}

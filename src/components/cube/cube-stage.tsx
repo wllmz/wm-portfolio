@@ -8,7 +8,6 @@ import {
   type PointerEvent,
 } from "react";
 import {
-  CHAOS,
   FACES,
   FACE_LAYOUT,
   NAV_ORDER,
@@ -33,15 +32,10 @@ type CubeState = {
   cmx: number;
   cmy: number;
   exp: number;
-  cur: number;
   dim: number;
   started: boolean;
   orientTarget: [number, number] | null;
 };
-
-const smooth = (t: number) => t * t * (3 - 2 * t); // smoothstep
-const ramp = (v: number, a: number, b: number) =>
-  Math.min(1, Math.max(0, (v - a) / (b - a)));
 
 function nearestAngle(current: number, target: number) {
   const k = Math.round((current - target) / 360);
@@ -53,7 +47,6 @@ export function CubeStage() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const cubeRef = useRef<HTMLDivElement>(null);
   const centerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
   const facenavRef = useRef<HTMLElement>(null);
   const scrollLineRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +74,6 @@ export function CubeStage() {
     cmx: 0,
     cmy: 0,
     exp: 1.7,
-    cur: 0,
     dim: 1,
     started: false,
     orientTarget: null,
@@ -194,7 +186,7 @@ export function CubeStage() {
     };
   }, [closeFace]);
 
-  /* ── boucle : rotation, déstructuration au scroll, émergence du titre ── */
+  /* ── boucle : rotation du cube, parallaxe souris, ouverture des faces ── */
   useEffect(() => {
     requestAnimationFrame(() => setLoaded(true));
 
@@ -204,56 +196,39 @@ export function CubeStage() {
 
     const startTimer = window.setTimeout(() => (s.started = true), 80);
 
-    const stage = stageRef.current;
     const cube = cubeRef.current;
     const center = centerRef.current;
-    const title = titleRef.current;
-    if (!stage || !cube || !center || !title) return;
+    if (!cube || !center) return;
 
     const faces = Array.from(cube.querySelectorAll<HTMLElement>(".face"));
-    const facenav = facenavRef.current;
-    const scrollLine = scrollLineRef.current;
 
     let rafId: number;
 
     const tick = () => {
-      /* progression 0→1 sur la hauteur de la scène épinglée */
-      const stageH = stage.offsetHeight - window.innerHeight;
-      const target = reduceMotion
-        ? 0
-        : Math.min(Math.max(window.scrollY / stageH, 0), 1);
-      s.cur += (target - s.cur) * 0.09;
-      const p = smooth(s.cur);
-      stage.classList.toggle("scrolling", s.cur > 0.02);
-
       s.cmx += (s.mx - s.cmx) * 0.06;
       s.cmy += (s.my - s.cmy) * 0.06;
 
-      /* LA DÉSTRUCTURATION : les faces s'éloignent du centre (jusqu'à 8x)
-         en tournant chacune sur elle-même, puis s'estompent.
-         Une face ouverte déstructure aussi le cube (plus doucement) pour
-         venir seule au premier plan. */
-      let expTarget = 1 + p * 8;
+      /* le cube reste assemblé — il se desserre seulement pendant
+         qu'une face est ouverte, et se pose à l'arrivée sur la page */
+      let expTarget = openKeyRef.current ? 1.55 : 1;
       if (!s.started) expTarget = 1.7;
-      if (openKeyRef.current) expTarget = Math.max(expTarget, 1.55);
       s.exp += (expTarget - s.exp) * 0.13;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
       /* le cube s'estompe légèrement pendant qu'une face est ouverte,
          mais reste bien présent — retour en douceur à la fermeture */
       s.dim += ((openKeyRef.current ? 0.8 : 1) - s.dim) * 0.08;
-
-      faces.forEach((f, i) => {
-        const position = FACE_LAYOUT[i].position;
-        f.style.setProperty("--cz", (CHAOS[position] * p).toFixed(2) + "deg");
-        if (s.started) {
-          /* la déstructuration se joue tôt : terminée à ~70% du pin */
-          const base = Math.max(0, 1 - ramp(p, 0.38, 0.72));
-          f.style.opacity = String(base * s.dim);
+      faces.forEach((f) => {
+        if (Math.abs(s.dim - 1) > 0.003) {
+          f.style.opacity = s.dim.toFixed(3);
+        } else {
+          /* au repos, on laisse le CSS gérer (fondu d'entrée en cascade) */
+          f.style.removeProperty("opacity");
         }
       });
 
-      /* rotation : s'accélère pendant la déstructuration */
+      /* rotation : inertie du drag, orientation vers la face ouverte,
+         ou rotation lente au repos */
       if (s.orientTarget) {
         s.rotX += (s.orientTarget[0] - s.rotX) * 0.08;
         s.rotY += (s.orientTarget[1] - s.rotY) * 0.08;
@@ -264,31 +239,15 @@ export function CubeStage() {
         s.rotX += s.velX;
         s.idle++;
         if (s.idle > 30) {
-          s.rotY += (reduceMotion ? 0.04 : 0.12) + p * 1.8;
+          s.rotY += reduceMotion ? 0.04 : 0.12;
           s.rotX += (-12 - s.rotX) * 0.012;
         }
       }
       cube.style.transform = `rotateX(${s.rotX}deg) rotateY(${s.rotY}deg)`;
 
+      /* parallaxe souris */
       if (!reduceMotion) {
-        /* le cube grossit légèrement vers toi en éclatant */
-        center.style.transform = `scale(${1 + p * 0.3}) translate(${s.cmx * 12}px, ${s.cmy * 9}px)`;
-
-        /* le titre émerge au cœur de l'explosion */
-        const tShow = ramp(p, 0.3, 0.62);
-        title.style.opacity = String(tShow);
-        title.style.transform = `translateY(${(1 - tShow) * 34}px)`;
-
-        /* l'habillage du cube s'efface — les quatre coins (wm, fullstack,
-           heure, dispo) et le cadre restent visibles */
-        if (facenav) {
-          facenav.style.opacity = String(Math.max(0, 1 - p * 4));
-          facenav.style.pointerEvents = p > 0.1 ? "none" : "";
-        }
-        if (scrollLine)
-          scrollLine.style.opacity = String(Math.max(0, 1 - p * 4));
-
-        if (p > 0.08 && openKeyRef.current) closeFace();
+        center.style.transform = `translate(${s.cmx * 12}px, ${s.cmy * 9}px)`;
       }
       rafId = requestAnimationFrame(tick);
     };
@@ -298,7 +257,7 @@ export function CubeStage() {
       cancelAnimationFrame(rafId);
       window.clearTimeout(startTimer);
     };
-  }, [closeFace]);
+  }, []);
 
   return (
     <div
@@ -330,18 +289,6 @@ export function CubeStage() {
           <span className="dot-live" aria-hidden="true" />
           Dispo <span className="accent">Freelance · Remote</span>
         </p>
-
-        {/* le titre qui émerge quand le cube se déstructure */}
-        <div className="stage-title" ref={titleRef} aria-hidden="true">
-          <div>
-            <span className="eyebrow">Projets — les vrais, en prod</span>
-            <h2>
-              trois projets,
-              <br />
-              <span className="g">six faces couvertes.</span>
-            </h2>
-          </div>
-        </div>
 
         <div className="center" ref={centerRef}>
           <div

@@ -49,16 +49,14 @@ body::after {
   color: var(--color-cream);
 }
 
-/* ══════════════ SCÈNE ÉPINGLÉE ══════════════
-   Le hero reste collé à l'écran pendant le scroll :
-   c'est sur cette distance que le cube se déstructure. */
+/* ══════════════ LE HERO ══════════════
+   Un écran plein : le cube reste assemblé en permanence,
+   le scroll mène directement aux projets. */
 .stage {
   position: relative;
-  height: 170vh;
 }
 .hero {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100vh;
   height: 100svh;
   overflow: hidden;
@@ -407,38 +405,6 @@ body::after {
   pointer-events: none;
 }
 
-/* ══ le titre qui émerge du cube déstructuré ══ */
-.stage-title {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  z-index: 4;
-}
-.stage-title .eyebrow {
-  display: block;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-burgundy);
-  margin-bottom: 16px;
-}
-.stage-title h2 {
-  font-family: var(--font-bricolage);
-  font-weight: 700;
-  font-size: clamp(2rem, 5vw, 3.6rem);
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-.stage-title h2 .g {
-  font-family: var(--font-shantell);
-  color: var(--color-burgundy);
-}
-
 /* nav des faces */
 .facenav {
   position: absolute;
@@ -567,21 +533,11 @@ body::after {
   }
   .corner,
   .face,
-  .tagline span,
   .scroll-line,
   .facenav {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
     transition: none !important;
-  }
-  .stage {
-    height: auto;
-  }
-  .hero {
-    position: relative;
-  }
-  .stage-title {
-    display: none;
   }
 }
