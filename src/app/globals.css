@@ -263,11 +263,12 @@ body::after {
 /* ══ la face détachée : plate, face caméra, taille maîtrisée — même
    matière qu'une face du cube (bordure, coins, numéro) ══ */
 .face-card {
-  /* carré strict, parfaitement centré */
-  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 62vh);
+  /* carré strict, centré horizontalement, remonté pour ne jamais être
+     coupé en bas (le texte vit en bas de la carte) */
+  --card: min(calc(var(--face) * 1.55), 540px, 88vw, 56vh);
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 44%;
   translate: -50% -50%;
   z-index: 8;
   width: var(--card);
