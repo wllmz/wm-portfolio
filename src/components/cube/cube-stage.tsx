@@ -247,7 +247,8 @@ export function CubeStage() {
         const position = FACE_LAYOUT[i].position;
         f.style.setProperty("--cz", (CHAOS[position] * p).toFixed(2) + "deg");
         if (s.started) {
-          const base = Math.max(0, 1 - ramp(p, 0.55, 0.92));
+          /* la déstructuration se joue tôt : terminée à ~70% du pin */
+          const base = Math.max(0, 1 - ramp(p, 0.38, 0.72));
           f.style.opacity = String(base * s.dim);
         }
       });
@@ -274,7 +275,7 @@ export function CubeStage() {
         center.style.transform = `scale(${1 + p * 0.3}) translate(${s.cmx * 12}px, ${s.cmy * 9}px)`;
 
         /* le titre émerge au cœur de l'explosion */
-        const tShow = ramp(p, 0.45, 0.8);
+        const tShow = ramp(p, 0.3, 0.62);
         title.style.opacity = String(tShow);
         title.style.transform = `translateY(${(1 - tShow) * 34}px)`;
 

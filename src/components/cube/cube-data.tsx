@@ -7,7 +7,13 @@ export type FaceKey =
   | "quality"
   | "deploy"
   | "suivi";
-export type FacePosition = "front" | "back" | "right" | "left" | "top" | "bottom";
+export type FacePosition =
+  | "front"
+  | "back"
+  | "right"
+  | "left"
+  | "top"
+  | "bottom";
 
 export type PanelKey = FaceKey;
 
@@ -26,9 +32,9 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Figma", "Illustrator", "DA & branding"],
     ex: (
       <>
-        Maquettes, identité visuelle, direction artistique : votre produit a
-        une <strong>vraie personnalité</strong> avant même la première ligne
-        de code.
+        Maquettes, identité visuelle, direction artistique : votre produit a une{" "}
+        <strong>vraie personnalité</strong> avant même la première ligne de
+        code.
       </>
     ),
   },
@@ -62,8 +68,8 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ex: (
       <>
         Je <strong>teste</strong> ce que je livre et je{" "}
-        <strong>sécurise</strong> ce que je déploie : votre produit résiste
-        aux bugs comme aux attaques.
+        <strong>sécurise</strong> ce que je déploie : votre produit résiste aux
+        bugs comme aux attaques.
       </>
     ),
   },
@@ -85,8 +91,8 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Docker", "Traefik", "VPS", "CI"],
     ex: (
       <>
-        La mise en ligne de A à Z : serveur, domaine, HTTPS, sauvegardes —
-        votre produit <strong>accessible au monde, en production</strong>.
+        La mise en ligne de A à Z : serveur, domaine, HTTPS, sauvegardes — votre
+        produit <strong>accessible au monde, en production</strong>.
       </>
     ),
   },

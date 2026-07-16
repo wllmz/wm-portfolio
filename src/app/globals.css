@@ -54,7 +54,7 @@ body::after {
    c'est sur cette distance que le cube se déstructure. */
 .stage {
   position: relative;
-  height: 260vh;
+  height: 170vh;
 }
 .hero {
   position: sticky;
