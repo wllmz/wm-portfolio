@@ -292,7 +292,29 @@ body::after {
   transition:
     opacity 0.32s ease,
     transform 0.55s var(--ease-boing),
+    left 0.55s var(--ease-out),
+    top 0.55s var(--ease-out),
     visibility 0.32s;
+}
+
+/* contenu de la carte — rejoué en fondu à chaque changement de face */
+.fc-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 9px;
+  height: 100%;
+  animation: fc-in 0.45s var(--ease-out) both;
+}
+@keyframes fc-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .face-card.open {
   opacity: 1;
@@ -305,15 +327,15 @@ body::after {
   top: 7%;
 }
 .face-card.pos-front {
-  left: 70%;
+  left: 63%;
   top: 7%;
 }
 .face-card.pos-back {
-  left: 26%;
+  left: 32%;
   top: 17%;
 }
 .face-card.pos-quality {
-  left: 74%;
+  left: 66%;
   top: 17%;
 }
 .face-card.pos-deploy {

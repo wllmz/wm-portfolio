@@ -391,12 +391,18 @@ export function CubeStage() {
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
           aria-live="polite"
         >
-          <span className="num" aria-hidden="true">
-            {FACES[activeKey].num}
-          </span>
-          <span className="fc-title">{FACES[activeKey].title}</span>
-          <span className="fc-skills">{FACES[activeKey].skills.join(" · ")}</span>
-          <p className="fc-ex">{FACES[activeKey].ex}</p>
+          {/* key = la face : le contenu se remonte (et rejoue son fondu)
+              à chaque changement, pendant que la carte glisse */}
+          <div className="fc-inner" key={activeKey}>
+            <span className="num" aria-hidden="true">
+              {FACES[activeKey].num}
+            </span>
+            <span className="fc-title">{FACES[activeKey].title}</span>
+            <span className="fc-skills">
+              {FACES[activeKey].skills.join(" · ")}
+            </span>
+            <p className="fc-ex">{FACES[activeKey].ex}</p>
+          </div>
         </div>
 
         <div className="scroll-line" ref={scrollLineRef} aria-hidden="true" />
