@@ -269,10 +269,16 @@ body::after {
      coupé en bas (le texte vit en bas de la carte) */
   --card: min(calc(var(--face) * 1.25), 440px, 88vw, 44vh);
   position: absolute;
-  /* toujours au centre de l'écran — simple et imparable */
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
+  /* desktop : chaque face a SA position préférée (--want, .pos-* plus
+     bas), le clamp l'empêche de sortir de l'écran. Mobile : centrée
+     (voir la media query). */
+  left: clamp(
+    calc(var(--card) / 2 + 26px),
+    var(--want, 50%),
+    calc(100% - var(--card) / 2 - 26px)
+  );
+  top: 7%;
+  translate: -50% 0;
   z-index: 8;
   width: var(--card);
   height: var(--card);
@@ -293,6 +299,8 @@ body::after {
   transition:
     opacity 0.32s ease,
     transform 0.55s var(--ease-boing),
+    left 0.55s var(--ease-out),
+    top 0.55s var(--ease-out),
     visibility 0.32s;
 }
 
@@ -319,6 +327,31 @@ body::after {
   opacity: 1;
   visibility: visible;
   transform: none;
+}
+/* les positions d'apparition desktop — une par face */
+.face-card.pos-design {
+  --want: 24%;
+  top: 5%;
+}
+.face-card.pos-front {
+  --want: 63%;
+  top: 7%;
+}
+.face-card.pos-back {
+  --want: 22%;
+  top: 16%;
+}
+.face-card.pos-quality {
+  --want: 66%;
+  top: 17%;
+}
+.face-card.pos-deploy {
+  --want: 31%;
+  top: 11%;
+}
+.face-card.pos-suivi {
+  --want: 60%;
+  top: 12%;
 }
 .face-card .num {
   position: absolute;
@@ -502,9 +535,19 @@ body::after {
     font-size: 0.68rem;
     padding: 7px 13px 8px;
   }
-  /* mobile : taille bornée, toujours centrée */
-  .face-card {
+  /* mobile UNIQUEMENT : toutes les cartes au centre de l'écran,
+     taille bornée — le desktop garde ses positions par face */
+  .face-card,
+  .face-card.pos-design,
+  .face-card.pos-front,
+  .face-card.pos-back,
+  .face-card.pos-quality,
+  .face-card.pos-deploy,
+  .face-card.pos-suivi {
     --card: min(84vw, 42vh, 400px);
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
   }
 }
 
