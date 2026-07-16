@@ -267,7 +267,7 @@ body::after {
 .face-card {
   /* carré strict, centré horizontalement, remonté pour ne jamais être
      coupé en bas (le texte vit en bas de la carte) */
-  --card: min(calc(var(--face) * 1.25), 440px, 88vw, 44vh);
+  --card: min(calc(var(--face) * 1.15), 390px, 88vw, 42vh);
   position: absolute;
   /* desktop : chaque face a SA position préférée (--want, .pos-* plus
      bas), le clamp l'empêche de sortir de l'écran. Mobile : centrée
@@ -286,7 +286,7 @@ body::after {
   background: rgba(234, 227, 210, 0.97);
   border: 1.5px solid var(--color-burgundy);
   border-radius: 12px;
-  padding: clamp(18px, 3vh, 28px);
+  padding: clamp(18px, 2.6vh, 24px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
