@@ -387,6 +387,31 @@ body::after {
   color: var(--color-navy);
   font-weight: 600;
 }
+.face-card .fc-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  padding: 8px;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--color-burgundy);
+  cursor: pointer;
+  opacity: 0.65;
+  transition:
+    opacity 0.2s,
+    rotate 0.3s var(--ease-boing);
+}
+.face-card .fc-close:hover {
+  opacity: 1;
+  rotate: 90deg;
+}
+.face-card .fc-close:focus-visible {
+  outline: 2px dashed var(--color-burgundy);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
 .face .lbl {
   font-size: calc(var(--face) * 0.035);
   font-weight: 600;
@@ -535,8 +560,8 @@ body::after {
     font-size: 0.68rem;
     padding: 7px 13px 8px;
   }
-  /* mobile UNIQUEMENT : toutes les cartes au centre de l'écran,
-     taille bornée — le desktop garde ses positions par face */
+  /* mobile UNIQUEMENT : la carte s'ouvre en PLEIN ÉCRAN —
+     le desktop garde ses positions par face */
   .face-card,
   .face-card.pos-design,
   .face-card.pos-front,
@@ -544,10 +569,35 @@ body::after {
   .face-card.pos-quality,
   .face-card.pos-deploy,
   .face-card.pos-suivi {
-    --card: min(84vw, 42vh, 400px);
-    left: 50%;
-    top: 50%;
-    translate: -50% -50%;
+    left: 0;
+    top: 0;
+    translate: none;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    background: rgba(234, 227, 210, 0.985);
+    padding: 28px 24px;
+    justify-content: center;
+  }
+  .face-card .fc-inner {
+    justify-content: center;
+  }
+  .face-card .fc-title {
+    font-size: 2rem;
+  }
+  .face-card .fc-ex {
+    font-size: 1rem;
+  }
+  .face-card .num {
+    top: 20px;
+    left: 22px;
+    font-size: 2.2rem;
+  }
+  .face-card .fc-close {
+    top: 16px;
+    right: 16px;
+    font-size: 1.4rem;
   }
 }
 

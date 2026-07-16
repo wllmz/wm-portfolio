@@ -338,6 +338,9 @@ export function CubeStage() {
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
           aria-live="polite"
         >
+          <button className="fc-close" aria-label="Fermer" onClick={closeFace}>
+            ✕
+          </button>
           {/* key = la face : le contenu se remonte (et rejoue son fondu)
               à chaque changement, pendant que la carte glisse */}
           <div className="fc-inner" key={activeKey}>
