@@ -26,8 +26,9 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Figma", "Illustrator", "DA & branding"],
     ex: (
       <>
-        Identité complète de <strong>Mellis</strong> : logo, packaging,
-        packshots générés par IA.
+        Maquettes, identité visuelle, direction artistique : votre produit a
+        une <strong>vraie personnalité</strong> avant même la première ligne
+        de code.
       </>
     ),
   },
@@ -37,9 +38,9 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["React", "React Native · Expo", "TypeScript"],
     ex: (
       <>
-        Le front sur mesure de <strong>Freïa Paris</strong>, l&apos;app{" "}
-        <strong>Dernier Mot</strong> (React Native, iOS & Android) et ce
-        portfolio.
+        L&apos;interface que vos utilisateurs voient et touchent — site web ou
+        app mobile, <strong>rapide, fluide et soignée</strong> sur tous les
+        écrans.
       </>
     ),
   },
@@ -49,27 +50,20 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Node.js", "REST · Socket.io", "MongoDB"],
     ex: (
       <>
-        L&apos;API multijoueur temps réel de <strong>Dernier Mot</strong>{" "}
-        (Node.js, Socket.io) et la base <strong>MongoDB Atlas</strong> de{" "}
-        <strong>Freïa Paris</strong>, en production.
+        Le moteur invisible : la logique métier, les données et le temps réel
+        qui font tourner votre produit <strong>de manière fiable</strong>.
       </>
     ),
   },
   quality: {
     num: 4,
     title: "tests & sécu",
-    skills: [
-      "Vitest",
-      "HTTPS · fail2ban",
-      "Perf",
-      "Accessibilité",
-    ],
+    skills: ["Vitest", "HTTPS · fail2ban", "Perf", "Accessibilité"],
     ex: (
       <>
         Je <strong>teste</strong> ce que je livre et je{" "}
-        <strong>sécurise</strong> ce que je déploie — l&apos;infra de{" "}
-        <strong>Freïa Paris</strong> tourne en production derrière HTTPS,
-        fail2ban et sauvegardes.
+        <strong>sécurise</strong> ce que je déploie : votre produit résiste
+        aux bugs comme aux attaques.
       </>
     ),
   },
@@ -79,8 +73,9 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Maintenance", "Évolutions", "Monitoring"],
     ex: (
       <>
-        Je ne disparais pas après la livraison : <strong>Freïa Paris</strong>{" "}
-        est maintenu et évolue en continu depuis sa mise en ligne.
+        Je ne disparais pas après la livraison : corrections, évolutions et
+        surveillance en continu — votre produit{" "}
+        <strong>reste en forme dans la durée</strong>.
       </>
     ),
   },
@@ -90,8 +85,8 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Docker", "Traefik", "VPS", "CI"],
     ex: (
       <>
-        L&apos;infra de <strong>Freïa Paris</strong> : VPS, reverse-proxy
-        Traefik, conteneurs Docker, fail2ban.
+        La mise en ligne de A à Z : serveur, domaine, HTTPS, sauvegardes —
+        votre produit <strong>accessible au monde, en production</strong>.
       </>
     ),
   },
