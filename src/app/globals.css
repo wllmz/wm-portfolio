@@ -353,16 +353,15 @@ body::after {
   --want: 60%;
   top: 12%;
 }
+/* le numéro vit juste au-dessus du titre, dans le flux du texte */
 .face-card .num {
-  position: absolute;
-  top: 14px;
-  left: 18px;
   font-family: var(--font-shantell);
   font-weight: 700;
   font-size: 1.8rem;
   line-height: 1;
   color: var(--color-burgundy);
   opacity: 0.85;
+  margin-bottom: 2px;
 }
 .face-card .fc-title {
   font-family: var(--font-bricolage);
