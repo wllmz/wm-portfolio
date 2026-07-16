@@ -3,8 +3,11 @@ import type { ReactNode } from "react";
 export type FaceKey = "design" | "front" | "api" | "mobile" | "data" | "deploy";
 export type FacePosition = "front" | "back" | "right" | "left" | "top" | "bottom";
 
+/** Les 6 faces + l'intérieur (le transversal : tests, sécurité, perf). */
+export type PanelKey = FaceKey | "interior";
+
 export type FaceInfo = {
-  num: number;
+  num: number | string;
   title: string;
   skills: string[];
   ex: ReactNode;
@@ -78,6 +81,30 @@ export const FACES: Record<FaceKey, FaceInfo> = {
       </>
     ),
   },
+};
+
+/**
+ * L'intérieur du cube — ce qui tient les six faces.
+ * Pas une 7e face : le transversal, invisible sur la démo,
+ * décisif en production.
+ */
+export const INTERIOR: FaceInfo = {
+  num: "+",
+  title: "l'intérieur",
+  skills: ["Tests · Vitest", "Sécurité · HTTPS, fail2ban", "Perf", "Accessibilité"],
+  ex: (
+    <>
+      Ce qui tient les six faces : je <strong>teste</strong> ce que je livre et
+      je <strong>sécurise</strong> ce que je déploie. Invisible sur la démo,
+      décisif en production.
+    </>
+  ),
+};
+
+/** Toutes les entrées du panneau : les 6 faces + l'intérieur. */
+export const PANELS: Record<PanelKey, FaceInfo> = {
+  ...FACES,
+  interior: INTERIOR,
 };
 
 /** Position géométrique de chaque face sur le cube. */

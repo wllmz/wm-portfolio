@@ -13,7 +13,9 @@ import {
   FACE_LAYOUT,
   NAV_ORDER,
   ORIENT,
+  PANELS,
   type FaceKey,
+  type PanelKey,
 } from "./cube-data";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
@@ -58,11 +60,11 @@ export function CubeStage() {
 
   const [loaded, setLoaded] = useState(false);
   const [clock, setClock] = useState("--:--:--");
-  const [openKey, setOpenKey] = useState<FaceKey | null>(null);
-  const [panelKey, setPanelKey] = useState<FaceKey>("design");
+  const [openKey, setOpenKey] = useState<PanelKey | null>(null);
+  const [panelKey, setPanelKey] = useState<PanelKey>("design");
   const [panelOpen, setPanelOpen] = useState(false);
 
-  const openKeyRef = useRef<FaceKey | null>(null);
+  const openKeyRef = useRef<PanelKey | null>(null);
   const reduceRef = useRef(false);
   const panelTimerRef = useRef<number>(0);
 
@@ -86,15 +88,20 @@ export function CubeStage() {
     orientTarget: null,
   });
 
-  /* ── ouverture / fermeture des faces ── */
-  const openFace = useCallback((key: FaceKey) => {
+  /* ── ouverture / fermeture des faces (et de l'intérieur) ── */
+  const openFace = useCallback((key: PanelKey) => {
     const s = state.current;
     stageRef.current?.classList.add("interacting");
     openKeyRef.current = key;
     setOpenKey(key);
     setPanelKey(key);
-    const [tx, ty] = ORIENT[key];
-    s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
+    if (key === "interior") {
+      // pas d'orientation cible : le cube s'entrouvre et continue de tourner
+      s.orientTarget = null;
+    } else {
+      const [tx, ty] = ORIENT[key];
+      s.orientTarget = [tx, nearestAngle(s.rotY, ty)];
+    }
     window.clearTimeout(panelTimerRef.current);
     panelTimerRef.current = window.setTimeout(
       () => setPanelOpen(true),
@@ -113,7 +120,7 @@ export function CubeStage() {
   }, []);
 
   const toggleFace = useCallback(
-    (key: FaceKey) => {
+    (key: PanelKey) => {
       if (openKeyRef.current === key) closeFace();
       else openFace(key);
     },
@@ -240,6 +247,9 @@ export function CubeStage() {
          en tournant chacune sur elle-même, puis s'estompent */
       let expTarget = 1 + p * 8;
       if (!s.started) expTarget = 2.6;
+      /* intérieur ouvert : le cube s'entrouvre pour laisser voir le cœur */
+      if (openKeyRef.current === "interior")
+        expTarget = Math.max(expTarget, 1.45);
       s.exp += (expTarget - s.exp) * 0.09;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
@@ -300,12 +310,12 @@ export function CubeStage() {
     };
   }, [closeFace]);
 
-  const panel = FACES[panelKey];
+  const panel = PANELS[panelKey];
 
   return (
     <div
       ref={stageRef}
-      className={`stage${loaded ? " loaded" : ""}`}
+      className={`stage${loaded ? " loaded" : ""}${openKey === "interior" ? " interior-open" : ""}`}
       id="stage"
     >
       <section className="hero" aria-label="William Martinez — fullstack">
@@ -368,13 +378,17 @@ export function CubeStage() {
                 </div>
               ))}
             </div>
+            {/* le cœur — visible quand on ouvre l'intérieur */}
+            <div className="core" aria-hidden="true">
+              <span />
+            </div>
           </div>
         </div>
 
         <nav
           className="facenav"
           ref={facenavRef}
-          aria-label="Explorer les six faces"
+          aria-label="Explorer les six faces et l'intérieur"
         >
           {NAV_ORDER.map((key) => (
             <button
@@ -385,6 +399,12 @@ export function CubeStage() {
               {FACES[key].title}
             </button>
           ))}
+          <button
+            className={`inside${openKey === "interior" ? " active" : ""}`}
+            onClick={() => toggleFace("interior")}
+          >
+            + l&apos;intérieur
+          </button>
         </nav>
 
         <aside
