@@ -604,6 +604,13 @@ body::after {
     right: 22px;
     font-size: 1.4rem;
   }
+  /* la nav des faces (design, front…) s'efface pendant que la
+     popup plein écran est ouverte */
+  .stage:has(.face-card.open) .facenav {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
 }
 
 /* écrans courts (téléphone en paysage, petites fenêtres) :
