@@ -1,152 +1,118 @@
-import { Reveal } from "@/components/reveal";
-import { FACES, type FaceKey } from "@/components/cube/cube-data";
+"use client";
 
-const ALL_FACES: FaceKey[] = [
-  "design",
-  "front",
-  "back",
-  "quality",
-  "deploy",
-  "suivi",
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { FACES } from "@/components/cube/cube-data";
+import { projects, ALL_FACES } from "@/components/cube/projects-data";
+
+/* texte provisoire — à remplacer par les vraies études de cas */
+const LOREM = [
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quis risus eget urna mollis ornare vel eu leo.",
+  "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper.",
+  "Maecenas faucibus mollis interdum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.",
 ];
-
-type Project = {
-  num: string;
-  title: string;
-  desc: React.ReactNode;
-  faces: FaceKey[];
-  card: { label: string; hint: string; variant: "navy" | "burgundy" | "line" };
-};
-
-const projects: Project[] = [
-  {
-    num: "01",
-    title: "Dernier Mot",
-    desc: (
-      <>
-        Jeu mobile de mots au tour par tour,{" "}
-        <strong>multijoueur temps réel</strong>. Conçu, développé et déployé en
-        solo — les six faces d&apos;un coup.
-      </>
-    ),
-    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
-    card: { label: "dernier mot", hint: "mockup de l'app ici", variant: "navy" },
-  },
-  {
-    num: "02",
-    title: "Freïa Paris",
-    desc: (
-      <>
-        E-commerce d&apos;une marque de sacs artisanaux : front sur mesure et{" "}
-        <strong>toute l&apos;infra derrière</strong> — VPS, Traefik, Docker. Un
-        vrai site marchand.
-      </>
-    ),
-    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
-    card: { label: "freïa", hint: "screenshot du site ici", variant: "burgundy" },
-  },
-  {
-    num: "03",
-    title: "Mellis",
-    desc: (
-      <>
-        Marque fictive de cosmétiques au miel : identité, packaging et
-        packshots <strong>générés par IA</strong>. Mon terrain de jeu direction
-        artistique.
-      </>
-    ),
-    faces: ["design"],
-    card: { label: "mellis", hint: "packshots ici", variant: "line" },
-  },
-];
-
-const cardVariants = {
-  navy: "bg-navy text-cream shadow-[0_18px_44px_rgba(35,43,78,0.16)]",
-  burgundy: "bg-burgundy text-cream shadow-[0_18px_44px_rgba(35,43,78,0.16)]",
-  line: "border-[1.5px] border-navy/35 text-navy",
-};
 
 export function Projects() {
+  const [active, setActive] = useState(0);
+  const [open, setOpen] = useState<number | null>(null);
+  const opened = open !== null ? projects[open] : null;
+
   return (
-    <section id="projets" className="relative pb-32 pt-24">
-      <div className="mx-auto max-w-[1100px] px-6 sm:px-9">
-        <Reveal>
-          <header className="text-center">
-            <span className="block text-[0.74rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
-              Projets — les vrais, en prod
-            </span>
-            <h2 className="mt-4 font-title text-[clamp(2rem,5vw,3.6rem)] font-bold leading-[1.1] tracking-tight">
-              trois projets,
-              <br />
-              <span className="font-hand text-burgundy">
-                six faces couvertes.
-              </span>
-            </h2>
-          </header>
-        </Reveal>
-        {projects.map((project, i) => (
-          <article
-            key={project.num}
-            className="grid items-center gap-9 border-navy/15 py-14 md:grid-cols-[1.05fr_1fr] md:gap-16 md:py-19 [&+&]:border-t-[1.5px]"
+    <section id="projets" className="proj-slide">
+      {/* encadré en écho au hero */}
+      <div className="proj-frame">
+        <header className="proj-head">
+          <span className="block text-[0.72rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
+            Projets — les vrais, en prod
+          </span>
+          <h2 className="mt-3 font-title text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.08] tracking-tight">
+            trois projets,{" "}
+            <span className="font-hand text-burgundy">six faces couvertes.</span>
+          </h2>
+        </header>
+
+        <div className="xpanels">
+          {projects.map((project, i) => (
+            <div
+              key={project.num}
+              className={`xpanel xp-${project.variant}${
+                project.variant !== "line" ? " xp-on-dark" : ""
+              }${active === i ? " active" : ""}`}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => setActive(i)}
+            >
+              <span className="xp-num">{project.num}</span>
+              <span className="xp-title">{project.title}</span>
+              <div className="xp-reveal">
+                <p>{project.desc}</p>
+                <div className="pp-faces" aria-label="Faces couvertes">
+                  {/* seules les faces couvertes s'affichent — l'ordre reste
+                      celui du cube */}
+                  {ALL_FACES.filter((face) => project.faces.includes(face)).map(
+                    (face) => (
+                      <span key={face} className="pp-chip on">
+                        {FACES[face].title}
+                      </span>
+                    ),
+                  )}
+                </div>
+                <button
+                  className="xp-more"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(i);
+                  }}
+                >
+                  voir le détail →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* la popup doit sortir du slider (transform de la piste) → portal body */}
+      {opened &&
+        createPortal(
+          <div
+            className="proj-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={opened.title}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setOpen(null);
+            }}
           >
-            <Reveal className={i % 2 === 1 ? "md:order-2" : undefined}>
-              <span
-                aria-hidden="true"
-                className="mb-2.5 block font-hand text-[clamp(3rem,6vw,5rem)] leading-none text-burgundy opacity-80"
-              >
-                {project.num}
+            <button
+              className="pm-close"
+              aria-label="Fermer"
+              onClick={() => setOpen(null)}
+            >
+              ✕
+            </button>
+            <div className="pm-inner">
+              <span className="pm-num" aria-hidden="true">
+                {opened.num}
               </span>
-              <h3 className="mb-3 font-title text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold tracking-tight">
-                {project.title}
-              </h3>
-              <p className="mb-6 max-w-[42ch] leading-[1.65] text-ink-soft [&_strong]:font-semibold [&_strong]:text-navy">
-                {project.desc}
-              </p>
-              <div
-                className="mb-7 flex flex-wrap gap-[7px]"
-                aria-label="Faces couvertes par ce projet"
-              >
-                {ALL_FACES.map((face) => {
-                  const on = project.faces.includes(face);
-                  return (
-                    <span
-                      key={face}
-                      className={`rounded-full border-[1.5px] px-3 py-1.5 text-[0.68rem] font-semibold tracking-[0.14em] uppercase ${
-                        on
-                          ? "border-burgundy bg-burgundy text-cream"
-                          : "border-navy/20 text-navy/40"
-                      }`}
-                    >
+              <h2 className="pm-title">{opened.title}</h2>
+              <div className="pm-faces" aria-label="Faces couvertes">
+                {ALL_FACES.filter((face) => opened.faces.includes(face)).map(
+                  (face) => (
+                    <span key={face} className="pp-chip on">
                       {FACES[face].title}
                     </span>
-                  );
-                })}
+                  ),
+                )}
               </div>
-              {/* TODO: liens vers les pages case study quand elles existeront */}
-              <span className="inline-flex items-center gap-2 font-title text-navy/50">
-                Case study en préparation
-              </span>
-            </Reveal>
-
-            <Reveal
-              delay={0.1}
-              className={i % 2 === 1 ? "md:order-1" : undefined}
-            >
-              <div
-                className={`relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[18px] transition-transform duration-500 [transition-timing-function:var(--ease-out)] hover:-translate-y-1.5 hover:-rotate-[0.5deg] ${cardVariants[project.card.variant]}`}
-              >
-                <span className="font-hand text-[clamp(1.8rem,3.6vw,3rem)] font-bold tracking-tight opacity-90">
-                  {project.card.label}
-                </span>
-                {/* TODO: remplacer par un vrai visuel (mockup / screenshot) */}
-                <span className="absolute bottom-3.5 text-[0.66rem] font-semibold tracking-[0.18em] uppercase opacity-40">
-                  {project.card.hint}
-                </span>
+              <div className="pm-body">
+                {LOREM.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
               </div>
-            </Reveal>
-          </article>
-        ))}
-      </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }

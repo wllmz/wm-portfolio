@@ -1,11 +1,9 @@
-import { Reveal } from "@/components/reveal";
 import { Magnetic } from "@/components/magnetic";
 
 export function Contact() {
   return (
-    <section id="contact" className="px-6 pb-12 sm:px-9">
-      <Reveal>
-        <div className="mx-auto max-w-[1100px] rounded-[26px] bg-navy px-7 py-16 text-center text-cream shadow-[0_24px_60px_rgba(35,43,78,0.32)] sm:px-12 sm:py-20">
+    <section id="contact" className="px-6 sm:px-9">
+      <div className="mx-auto max-w-[1100px] rounded-[26px] bg-navy px-7 py-16 text-center text-cream shadow-[0_24px_60px_rgba(35,43,78,0.32)] sm:px-12 sm:py-20">
           <p className="text-[0.74rem] font-semibold tracking-[0.24em] text-cream/60 uppercase">
             Contact
           </p>
@@ -30,8 +28,7 @@ export function Contact() {
               </span>
             </a>
           </Magnetic>
-        </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

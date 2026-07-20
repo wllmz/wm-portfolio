@@ -8,12 +8,6 @@ import {
   type PointerEvent,
 } from "react";
 import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import {
   FACES,
   FACE_LAYOUT,
   NAV_ORDER,
@@ -48,6 +42,7 @@ function nearestAngle(current: number, target: number) {
   return target + k * 360;
 }
 
+/** Le hero : un cube 3D interactif, plein écran. Le cube ne vit QUE là. */
 export function CubeStage() {
   const stageRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -63,13 +58,6 @@ export function CubeStage() {
 
   const openKeyRef = useRef<PanelKey | null>(null);
   const reduceRef = useRef(false);
-
-  /* pendant que la feuille des projets recouvre le hero épinglé,
-     celui-ci rétrécit et s'estompe — effet pile de sections */
-  const reduce = useReducedMotion();
-  const { scrollY } = useScroll();
-  const heroScale = useTransform(scrollY, [0, 900], [1, 0.94]);
-  const heroFade = useTransform(scrollY, [0, 900], [1, 0.4]);
 
   const state = useRef<CubeState>({
     rotX: -12,
@@ -184,9 +172,6 @@ export function CubeStage() {
     const onDocPointerDown = (e: globalThis.PointerEvent) => {
       if (!openKeyRef.current) return;
       const t = e.target as HTMLElement;
-      // un tap sur la carte ne la ferme pas (fermeture : ✕, Échap,
-      // ou clic vraiment en dehors) — évite les taps qui "traversent"
-      // vers le cube et rouvrent une autre face sans le vouloir
       if (
         t.closest(".scene") ||
         t.closest(".facenav") ||
@@ -228,27 +213,20 @@ export function CubeStage() {
       s.cmx += (s.mx - s.cmx) * 0.06;
       s.cmy += (s.my - s.cmy) * 0.06;
 
-      /* le cube reste assemblé — il se desserre seulement pendant
-         qu'une face est ouverte, et se pose à l'arrivée sur la page */
+      /* le cube reste assemblé — il se desserre pendant qu'une face est
+         ouverte, et se pose à l'arrivée sur la page */
       let expTarget = openKeyRef.current ? 1.55 : 1;
       if (!s.started) expTarget = 1.7;
       s.exp += (expTarget - s.exp) * 0.13;
       cube.style.setProperty("--exp", s.exp.toFixed(4));
 
-      /* le cube s'estompe légèrement pendant qu'une face est ouverte,
-         mais reste bien présent — retour en douceur à la fermeture */
       s.dim += ((openKeyRef.current ? 0.8 : 1) - s.dim) * 0.08;
       faces.forEach((f) => {
-        if (Math.abs(s.dim - 1) > 0.003) {
-          f.style.opacity = s.dim.toFixed(3);
-        } else {
-          /* au repos, on laisse le CSS gérer (fondu d'entrée en cascade) */
-          f.style.removeProperty("opacity");
-        }
+        if (Math.abs(s.dim - 1) > 0.003) f.style.opacity = s.dim.toFixed(3);
+        else f.style.removeProperty("opacity");
       });
 
-      /* rotation : inertie du drag, orientation vers la face ouverte,
-         ou rotation lente au repos */
+      /* rotation : orientation vers la face ouverte, ou rotation lente */
       if (s.orientTarget) {
         s.rotX += (s.orientTarget[0] - s.rotX) * 0.08;
         s.rotY += (s.orientTarget[1] - s.rotY) * 0.08;
@@ -280,16 +258,8 @@ export function CubeStage() {
   }, []);
 
   return (
-    <div
-      ref={stageRef}
-      className={`stage${loaded ? " loaded" : ""}`}
-      id="stage"
-    >
-      <motion.section
-        className="hero"
-        aria-label="William Martinez — fullstack"
-        style={reduce ? undefined : { scale: heroScale, opacity: heroFade }}
-      >
+    <div ref={stageRef} className={`stage${loaded ? " loaded" : ""}`} id="stage">
+      <section className="hero" aria-label="William Martinez — fullstack">
         <div className="frame" aria-hidden="true" />
 
         <p className="corner tl">
@@ -356,9 +326,8 @@ export function CubeStage() {
           ))}
         </nav>
 
-        {/* la face détachée : même matière qu'une face du cube, mais plate,
-            face caméra, taille maîtrisée — elle atterrit au premier plan
-            pendant que le cube se déstructure derrière */}
+        <div className="scroll-line" aria-hidden="true" />
+
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
           aria-live="polite"
@@ -366,8 +335,6 @@ export function CubeStage() {
           <button className="fc-close" aria-label="Fermer" onClick={closeFace}>
             ✕
           </button>
-          {/* key = la face : le contenu se remonte (et rejoue son fondu)
-              à chaque changement, pendant que la carte glisse */}
           <div className="fc-inner" key={activeKey}>
             <span className="num" aria-hidden="true">
               {FACES[activeKey].num}
@@ -379,7 +346,7 @@ export function CubeStage() {
             <p className="fc-ex">{FACES[activeKey].ex}</p>
           </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 }

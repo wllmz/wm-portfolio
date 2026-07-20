@@ -4,7 +4,6 @@ import {
   Shantell_Sans,
   Hanken_Grotesk,
 } from "next/font/google";
-import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 // Bricolage Grotesque : logo (800) et titres (600/700) — découpes franches
@@ -46,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
+        {children}
       </body>
     </html>
   );
