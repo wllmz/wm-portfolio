@@ -9,6 +9,13 @@ import {
   type ReactNode,
 } from "react";
 
+/* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
+   sinon dragger le cube ou lire une étude de cas change d'écran. */
+const OWN_GESTURE = ".scene, .proj-modal, .face-card, .about-grid";
+
+/** Un modal est ouvert : il est portalisé dans body, hors de la piste. */
+const modalOpen = () => !!document.querySelector(".proj-modal");
+
 /** Slider vertical plein écran : chaque enfant devient un écran, on glisse
     de l'un à l'autre à la molette / aux flèches / au swipe. */
 export function Slider({ children }: { children: ReactNode }) {
@@ -32,17 +39,25 @@ export function Slider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      if (animating.current) return;
+      if (animating.current || modalOpen()) return;
       if (e.deltaY > 24) go(idxRef.current + 1);
       else if (e.deltaY < -24) go(idxRef.current - 1);
     };
     const onKey = (e: KeyboardEvent) => {
+      if (modalOpen()) return;
       if (["ArrowDown", "PageDown"].includes(e.key)) go(idxRef.current + 1);
       if (["ArrowUp", "PageUp"].includes(e.key)) go(idxRef.current - 1);
     };
+    /* le geste tactile est verrouillé s'il démarre dans une zone qui gère
+       elle-même le glissement — le cube en premier lieu */
     let ty = 0;
-    const onTS = (e: TouchEvent) => (ty = e.touches[0].clientY);
+    let held = false;
+    const onTS = (e: TouchEvent) => {
+      held = !!(e.target as HTMLElement).closest(OWN_GESTURE);
+      ty = e.touches[0].clientY;
+    };
     const onTE = (e: TouchEvent) => {
+      if (held || modalOpen()) return;
       const dy = ty - e.changedTouches[0].clientY;
       if (Math.abs(dy) > 40) go(idxRef.current + (dy > 0 ? 1 : -1));
     };

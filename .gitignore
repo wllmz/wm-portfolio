@@ -17,6 +17,10 @@ npm-debug.log*
 
 # env files
 .env*
+!.env.example
+
+# captures brutes (dupliquées dans public/)
+/projet/
 
 # typescript
 *.tsbuildinfo

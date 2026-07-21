@@ -6,7 +6,7 @@ export function Footer() {
           © {new Date().getFullYear()}{" "}
           <span className="font-logo text-[0.95rem] font-extrabold text-navy uppercase">
             wm<span className="text-burgundy">.</span>
-          </span> — William
+          </span> · William
           Martinez, fullstack freelance
         </p>
         <div className="flex gap-6">

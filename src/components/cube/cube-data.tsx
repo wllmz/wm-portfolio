@@ -44,7 +44,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["React", "React Native · Expo", "TypeScript"],
     ex: (
       <>
-        L&apos;interface que vos utilisateurs voient et touchent — site web ou
+        L&apos;interface que vos utilisateurs voient et touchent : site web ou
         app mobile, <strong>rapide, fluide et soignée</strong> sur tous les
         écrans.
       </>
@@ -80,7 +80,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     ex: (
       <>
         Je ne disparais pas après la livraison : corrections, évolutions et
-        surveillance en continu — votre produit{" "}
+        surveillance en continu, pour que votre produit{" "}
         <strong>reste en forme dans la durée</strong>.
       </>
     ),
@@ -91,7 +91,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
     skills: ["Docker", "Traefik", "VPS", "CI"],
     ex: (
       <>
-        La mise en ligne de A à Z : serveur, domaine, HTTPS, sauvegardes — votre
+        La mise en ligne de A à Z : serveur, domaine, HTTPS, sauvegardes, votre
         produit <strong>accessible au monde, en production</strong>.
       </>
     ),

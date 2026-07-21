@@ -36,6 +36,22 @@ body {
   font-family: var(--font-hanken);
   background: var(--color-cream);
   color: var(--color-navy);
+  /* aucun texte n'est sélectionnable / copiable sur le site… */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+/* …sauf les champs de saisie, sinon on ne peut plus éditer ce qu'on tape */
+input,
+textarea,
+select {
+  -webkit-user-select: text;
+  user-select: text;
+}
+/* Le blocage du scroll ne concerne QUE l'accueil, qui porte le slider.
+   Appliqué au body sans condition, il rendait les pages projet illisibles :
+   le contenu sous la ligne de flottaison devenait inatteignable. */
+body:has(.deck) {
   overflow: hidden;
 }
 
@@ -584,6 +600,393 @@ body::after {
   }
 }
 
+/* ══════════════ PAGE PROJET ══════════════
+   Page classique, hors slider : elle scrolle normalement. Même matière que
+   le reste — crème, contour fin, accent bordeaux. */
+.case {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(28px, 6vh, 68px) clamp(20px, 5vw, 40px)
+    clamp(48px, 10vh, 110px);
+}
+.case-inner {
+  max-width: 860px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(30px, 5vh, 52px);
+}
+.case-back {
+  align-self: flex-start;
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-navy);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.case-back:hover {
+  opacity: 1;
+  color: var(--color-burgundy);
+}
+.case-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case-num {
+  font-family: var(--font-hand);
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  line-height: 1;
+  color: var(--color-burgundy);
+  opacity: 0.85;
+}
+.case-head h1 {
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.case-tagline {
+  font-size: clamp(1.02rem, 2vw, 1.28rem);
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+  max-width: 46ch;
+}
+.case-head .pp-faces {
+  margin-top: 6px;
+}
+.case-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: clamp(22px, 3.5vh, 34px);
+  border-top: 1.5px solid rgba(45, 54, 96, 0.15);
+}
+.case-block h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-burgundy);
+}
+.case-block p {
+  max-width: 62ch;
+  line-height: 1.7;
+  color: var(--color-ink-soft);
+}
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 62ch;
+}
+.case-list li {
+  position: relative;
+  padding-left: 22px;
+  line-height: 1.65;
+  color: var(--color-ink-soft);
+}
+.case-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 9px;
+  height: 1.5px;
+  background: var(--color-burgundy);
+}
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.case-stack span {
+  border: 1.5px solid rgba(45, 54, 96, 0.28);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+}
+/* les captures gardent la matière d'une face du cube */
+.case-shots {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(26px, 4vh, 42px);
+}
+.case-shots figure {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.case-shots img {
+  width: 100%;
+  height: auto;
+  border: 1.5px solid rgba(45, 54, 96, 0.28);
+  border-radius: 10px;
+}
+.case-shots figcaption {
+  font-size: 0.84rem;
+  color: rgba(45, 54, 96, 0.55);
+}
+/* ══ captures téléphone : tuile façon App Store + carrousel en mockup ══ */
+.app-tile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 430px;
+  padding: 16px 18px;
+  text-align: left;
+  border: 1.5px solid rgba(45, 54, 96, 0.2);
+  border-radius: 20px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s var(--ease-out);
+}
+.app-tile:hover {
+  border-color: var(--color-burgundy);
+  transform: translateY(-2px);
+}
+.app-tile:focus-visible {
+  outline: 2px dashed var(--color-burgundy);
+  outline-offset: 3px;
+}
+.app-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 30%;
+}
+/* jeu mobile : dégradé chaud aux couleurs de l'app */
+.app-icon--phone {
+  background: linear-gradient(140deg, #f2694e 0%, #6c4cf1 100%);
+  box-shadow: 0 6px 16px rgba(108, 76, 241, 0.28);
+}
+/* web app : dégradé navy, sobre */
+.app-icon--browser {
+  background: linear-gradient(140deg, #3a4372 0%, #232b4e 100%);
+  box-shadow: 0 6px 16px rgba(35, 43, 78, 0.3);
+}
+.app-tile-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.app-tile-name {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--color-navy);
+}
+.app-tile-sub {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--color-ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-tile-cta {
+  flex: none;
+  margin-left: auto;
+  align-self: center;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-burgundy);
+  white-space: nowrap;
+}
+
+/* popup plein écran : fond navy translucide pour faire ressortir le mobile */
+.app-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.5vh, 24px);
+  padding: clamp(20px, 4vh, 44px) 20px;
+  background: rgba(24, 30, 56, 0.74);
+  backdrop-filter: blur(7px);
+  animation: app-in 0.28s var(--ease-out);
+}
+@keyframes app-in {
+  from {
+    opacity: 0;
+  }
+}
+.app-modal-close {
+  position: fixed;
+  top: clamp(1rem, 3vh, 2rem);
+  right: clamp(1rem, 4vw, 2.4rem);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(234, 227, 210, 0.4);
+  background: rgba(234, 227, 210, 0.1);
+  color: var(--color-cream);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+.app-modal-close:hover {
+  border-color: var(--color-cream);
+  background: rgba(234, 227, 210, 0.2);
+}
+.app-stage {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 3vw, 30px);
+}
+/* piste + slides communes aux deux mockups */
+.sc-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.42s var(--ease-out);
+}
+.sc-slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+}
+.sc-slide img {
+  object-fit: cover;
+}
+/* mockup téléphone : bezel sombre, coins arrondis */
+.phone {
+  position: relative;
+  flex: none;
+  height: min(70vh, 620px);
+  aspect-ratio: 1242 / 2688;
+  border: 9px solid #12172a;
+  border-radius: 40px;
+  background: #12172a;
+  overflow: hidden;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
+}
+/* mockup navigateur : barre de titre + pastilles, l'écran garde son ratio */
+.browser {
+  position: relative;
+  flex: none;
+  width: min(72vw, 820px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #12172a;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
+}
+.browser-bar {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 14px;
+  background: #1b2340;
+}
+.browser-dots {
+  display: flex;
+  gap: 8px;
+}
+.browser-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.browser-dots span:nth-child(1) {
+  background: #ff5f57;
+}
+.browser-dots span:nth-child(2) {
+  background: #febc2e;
+}
+.browser-dots span:nth-child(3) {
+  background: #28c840;
+}
+.browser-view {
+  position: relative;
+  overflow: hidden;
+}
+.app-nav {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(234, 227, 210, 0.35);
+  background: rgba(234, 227, 210, 0.1);
+  color: var(--color-cream);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+.app-nav:hover {
+  border-color: var(--color-cream);
+  background: rgba(234, 227, 210, 0.2);
+}
+.app-caption {
+  max-width: 34ch;
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(234, 227, 210, 0.85);
+}
+.app-dots {
+  display: flex;
+  gap: 9px;
+}
+.app-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(234, 227, 210, 0.35);
+  cursor: pointer;
+  transition:
+    width 0.25s var(--ease-out),
+    background 0.25s ease;
+}
+.app-dots button.on {
+  width: 24px;
+  border-radius: 5px;
+  background: var(--color-cream);
+}
+/* sur mobile : les flèches passent en bas, le pouce fait le reste au swipe */
+@media (max-width: 560px) {
+  .app-nav {
+    display: none;
+  }
+  .phone {
+    height: min(64vh, 560px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phone-track {
+    transition: none;
+  }
+  .app-tile {
+    transition: none;
+  }
+}
 /* ══════════════ PROJETS — pastilles, bouton, popup ══════════════ */
 .pp-faces {
   display: flex;
@@ -592,12 +995,14 @@ body::after {
 }
 
 /* écran projets : l'encadré remplit tout l'écran du slider */
-.proj-slide {
+.proj-slide,
+.about-slide {
   height: 100%;
   display: flex;
 }
-/* encadré de la section projets — écho au cadre du hero */
-.proj-frame {
+/* encadré des sections projets et à propos — écho au cadre du hero */
+.proj-frame,
+.about-frame {
   position: relative;
   flex: 1;
   min-height: 0;
@@ -608,9 +1013,114 @@ body::after {
   border-radius: 26px;
   padding: clamp(24px, 3.5vw, 52px) clamp(22px, 3.5vw, 52px);
 }
-.proj-head {
+.proj-head,
+.about-head {
   flex-shrink: 0;
   margin-bottom: clamp(18px, 3vh, 38px);
+}
+
+/* ══ à propos ══ */
+.about-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+/* la photo reprend la matière d'une face du cube : contour fin, même rayon */
+.about-photo {
+  align-self: center;
+  aspect-ratio: 4 / 5;
+  max-height: 100%;
+  overflow: hidden;
+  border: 1.5px solid rgba(45, 54, 96, 0.42);
+  border-radius: 10px;
+}
+.about-text p {
+  max-width: 58ch;
+  line-height: 1.7;
+  color: var(--color-ink-soft, rgba(45, 54, 96, 0.78));
+}
+/* l'accroche : reprend l'échelle des titres de section, en plus léger */
+.about-lead {
+  font-family: var(--font-title);
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--color-navy);
+  margin-bottom: clamp(14px, 2vh, 22px);
+}
+.about-text p + p {
+  margin-top: 14px;
+}
+.about-text strong {
+  font-weight: 600;
+  color: var(--color-navy);
+}
+.about-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  margin-top: clamp(20px, 3vh, 34px);
+  padding-top: clamp(18px, 2.5vh, 28px);
+  border-top: 1.5px solid rgba(45, 54, 96, 0.15);
+}
+.about-facts dt {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(45, 54, 96, 0.45);
+}
+.about-facts dd {
+  margin-top: 4px;
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-burgundy);
+}
+@media (max-width: 820px) {
+  /* encadré resserré pour laisser de la place à la photo + au texte */
+  .about-frame {
+    margin: 12px;
+    padding: clamp(16px, 4.5vw, 26px);
+  }
+  /* photo en haut, à GAUCHE, puis le texte aligné à gauche dessous —
+     rien n'est centré. Le texte est compacté pour que la photo reste
+     visible sans devoir scroller. */
+  .about-grid {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 18px;
+    align-content: start;
+    overflow-y: auto;
+  }
+  .about-photo {
+    width: 150px;
+  }
+  .about-text {
+    text-align: left;
+  }
+  .about-lead {
+    font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+    margin-bottom: 12px;
+  }
+  .about-text p {
+    margin-inline: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .about-text p + p {
+    margin-top: 10px;
+  }
+  .about-facts {
+    justify-content: flex-start;
+    margin-top: 16px;
+    padding-top: 14px;
+    gap: 8px 20px;
+  }
 }
 
 /* panneaux extensibles : survol → le panneau s'ouvre, les autres se resserrent */
@@ -620,40 +1130,41 @@ body::after {
   flex: 1;
   min-height: 0;
 }
+/* même matière qu'une face du cube : contour fin sur le crème, aucun aplat,
+   le bordeaux ne sert que d'accent au survol et à l'ouverture */
 .xpanel {
   position: relative;
   flex: 0.7;
   min-width: 0;
-  border-radius: 18px;
+  border: 1.5px solid rgba(45, 54, 96, 0.42);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-navy);
   overflow: hidden;
   cursor: pointer;
-  padding: clamp(24px, 2.4vw, 36px);
+  padding: clamp(28px, 3vw, 44px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  transition: flex 0.6s var(--ease-out);
+  transition:
+    flex 0.6s var(--ease-out),
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+.xpanel:hover {
+  border-color: var(--color-burgundy);
+  background: rgba(92, 14, 32, 0.045);
 }
 .xpanel.active {
   flex: 3.6;
-}
-.xp-navy {
-  background: var(--color-navy);
-  color: var(--color-cream);
-}
-.xp-burgundy {
-  background: var(--color-burgundy);
-  color: var(--color-cream);
-}
-.xp-line {
-  background: var(--color-paper);
-  color: var(--color-navy);
-  border: 1.5px solid rgba(45, 54, 96, 0.28);
+  border-color: var(--color-burgundy);
+  background: rgba(92, 14, 32, 0.045);
 }
 .xp-num {
   font-family: var(--font-hand);
   font-weight: 700;
   font-size: 1.4rem;
-  opacity: 0.85;
+  color: var(--color-burgundy);
 }
 .xp-title {
   font-family: var(--font-title);
@@ -661,7 +1172,7 @@ body::after {
   font-size: clamp(1.5rem, 2.6vw, 2.4rem);
   letter-spacing: -0.02em;
   line-height: 1.02;
-  margin-top: 4px;
+  margin-top: 8px;
   overflow-wrap: break-word;
 }
 /* panneau replié : la largeur est réduite, le titre se compacte pour tenir
@@ -669,73 +1180,171 @@ body::after {
 .xpanel:not(.active) .xp-title {
   font-size: clamp(1rem, 1.45vw, 1.35rem);
 }
+/* le logotype du client tient la place du titre, à la même hauteur optique */
+.xp-logo {
+  display: block;
+  margin-top: 6px;
+}
+/* Les logotypes n'ont pas le même rapport (Freïa 2,6 — Alcma 4,6). Caler sur
+   la seule hauteur rendait Alcma deux fois plus large et écrasait Freïa :
+   on borne les DEUX dimensions pour un poids visuel comparable. */
+.xp-logo img {
+  width: auto;
+  height: auto;
+  max-height: clamp(32px, 3.4vw, 52px);
+  max-width: min(100%, 210px);
+  object-fit: contain;
+}
+.xpanel:not(.active) .xp-logo img {
+  max-height: clamp(21px, 2vw, 30px);
+  max-width: 100%;
+}
 .xp-reveal {
-  max-width: 46ch;
   overflow: hidden;
   opacity: 0;
   max-height: 0;
+  /* visibility retire le lien « voir le détail » de l'ordre de tabulation
+     tant que le panneau est replié — sinon on tabule dans le vide */
+  visibility: hidden;
   transition:
     opacity 0.4s ease,
-    max-height 0.6s var(--ease-out);
+    max-height 0.6s var(--ease-out),
+    visibility 0.6s;
 }
 .xpanel.active .xp-reveal {
   opacity: 1;
-  max-height: 320px;
-  margin-top: 16px;
+  max-height: 520px;
+  visibility: visible;
+  margin-top: 26px;
 }
+/* le texte garde une largeur de lecture confortable… */
 .xp-reveal p {
-  line-height: 1.6;
+  max-width: 46ch;
+  line-height: 1.75;
+  font-size: 1rem;
   opacity: 0.9;
 }
+/* …mais les pastilles s'étalent sur toute la largeur, sur une seule ligne */
 .xp-reveal .pp-faces {
-  margin-top: 16px;
-}
-.xp-on-dark .pp-chip {
-  border-color: rgba(255, 255, 255, 0.35);
-  color: rgba(255, 255, 255, 0.6);
-}
-.xp-on-dark .pp-chip.on {
-  border-color: var(--color-cream);
-  background: var(--color-cream);
-  color: var(--color-navy);
+  margin-top: 26px;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 .xp-more {
-  margin-top: 18px;
+  display: inline-block;
+  margin-top: 34px;
   align-self: flex-start;
   font-family: var(--font-title);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: inherit;
   background: none;
   border: none;
   border-bottom: 1.5px solid currentColor;
-  padding: 0 0 2px;
+  padding: 0 0 4px;
   cursor: pointer;
+  transition: gap 0.25s var(--ease-out);
+}
+.xp-more:hover {
+  border-color: var(--color-burgundy);
+  color: var(--color-burgundy);
 }
 @media (max-width: 820px) {
+  /* l'encadré respire moins pour laisser la place aux 3 cartes empilées */
+  .proj-frame {
+    margin: 12px;
+    padding: clamp(16px, 4.5vw, 26px);
+  }
+  .proj-head {
+    margin-bottom: clamp(12px, 2vh, 18px);
+  }
+  /* mobile : on n'anime PAS le flex (direction row→column non animable →
+     transition saccadée). Le contenu apparaît en fondu via le reveal ;
+     seuls bordure et fond gardent une transition. */
+  .xpanel {
+    transition:
+      border-color 0.3s ease,
+      background 0.3s ease;
+  }
+  /* accordéon vertical : les cartes remplissent la hauteur dispo. La carte
+     ouverte prend tout l'espace restant, les autres restent compactes —
+     ainsi tout tient dans l'écran du slider, sans rognage ni débordement. */
   .xpanels {
     flex-direction: column;
-    height: auto;
+    flex: 1;
+    min-height: 0;
+    gap: 10px;
   }
-  .xpanel {
-    min-height: 84px;
+  /* carte repliée : une ligne compacte « numéro + titre/logo » */
+  .xpanel:not(.active) {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    min-height: 58px;
+    padding: 12px 18px;
   }
-  .xpanel.active {
-    min-height: 360px;
+  .xpanel:not(.active) .xp-num {
+    font-size: 1.2rem;
   }
-  /* en colonne les panneaux repliés font toute la largeur : le titre
-     retrouve sa taille normale */
   .xpanel:not(.active) .xp-title {
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-top: 0;
+    font-size: clamp(1.25rem, 4.6vw, 1.6rem);
+  }
+  .xpanel:not(.active) .xp-logo {
+    margin-top: 0;
+  }
+  /* rien à révéler tant que la carte est fermée */
+  .xpanel:not(.active) .xp-reveal {
+    display: none;
+  }
+  /* carte ouverte : contenu lu du haut vers le bas, remplit l'espace libre */
+  .xpanel.active {
+    flex: 1 1 auto;
+    min-height: 0;
+    justify-content: flex-start;
+    padding: clamp(20px, 5vw, 30px);
+  }
+  .xpanel.active .xp-reveal {
+    margin-top: 16px;
+    max-height: none;
+    /* fondu + léger glissé à l'ouverture (l'animation se déclenche au
+       passage display:none → visible, contrairement à une transition) */
+    animation: xp-reveal-in 0.4s var(--ease-out);
+  }
+  .xp-reveal p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .xp-reveal .pp-faces {
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .xp-more {
+    margin-top: 20px;
+  }
+}
+@keyframes xp-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@media (max-width: 820px) and (prefers-reduced-motion: reduce) {
+  .xpanel.active .xp-reveal {
+    animation: none;
   }
 }
 .pp-chip {
+  flex: none;
+  white-space: nowrap;
   border: 1.5px solid rgba(45, 54, 96, 0.2);
   border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.66rem;
+  padding: 5px 10px;
+  font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: rgba(45, 54, 96, 0.4);
 }
@@ -774,6 +1383,8 @@ body::after {
   place-items: start center;
   padding: clamp(3rem, 9vh, 7rem) 6vw;
   overflow-y: auto;
+  /* le scroll ne se propage pas à la page derrière */
+  overscroll-behavior: contain;
   animation: pm-in 0.35s var(--ease-out);
 }
 @keyframes pm-in {
@@ -781,10 +1392,12 @@ body::after {
     opacity: 0;
   }
 }
+/* pas de `margin: auto` ici : avec une étude de cas plus haute que l'écran,
+   les marges automatiques rendent le haut du contenu inatteignable. On part
+   du haut, le padding du modal fait respirer. */
 .pm-inner {
   width: 100%;
   max-width: 720px;
-  margin: auto 0;
 }
 .pm-num {
   display: block;
@@ -849,6 +1462,8 @@ body::after {
   .corner {
     font-size: 0.68rem;
   }
+  /* le cube est plus petit ici : la promesse se resserre pour tenir
+     au-dessus sans mordre dessus */
   .corner.tl {
     top: 30px;
     left: 30px;
@@ -973,5 +1588,231 @@ body::after {
     transform: none !important;
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* ══════════════ CONTACT — section + formulaire ══════════════ */
+/* Fond clair, simple et pro. Tout tient dans un encadré, compact pour
+   que le footer reste visible sous le formulaire dans le slide. */
+.contact-section {
+  padding: clamp(20px, 3vh, 40px) 20px;
+}
+/* l'encadré, en écho au hero et à la section à propos */
+.contact-frame {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: clamp(22px, 3.2vh, 40px) clamp(20px, 3.2vw, 44px);
+  border: 1.5px solid rgba(45, 54, 96, 0.2);
+  border-radius: 24px;
+  background: transparent;
+}
+.contact-head {
+  text-align: center;
+  margin-bottom: clamp(18px, 2.6vh, 28px);
+}
+.contact-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(45, 54, 96, 0.5);
+}
+.contact-title {
+  margin-top: 8px;
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--color-navy);
+}
+.contact-sub {
+  margin: 10px auto 0;
+  max-width: 42ch;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+
+.cform {
+  text-align: left;
+}
+.cform-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.cfield {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.cfield + .cfield,
+.cform-row + .cfield {
+  margin-top: 14px;
+}
+/* dans la ligne Prénom/Nom, pas de décalage : les deux champs alignés */
+.cform-row .cfield + .cfield {
+  margin-top: 0;
+}
+.cfield label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+.cfield input,
+.cfield select,
+.cfield textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 0.94rem;
+  color: var(--color-navy);
+  background: transparent;
+  border: 1.5px solid rgba(45, 54, 96, 0.2);
+  border-radius: 10px;
+  transition:
+    border-color 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out);
+}
+.cfield textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.5;
+}
+.cfield input::placeholder,
+.cfield textarea::placeholder {
+  color: rgba(45, 54, 96, 0.45);
+}
+/* flèche custom pour le select */
+.cfield select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232d3660' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+.cfield input:hover,
+.cfield select:hover,
+.cfield textarea:hover {
+  border-color: rgba(45, 54, 96, 0.35);
+}
+.cfield input:focus,
+.cfield select:focus,
+.cfield textarea:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(92, 14, 32, 0.12);
+}
+.cfield input[aria-invalid="true"],
+.cfield select[aria-invalid="true"],
+.cfield textarea[aria-invalid="true"] {
+  border-color: var(--color-burgundy);
+}
+.cfield-error {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--color-burgundy);
+}
+
+/* champ appât anti-spam : hors écran, invisible aux humains */
+.cform-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cform-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: clamp(16px, 2.4vh, 24px);
+}
+.cform-submit {
+  padding: 11px 26px;
+  font-family: var(--font-title);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--color-cream);
+  background: var(--color-navy);
+  border-radius: 10px;
+  transition:
+    background-color 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out);
+}
+.cform-submit:hover:not(:disabled) {
+  background: var(--color-navy-deep);
+  transform: translateY(-1px);
+}
+.cform-submit:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 3px;
+}
+.cform-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.cform-status {
+  min-height: 1.3rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}
+.cform-status a {
+  color: var(--color-burgundy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Prénom / Nom restent sur la même ligne tant que la place le permet */
+@media (max-width: 430px) {
+  .cform-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .cform-row .cfield + .cfield {
+    margin-top: 0;
+  }
+}
+@media (max-width: 620px) {
+  .cform-submit {
+    width: 100%;
+  }
+}
+
+/* écrans peu hauts (laptops, fenêtres réduites) : on compacte pour
+   que le formulaire ET le footer tiennent dans le slide. */
+@media (max-height: 820px) {
+  .contact-sub {
+    display: none;
+  }
+  .contact-head {
+    margin-bottom: clamp(14px, 2vh, 20px);
+  }
+}
+@media (max-height: 700px) {
+  .cform-row + .cfield,
+  .cfield + .cfield {
+    margin-top: 11px;
+  }
+  .cfield textarea {
+    min-height: 68px;
+  }
+  .contact-title {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cform-submit,
+  .cfield input,
+  .cfield select,
+  .cfield textarea {
+    transition: none;
   }
 }

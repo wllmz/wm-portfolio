@@ -30,7 +30,7 @@ const hanken = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "wm — William Martinez, fullstack freelance",
+  title: "wm · William Martinez, fullstack freelance",
   description:
     "Développeur full stack freelance. Un projet, six faces, zéro angle mort : design, front, back, tests & sécu, deploy, suivi. Disponible pour vos projets web & mobile.",
 };
@@ -41,9 +41,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    // suppressHydrationWarning : certaines extensions de navigateur injectent
+    // des attributs sur <html>/<body> avant l'hydratation (ex.
+    // data-scribe-recorder-ready, cz-shortcut-listen), ce qui déclenche un
+    // faux mismatch. On l'ignore UNIQUEMENT sur ces deux balises.
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
+        suppressHydrationWarning
       >
         {children}
       </body>

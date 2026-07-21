@@ -24,6 +24,9 @@ type CubeState = {
   velY: number;
   dragging: boolean;
   dragDist: number;
+  /* la face visée, résolue au pointerdown : après setPointerCapture tous les
+     événements sont retargetés sur .scene, donc e.target ne sert plus à rien */
+  downFace: FaceKey | null;
   lastPX: number;
   lastPY: number;
   idle: number;
@@ -66,6 +69,7 @@ export function CubeStage() {
     velY: 0,
     dragging: false,
     dragDist: 0,
+    downFace: null,
     lastPX: 0,
     lastPY: 0,
     idle: 0,
@@ -112,6 +116,8 @@ export function CubeStage() {
     const s = state.current;
     s.dragging = true;
     s.dragDist = 0;
+    const face = (e.target as HTMLElement).closest<HTMLElement>(".face");
+    s.downFace = (face?.dataset.key as FaceKey | undefined) ?? null;
     s.lastPX = e.clientX;
     s.lastPY = e.clientY;
     s.velX = 0;
@@ -135,17 +141,17 @@ export function CubeStage() {
     s.idle = 0;
   };
 
-  const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = () => {
     const s = state.current;
     s.dragging = false;
     if (s.dragDist < 8) {
-      const face = (e.target as HTMLElement).closest<HTMLElement>(".face");
-      if (face && face.dataset.key) {
-        toggleFace(face.dataset.key as FaceKey);
+      if (s.downFace) {
+        toggleFace(s.downFace);
       } else if (openKeyRef.current) {
         closeFace();
       }
     }
+    s.downFace = null;
   };
 
   /* ── horloge ── */
@@ -259,7 +265,7 @@ export function CubeStage() {
 
   return (
     <div ref={stageRef} className={`stage${loaded ? " loaded" : ""}`} id="stage">
-      <section className="hero" aria-label="William Martinez — fullstack">
+      <section className="hero" aria-label="William Martinez, fullstack">
         <div className="frame" aria-hidden="true" />
 
         <p className="corner tl">

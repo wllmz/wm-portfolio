@@ -1,21 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { createPortal } from "react-dom";
+import Image from "next/image";
+import Link from "next/link";
 import { FACES } from "@/components/cube/cube-data";
 import { projects, ALL_FACES } from "@/components/cube/projects-data";
 
-/* texte provisoire — à remplacer par les vraies études de cas */
-const LOREM = [
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quis risus eget urna mollis ornare vel eu leo.",
-  "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper.",
-  "Maecenas faucibus mollis interdum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur.",
-];
-
 export function Projects() {
   const [active, setActive] = useState(0);
-  const [open, setOpen] = useState<number | null>(null);
-  const opened = open !== null ? projects[open] : null;
 
   return (
     <section id="projets" className="proj-slide">
@@ -23,7 +15,7 @@ export function Projects() {
       <div className="proj-frame">
         <header className="proj-head">
           <span className="block text-[0.72rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
-            Projets — les vrais, en prod
+            Projets, les vrais en prod
           </span>
           <h2 className="mt-3 font-title text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.08] tracking-tight">
             trois projets,{" "}
@@ -35,14 +27,24 @@ export function Projects() {
           {projects.map((project, i) => (
             <div
               key={project.num}
-              className={`xpanel xp-${project.variant}${
-                project.variant !== "line" ? " xp-on-dark" : ""
-              }${active === i ? " active" : ""}`}
+              className={`xpanel${active === i ? " active" : ""}`}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
             >
               <span className="xp-num">{project.num}</span>
-              <span className="xp-title">{project.title}</span>
+              {project.logo ? (
+                <span className="xp-logo">
+                  <Image
+                    src={project.logo.src}
+                    alt={project.title}
+                    width={project.logo.w}
+                    height={project.logo.h}
+                    priority
+                  />
+                </span>
+              ) : (
+                <span className="xp-title">{project.title}</span>
+              )}
               <div className="xp-reveal">
                 <p>{project.desc}</p>
                 <div className="pp-faces" aria-label="Faces couvertes">
@@ -56,63 +58,18 @@ export function Projects() {
                     ),
                   )}
                 </div>
-                <button
+                <Link
+                  href={`/projets/${project.slug}`}
                   className="xp-more"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpen(i);
-                  }}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   voir le détail →
-                </button>
+                </Link>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* la popup doit sortir du slider (transform de la piste) → portal body */}
-      {opened &&
-        createPortal(
-          <div
-            className="proj-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label={opened.title}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setOpen(null);
-            }}
-          >
-            <button
-              className="pm-close"
-              aria-label="Fermer"
-              onClick={() => setOpen(null)}
-            >
-              ✕
-            </button>
-            <div className="pm-inner">
-              <span className="pm-num" aria-hidden="true">
-                {opened.num}
-              </span>
-              <h2 className="pm-title">{opened.title}</h2>
-              <div className="pm-faces" aria-label="Faces couvertes">
-                {ALL_FACES.filter((face) => opened.faces.includes(face)).map(
-                  (face) => (
-                    <span key={face} className="pp-chip on">
-                      {FACES[face].title}
-                    </span>
-                  ),
-                )}
-              </div>
-              <div className="pm-body">
-                {LOREM.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-            </div>
-          </div>,
-          document.body,
-        )}
     </section>
   );
 }
