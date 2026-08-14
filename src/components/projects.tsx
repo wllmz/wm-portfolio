@@ -1,13 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FACES } from "@/components/cube/cube-data";
 import { projects, ALL_FACES } from "@/components/cube/projects-data";
 
+/* même seuil que l'accordéon vertical en CSS */
+const MOBILE = "(max-width: 820px)";
+
 export function Projects() {
-  const [active, setActive] = useState(0);
+  /* Desktop : le premier panneau est ouvert d'emblée, sinon la section ne
+     montre que trois colonnes muettes. Mobile : tout est replié, les trois
+     cartes tiennent alors dans l'écran et on choisit celle qu'on ouvre.
+     Le repli se fait après montage — le rendu serveur ne connaît pas la
+     largeur de l'écran — mais la section n'est pas le premier slide, donc
+     l'effet a joué bien avant qu'on y arrive. */
+  const [active, setActive] = useState<number | null>(0);
+
+  useEffect(() => {
+    if (window.matchMedia(MOBILE).matches) setActive(null);
+  }, []);
 
   return (
     <section id="projets" className="proj-slide">
