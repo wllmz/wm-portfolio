@@ -35,8 +35,10 @@ export const contactSchema = z.object({
     .trim()
     .min(10, "Décris ton projet en quelques mots.")
     .max(3000, "3000 caractères maximum."),
-  // honeypot anti-spam : doit rester vide
-  company: z.string().max(0).optional(),
+  // honeypot anti-spam : doit rester vide, mais on ne le valide pas —
+  // sinon le formulaire serait rejeté silencieusement au lieu d'être
+  // traité comme un bot par onSubmit et par Formspree (_gotcha).
+  company: z.string().optional(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
