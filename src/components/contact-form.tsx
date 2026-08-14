@@ -9,6 +9,10 @@ import {
   type ContactInput,
 } from "@/lib/contact-schema";
 
+// Endpoint Formspree (formspree.io > ton formulaire > Integration).
+// Cet identifiant est public par nature : il apparaît dans le HTML du site déployé.
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkpqboz";
+
 type Status = "idle" | "success" | "error";
 
 export function ContactForm() {
@@ -25,11 +29,30 @@ export function ContactForm() {
 
   async function onSubmit(data: ContactInput) {
     setStatus("idle");
+
+    // honeypot rempli -> bot : on simule un succès sans rien envoyer
+    if (data.company) {
+      reset();
+      setStatus("success");
+      return;
+    }
+
+    const fullName = `${data.firstName} ${data.lastName}`;
+
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: fullName,
+          email: data.email,
+          "Type de projet": data.projectType,
+          message: data.message,
+          _subject: `Nouveau projet (${data.projectType}) · ${fullName}`,
+        }),
       });
       if (!res.ok) throw new Error("send failed");
       reset();
