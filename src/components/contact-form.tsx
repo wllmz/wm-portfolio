@@ -46,15 +46,22 @@ export function ContactForm() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
+        signal: AbortSignal.timeout(15_000),
         body: JSON.stringify({
           name: fullName,
           email: data.email,
           "Type de projet": data.projectType,
           message: data.message,
           _subject: `Nouveau projet (${data.projectType}) · ${fullName}`,
+          _replyto: data.email,
+          _gotcha: data.company ?? "",
         }),
       });
-      if (!res.ok) throw new Error("send failed");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        console.error("[contact] formspree", res.status, body);
+        throw new Error("send failed");
+      }
       reset();
       setStatus("success");
     } catch {
