@@ -26,6 +26,11 @@ export type Project = {
   /* logotype du client, quand il y en a un : il remplace le titre écrit
      dans le panneau. `title` reste la source pour l'alt et les métadonnées. */
   logo?: { src: string; w: number; h: number };
+  /* icône de la tuile sur la page de détail. Les logotypes posés sur fond
+     transparent (Freïa, Alcma sont noirs) disparaîtraient sur le pavé
+     dégradé : seuls ceux qui embarquent leur propre fond tiennent ici, d'où
+     la couleur déclarée avec. À défaut, la tuile garde son pictogramme. */
+  tileIcon?: { src: string; w: number; h: number; bg: string };
   desc: ReactNode;
   faces: FaceKey[];
   // face dominante : celle vers laquelle le cube pivote pour ce projet
@@ -203,6 +208,15 @@ export const projects: Project[] = [
     slug: "dernier-mot",
     num: "03",
     title: "Dernier Mot",
+    logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
+    // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
+    // lequel le liseré crème du logotype a été dessiné.
+    tileIcon: {
+      src: "/projets/dernier-mot/logo.png",
+      w: 480,
+      h: 227,
+      bg: "#032fac",
+    },
     desc: (
       <>
         Jeu mobile de mots au tour par tour,{" "}
@@ -216,68 +230,107 @@ export const projects: Project[] = [
     contexte:
       "Projet mené seul, de l'idée à la mise en ligne : c'est le seul des trois où j'ai couvert les six faces sans personne d'autre.",
     livre: [
-      "Le jeu : parties au tour par tour, plusieurs joueurs en simultané.",
+      "Le jeu : parties au tour par tour, de 2 à 8 joueurs, sur un seul téléphone ou en ligne.",
       "Le temps réel : chaque coup arrive chez l'adversaire sans rechargement.",
+      "Les rooms en ligne : un code à partager, les joueurs qui rejoignent et l'état de la connexion en direct.",
+      "Deux modes de jeu, chacun avec ses réglages : classique au chrono, et time-bomb à mèche cachée.",
+      "Le catalogue de questions : univers, sous-thèmes et banques de réponses.",
+      "Les achats intégrés : boutique, déblocage définitif des sous-thèmes et restauration des achats.",
       "L'identité visuelle et les écrans de l'application.",
       "La mise en ligne et le suivi.",
     ],
     stack: ["React Native", "Expo", "Node.js", "Socket.io"],
     shots: [
       {
-        src: "/projets/dernier-mot/01-accueil.jpg",
-        alt: "Écran d'accueil du jeu Le Dernier Mot",
-        w: 1242,
-        h: 2688,
+        src: "/projets/dernier-mot/accueil.jpeg",
+        alt: "Écran d'accueil de Dernier Mot avec les boutons Jouer ici, Room et Rejoindre",
+        w: 739,
+        h: 1600,
         caption: "L'accueil : jouer sur un seul téléphone, ou créer et rejoindre une partie en ligne.",
       },
       {
-        src: "/projets/dernier-mot/02-salon.jpg",
-        alt: "Salon d'attente avec code de partie à partager",
-        w: 1242,
-        h: 2688,
-        caption: "Le salon : un code à partager, les joueurs qui rejoignent en temps réel.",
+        src: "/projets/dernier-mot/themes.jpeg",
+        alt: "Choix de l'univers : séries, films, foot, pays",
+        w: 739,
+        h: 1600,
+        caption: "Le choix de l'univers sur lequel s'affronter.",
       },
       {
-        src: "/projets/dernier-mot/03-themes.jpg",
-        alt: "Choix du thème : séries, films, foot, pays",
-        w: 1242,
-        h: 2688,
-        caption: "Le choix du thème sur lequel s'affronter.",
+        src: "/projets/dernier-mot/sous-themes.jpeg",
+        alt: "Sous-thèmes du thème Pays, certains gratuits, d'autres verrouillés",
+        w: 739,
+        h: 1600,
+        caption: "Les sous-thèmes, gratuits ou à débloquer, avec leur nombre de réponses.",
       },
       {
-        src: "/projets/dernier-mot/04-pays.jpg",
-        alt: "Sous-catégories du thème Pays, certaines verrouillées",
-        w: 1242,
-        h: 2688,
-        caption: "Les catégories, gratuites ou à débloquer.",
+        src: "/projets/dernier-mot/boutique.jpeg",
+        alt: "Boutique de l'application : déblocage des 34 sous-thèmes pour 4,99 € et restauration des achats",
+        w: 946,
+        h: 2048,
+        caption: "La boutique : un achat unique, sans abonnement ni pub, restaurable sur tous les appareils.",
       },
       {
-        src: "/projets/dernier-mot/05-joueurs.jpg",
-        alt: "Écran d'ajout des joueurs avec avatars personnalisables",
-        w: 1242,
-        h: 2688,
-        caption: "Les joueurs : de 2 à 8, chacun son avatar.",
+        src: "/projets/dernier-mot/player-choose.jpeg",
+        alt: "Ajout d'un joueur : saisie du prénom et choix d'un avatar",
+        w: 739,
+        h: 1600,
+        caption: "Les joueurs : de 2 à 8, chacun son prénom et sa tête.",
       },
       {
-        src: "/projets/dernier-mot/06-regles.jpg",
-        alt: "Réglages de la partie : temps par tour, mode secret, mode de jeu",
-        w: 1242,
-        h: 2688,
-        caption: "Les règles : temps par tour, mode secret, classique ou time-bomb.",
+        src: "/projets/dernier-mot/game-set.jpeg",
+        alt: "Réglages de la partie en mode classique : chrono, vies, mode secret, mort subite",
+        w: 739,
+        h: 1600,
+        caption: "Les réglages : chrono par tour, vies, mode secret, mort subite.",
       },
       {
-        src: "/projets/dernier-mot/07-tour.jpg",
-        alt: "Écran de passage de tour : au tour de Will",
-        w: 1242,
-        h: 2688,
+        src: "/projets/dernier-mot/regles.jpeg",
+        alt: "Écran expliquant comment on joue en trois étapes",
+        w: 739,
+        h: 1600,
+        caption: "Les règles rappelées avant de lancer, adaptées aux options choisies.",
+      },
+      {
+        src: "/projets/dernier-mot/player.jpeg",
+        alt: "Écran de passage de tour orange : à toi, Will",
+        w: 739,
+        h: 1600,
         caption: "Le passage de tour, quand on se passe le téléphone.",
       },
       {
-        src: "/projets/dernier-mot/08-partie.jpg",
-        alt: "Partie en cours en mort subite avec compte à rebours et vies",
-        w: 1242,
-        h: 2688,
-        caption: "La manche en temps réel : compte à rebours, vies, mort subite.",
+        src: "/projets/dernier-mot/game.jpeg",
+        alt: "Manche en cours en mort subite : compte à rebours, vies et saisie de la réponse",
+        w: 739,
+        h: 1600,
+        caption: "La manche : compte à rebours, vies restantes, réponse au clavier.",
+      },
+      {
+        src: "/projets/dernier-mot/time-bombe-set.jpeg",
+        alt: "Réglages du mode Time-bomb : longueur de mèche, tic-tac audible, vibration",
+        w: 739,
+        h: 1600,
+        caption: "Le mode time-bomb et ses propres réglages : mèche, son, vibration.",
+      },
+      {
+        src: "/projets/dernier-mot/time-bombe.jpeg",
+        alt: "Manche en mode Time-bomb avec la bombe allumée et le message Passe vite",
+        w: 739,
+        h: 1600,
+        caption: "En time-bomb, personne ne sait quand ça explose : celui qui tient le téléphone paie.",
+      },
+      {
+        src: "/projets/dernier-mot/room.jpeg",
+        alt: "Room créée avec son code à partager et l'état de la connexion",
+        w: 739,
+        h: 1600,
+        caption: "La room en ligne : un code à dicter, l'état de la connexion en direct.",
+      },
+      {
+        src: "/projets/dernier-mot/join-room.jpeg",
+        alt: "Écran pour rejoindre une room : saisie du code et du pseudo",
+        w: 739,
+        h: 1600,
+        caption: "Rejoindre : le code, un pseudo, et c'est parti.",
       },
     ],
   },

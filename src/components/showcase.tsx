@@ -6,11 +6,15 @@ import type { Shot } from "@/components/cube/projects-data";
 
 type Device = "phone" | "browser";
 
+type TileIcon = { src: string; w: number; h: number; bg: string };
+
 type Props = {
   title: string;
   subtitle: string;
   shots: Shot[];
   device: Device;
+  /* logotype du projet ; sans lui la tuile retombe sur son pictogramme */
+  icon?: TileIcon;
 };
 
 const CTA: Record<Device, string> = {
@@ -18,7 +22,7 @@ const CTA: Record<Device, string> = {
   browser: "Voir les écrans",
 };
 
-export function Showcase({ title, subtitle, shots, device }: Props) {
+export function Showcase({ title, subtitle, shots, device, icon }: Props) {
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
   const n = shots.length;
@@ -81,8 +85,14 @@ export function Showcase({ title, subtitle, shots, device }: Props) {
           setOpen(true);
         }}
       >
-        <span className={`app-icon app-icon--${device}`} aria-hidden="true">
-          {isPhone ? (
+        <span
+          className={icon ? "app-icon app-icon--logo" : `app-icon app-icon--${device}`}
+          style={icon ? { background: icon.bg } : undefined}
+          aria-hidden="true"
+        >
+          {icon ? (
+            <Image src={icon.src} alt="" width={icon.w} height={icon.h} />
+          ) : isPhone ? (
             <svg viewBox="0 0 64 64" width="38" height="38">
               <circle cx="32" cy="33" r="17" fill="#3d9bff" />
               <ellipse cx="27" cy="31" rx="2.7" ry="3.6" fill="#0d1220" />

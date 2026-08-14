@@ -80,6 +80,7 @@ export default async function ProjetPage({ params }: Params) {
             title={project.title}
             subtitle={project.tagline}
             shots={project.shots}
+            icon={project.tileIcon}
             device={
               project.shots.every((s) => s.h > s.w) ? "phone" : "browser"
             }
