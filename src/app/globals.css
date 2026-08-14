@@ -778,6 +778,21 @@ body::after {
   background: linear-gradient(140deg, #3a4372 0%, #232b4e 100%);
   box-shadow: 0 6px 16px rgba(35, 43, 78, 0.3);
 }
+/* un logotype n'a pas la silhouette d'un pictogramme : le pavé s'élargit pour
+   que le mot reste lisible au lieu d'être réduit à une vignette. Le fond vient
+   du projet (`tileIcon.bg`), pas d'ici. */
+.app-icon--logo {
+  width: 104px;
+  height: 60px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(3, 47, 172, 0.28);
+}
+.app-icon--logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .app-tile-meta {
   display: flex;
   flex-direction: column;
@@ -1185,9 +1200,10 @@ body::after {
   display: block;
   margin-top: 6px;
 }
-/* Les logotypes n'ont pas le même rapport (Freïa 2,6 — Alcma 4,6). Caler sur
-   la seule hauteur rendait Alcma deux fois plus large et écrasait Freïa :
-   on borne les DEUX dimensions pour un poids visuel comparable. */
+/* Les logotypes n'ont pas le même rapport (Dernier Mot 2,1 — Freïa 2,6 —
+   Alcma 4,6). Caler sur la seule hauteur rendait Alcma deux fois plus large et
+   écrasait Freïa : on borne les DEUX dimensions pour un poids visuel
+   comparable. */
 .xp-logo img {
   width: auto;
   height: auto;

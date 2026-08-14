@@ -26,6 +26,11 @@ export type Project = {
   /* logotype du client, quand il y en a un : il remplace le titre écrit
      dans le panneau. `title` reste la source pour l'alt et les métadonnées. */
   logo?: { src: string; w: number; h: number };
+  /* icône de la tuile sur la page de détail. Les logotypes posés sur fond
+     transparent (Freïa, Alcma sont noirs) disparaîtraient sur le pavé
+     dégradé : seuls ceux qui embarquent leur propre fond tiennent ici, d'où
+     la couleur déclarée avec. À défaut, la tuile garde son pictogramme. */
+  tileIcon?: { src: string; w: number; h: number; bg: string };
   desc: ReactNode;
   faces: FaceKey[];
   // face dominante : celle vers laquelle le cube pivote pour ce projet
@@ -203,6 +208,15 @@ export const projects: Project[] = [
     slug: "dernier-mot",
     num: "03",
     title: "Dernier Mot",
+    logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
+    // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
+    // lequel le liseré crème du logotype a été dessiné.
+    tileIcon: {
+      src: "/projets/dernier-mot/logo.png",
+      w: 480,
+      h: 227,
+      bg: "#032fac",
+    },
     desc: (
       <>
         Jeu mobile de mots au tour par tour,{" "}
