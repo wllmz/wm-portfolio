@@ -123,13 +123,21 @@ body::after {
   display: flex;
   flex-direction: column;
 }
+/* min-height: 0 est indispensable : sans lui la min-height:auto d'un enfant
+   flex l'empêche de descendre sous la hauteur de son contenu. Le formulaire
+   poussait alors le footer hors du slide, que .slide { overflow: hidden }
+   rognait — invisible sur desktop, systématique sur mobile. */
 .contact-slide > #contact {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
-  align-items: center;
 }
+/* centrage par margin plutôt que par align-items : quand le contenu dépasse,
+   `center` rend le haut inatteignable au scroll, `auto` non. */
 .contact-slide > #contact > * {
   width: 100%;
+  margin: auto 0;
 }
 
 /* ══════════════ LE HERO ══════════════
