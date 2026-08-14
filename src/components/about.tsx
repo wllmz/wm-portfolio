@@ -53,13 +53,6 @@ export function About() {
               C&apos;est ce que j&apos;ai fait sur <strong>Alcma</strong>, un
               logiciel de facturation développé à plusieurs.
             </p>
-            <p>
-              J&apos;ai aussi travaillé pour <strong>Mylizy</strong>, spécialisée
-              dans la périnatalité : leur logiciel métier B2B, puis leur
-              plateforme de prise de rendez-vous avec des professionnels de la
-              périnatalité.
-            </p>
-
             <dl className="about-facts">
               {FACTS.map((f) => (
                 <div key={f.k}>

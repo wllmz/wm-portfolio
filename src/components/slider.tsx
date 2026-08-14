@@ -11,10 +11,35 @@ import {
 
 /* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
    sinon dragger le cube ou lire une étude de cas change d'écran. */
-const OWN_GESTURE = ".scene, .proj-modal, .face-card, .about-grid";
+const OWN_GESTURE = ".scene, .proj-modal, .face-card";
+
+/* Zones qui défilent à l'intérieur de leur écran. Elles ne confisquent pas le
+   geste : elles le gardent tant qu'il leur reste de la course, et le rendent
+   au slider une fois en butée — sinon on reste prisonnier de l'écran. */
+const SCROLLER = ".about-grid, #contact, .xp-reveal, .xpanels";
 
 /** Un modal est ouvert : il est portalisé dans body, hors de la piste. */
 const modalOpen = () => !!document.querySelector(".proj-modal");
+
+/** Le conteneur sous le doigt (ou le curseur) peut-il encore défiler dans ce
+    sens ? `dy > 0` = on descend, donc vers l'écran suivant. */
+function stillScrolls(target: EventTarget | null, dy: number) {
+  /* on remonte toute la chaîne : selon la taille d'écran, c'est le texte
+     révélé OU la pile de cartes qui porte le défilement */
+  let el = (target as HTMLElement | null)?.closest?.<HTMLElement>(SCROLLER);
+  while (el) {
+    /* un contenu plus haut que son cadre ne défile pas pour autant : sur
+       grand écran ces mêmes blocs sont en overflow visible */
+    const oy = getComputedStyle(el).overflowY;
+    if (oy === "auto" || oy === "scroll") {
+      const room = el.scrollHeight - el.clientHeight;
+      if (room > 2 && (dy > 0 ? el.scrollTop < room - 1 : el.scrollTop > 1))
+        return true;
+    }
+    el = el.parentElement?.closest<HTMLElement>(SCROLLER) ?? null;
+  }
+  return false;
+}
 
 /** Slider vertical plein écran : chaque enfant devient un écran, on glisse
     de l'un à l'autre à la molette / aux flèches / au swipe. */
@@ -40,6 +65,7 @@ export function Slider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (animating.current || modalOpen()) return;
+      if (stillScrolls(e.target, e.deltaY)) return;
       if (e.deltaY > 24) go(idxRef.current + 1);
       else if (e.deltaY < -24) go(idxRef.current - 1);
     };
@@ -59,6 +85,9 @@ export function Slider({ children }: { children: ReactNode }) {
     const onTE = (e: TouchEvent) => {
       if (held || modalOpen()) return;
       const dy = ty - e.changedTouches[0].clientY;
+      /* la cible d'un touchend reste celle du touchstart : on interroge donc
+         bien le conteneur d'où le geste est parti */
+      if (stillScrolls(e.target, dy)) return;
       if (Math.abs(dy) > 40) go(idxRef.current + (dy > 0 ? 1 : -1));
     };
     window.addEventListener("wheel", onWheel, { passive: true });
