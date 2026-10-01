@@ -315,6 +315,22 @@ export function CubeStage() {
           Dispo <span className="accent">Freelance · Paris / remote</span>
         </p>
 
+        {/* mobile uniquement (masqué sur desktop) : la page y défile, le hero
+            a besoin d'une accroche lisible et de deux portes d'entrée */}
+        <div className="hero-pitch">
+          <p className="hero-tagline">
+            sites, apps mobiles et API, de la maquette à la mise en ligne.
+          </p>
+          <div className="hero-cta">
+            <a href="#projets" className="hero-btn">
+              Voir les projets
+            </a>
+            <a href="#contact" className="hero-btn hero-btn--ghost">
+              Me contacter
+            </a>
+          </div>
+        </div>
+
         <div className="center" ref={centerRef}>
           <div
             className="scene"

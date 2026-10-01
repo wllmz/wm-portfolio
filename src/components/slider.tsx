@@ -5,9 +5,23 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   Children,
   type ReactNode,
 } from "react";
+
+/* Sous ce seuil, l'accueil n'est plus un slider mais une page qui défile
+   (même seuil que le bloc « page qui défile » de globals.css) : chaque
+   section prend sa hauteur naturelle au lieu d'être forcée à celle de
+   l'écran. */
+const FLOW = "(max-width: 820px)";
+
+function subscribeFlow(onChange: () => void) {
+  const mq = window.matchMedia(FLOW);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+const isFlow = () => window.matchMedia(FLOW).matches;
 
 /* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
    sinon dragger le cube change d'écran. */
@@ -52,6 +66,9 @@ export function Slider({
   const [idx, setIdx] = useState(0);
   const idxRef = useRef(0);
   const animating = useRef(false);
+  /* faux côté serveur : le rendu initial est celui du slider, le CSS mobile
+     l'aplatit déjà avant l'hydratation */
+  const flow = useSyncExternalStore(subscribeFlow, isFlow, () => false);
 
   const go = useCallback(
     (i: number) => {
@@ -77,6 +94,8 @@ export function Slider({
      lien de ce genre aujourd'hui, à gérer explicitement s'il en apparaît. */
   useEffect(() => {
     const toHash = () => {
+      // page qui défile : le navigateur gère l'ancre lui-même
+      if (isFlow()) return;
       const id = decodeURIComponent(window.location.hash.slice(1));
       if (!id) return;
       const target = document.getElementById(id);
@@ -98,6 +117,7 @@ export function Slider({
        atteinte, ils ne doivent pas changer d'écran à la place du geste. */
     let lastInner = 0;
     const onWheel = (e: WheelEvent) => {
+      if (isFlow()) return;
       // ctrl + molette, c'est le pinch-zoom du trackpad
       if (animating.current || e.ctrlKey) return;
       const dir = e.deltaY > 24 ? 1 : e.deltaY < -24 ? -1 : 0;
@@ -110,6 +130,7 @@ export function Slider({
       go(idxRef.current + dir);
     };
     const onKey = (e: KeyboardEvent) => {
+      if (isFlow()) return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       if (e.target instanceof Element && e.target.closest(EDITABLE)) return;
       const dir = ["ArrowDown", "PageDown"].includes(e.key)
@@ -135,7 +156,7 @@ export function Slider({
       ty = e.touches[0].clientY;
     };
     const onTE = (e: TouchEvent) => {
-      if (held) return;
+      if (held || isFlow()) return;
       const dy = ty - e.changedTouches[0].clientY;
       if (dy > 40 && !scrollDown) go(idxRef.current + 1);
       else if (dy < -40 && !scrollUp) go(idxRef.current - 1);
@@ -164,7 +185,7 @@ export function Slider({
           <div
             key={i}
             className={`slide${i === idx ? " on" : ""}`}
-            inert={i !== idx}
+            inert={!flow && i !== idx}
           >
             {slide}
           </div>

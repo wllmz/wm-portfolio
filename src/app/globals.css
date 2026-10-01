@@ -1929,3 +1929,317 @@ body::after {
     transition: none;
   }
 }
+
+/* ══════════════ MOBILE : PAGE QUI DÉFILE (≤ 820px) ══════════════
+   Sur desktop, l'accueil est un slider plein écran. Sur un téléphone, forcer
+   chaque écran à la hauteur du viewport laissait des écrans à moitié vides
+   (projets, hero) et en rognait d'autres (contact). Sous 820px, l'accueil
+   devient une page classique : chaque section prend sa hauteur naturelle,
+   une barre fixe en haut sert de navigation. Le slider JS se désactive au
+   même seuil (slider.tsx). Rien ici ne s'applique au-delà de 820px. */
+
+/* éléments propres au mobile : absents du desktop */
+.mobile-bar,
+.hero-pitch {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  /* ── la page défile : c'est le document qui défile, pas le body ── */
+  html:has(.deck),
+  body:has(.deck) {
+    height: auto;
+  }
+  body:has(.deck) {
+    overflow: visible;
+  }
+  html:has(.deck) {
+    scroll-behavior: smooth;
+    /* les ancres s'arrêtent sous la barre fixe */
+    scroll-padding-top: 64px;
+  }
+  .deck {
+    position: static;
+    overflow: visible;
+  }
+  /* !important : le slider écrit son translateY en style inline.
+     will-change: auto : un will-change sur transform fait de la piste le
+     repère des éléments fixed (carte des faces), qui ne couvriraient plus
+     l'écran mais toute la hauteur de la page */
+  .track {
+    height: auto;
+    transform: none !important;
+    transition: none;
+    will-change: auto;
+  }
+  .slide {
+    height: auto;
+    overflow: visible;
+  }
+  .slider-dots {
+    display: none;
+  }
+
+  /* ── barre de navigation ── */
+  .mobile-bar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 56px;
+    padding: 0 18px;
+    background: rgba(234, 227, 210, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1.5px solid rgba(45, 54, 96, 0.12);
+  }
+  .mobile-bar-logo {
+    font-family: var(--font-logo);
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--color-navy);
+  }
+  .mobile-bar-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+  .mobile-bar-links a {
+    padding: 8px 0;
+  }
+  .mobile-bar-links .mobile-bar-cta {
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--color-navy);
+    color: var(--color-cream);
+  }
+
+  /* ── hero : l'intro passe dans le flux, le cube en dessous ── */
+  .hero {
+    height: auto;
+    min-height: calc(100svh - 56px);
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    padding: 36px 22px 40px;
+  }
+  .frame,
+  .corner.bl,
+  .corner .wm-mini,
+  .corner.tl br {
+    display: none;
+  }
+  .corner {
+    position: static;
+    text-align: left;
+  }
+  /* le nom, en titre */
+  .corner.tl {
+    order: 1;
+    font-family: var(--font-title);
+    font-size: clamp(2.3rem, 11vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  /* le métier, en sous-titre (les coins droits étaient alignés à droite) */
+  .corner.tr,
+  .corner.br {
+    text-align: left;
+  }
+  .corner.tr {
+    order: 2;
+    margin-top: 10px;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+  }
+  .corner.tr br {
+    display: none;
+  }
+  .corner.tr .accent::before {
+    content: " · ";
+  }
+  .hero-pitch {
+    order: 3;
+    display: block;
+    margin-top: 18px;
+  }
+  .hero-tagline {
+    font-family: var(--font-hand);
+    font-size: clamp(1.25rem, 5.4vw, 1.6rem);
+    line-height: 1.25;
+    color: var(--color-burgundy);
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-navy);
+    background: var(--color-navy);
+    color: var(--color-cream);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .hero-btn--ghost {
+    background: transparent;
+    color: var(--color-navy);
+  }
+  /* la dispo, en pastille sous les boutons */
+  .corner.br {
+    order: 4;
+    margin-top: 18px;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+  }
+  /* le cube : un bloc dans le flux, à sa taille */
+  .center {
+    order: 5;
+    position: relative;
+    inset: auto;
+    flex: 1;
+    min-height: calc(var(--face) * 1.45);
+    margin-top: 12px;
+  }
+  .scene {
+    translate: 0 0;
+  }
+  .facenav {
+    order: 6;
+    position: static;
+    translate: none;
+    margin: 4px auto 0;
+  }
+  /* carte d'une face : au-dessus de tout, plein écran */
+  .face-card,
+  .face-card.pos-design,
+  .face-card.pos-front,
+  .face-card.pos-back,
+  .face-card.pos-quality,
+  .face-card.pos-deploy,
+  .face-card.pos-suivi {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    /* opaque : la page défile dessous, le hero ne doit pas transparaître */
+    background: var(--color-cream);
+  }
+  .face-card .fc-close {
+    top: 16px;
+    right: 14px;
+  }
+
+  /* ── sections : plus de cadres, des blocs séparés par un filet ── */
+  .proj-slide,
+  .about-slide {
+    height: auto;
+    display: block;
+  }
+  .proj-frame,
+  .about-frame {
+    margin: 0;
+    padding: 56px 22px;
+    border: none;
+    border-top: 1.5px solid rgba(45, 54, 96, 0.12);
+    border-radius: 0;
+  }
+  .proj-head,
+  .about-head {
+    margin-bottom: 28px;
+  }
+
+  /* ── projets : toutes les cartes ouvertes, empilées ── */
+  .proj-slide .xpanels {
+    flex: none;
+    flex-direction: column;
+    gap: 16px;
+    overflow: visible;
+  }
+  .proj-slide .xpanel,
+  .proj-slide .xpanel.active,
+  .proj-slide .xpanel:not(.active) {
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+    min-height: 0;
+    padding: 24px 22px;
+    cursor: default;
+    border-color: rgba(45, 54, 96, 0.22);
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 18px;
+  }
+  .proj-slide .xpanel .xp-num {
+    font-size: 1.1rem;
+  }
+  .proj-slide .xpanel .xp-logo {
+    margin-top: 10px;
+  }
+  .proj-slide .xpanel .xp-logo img {
+    max-height: 34px;
+    max-width: 70%;
+  }
+  .proj-slide .xpanel .xp-logo--square img {
+    max-height: 48px;
+  }
+  .proj-slide .xpanel .xp-reveal {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    max-height: none;
+    overflow: visible;
+    animation: none;
+    margin-top: 14px;
+  }
+  .proj-slide .xp-reveal p {
+    max-width: none;
+  }
+  .proj-slide .xp-reveal .pp-faces {
+    margin-top: 16px;
+  }
+  .proj-slide .xp-more {
+    margin-top: 18px;
+  }
+
+  /* ── à propos : hauteur naturelle ── */
+  .about-grid {
+    overflow: visible;
+  }
+
+  /* ── contact : formulaire entier, sans cadre ── */
+  .contact-slide {
+    height: auto;
+  }
+  .contact-slide > #contact {
+    flex: none;
+    overflow: visible;
+    display: block;
+  }
+  .contact-section {
+    padding: 56px 22px 40px;
+    border-top: 1.5px solid rgba(45, 54, 96, 0.12);
+  }
+  .contact-frame {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
+  .contact-head {
+    text-align: left;
+  }
+}

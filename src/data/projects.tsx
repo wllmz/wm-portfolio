@@ -147,9 +147,9 @@ export const projects: Project[] = [
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     desc: (
       <>
-        ERP développé from scratch <strong>en binôme</strong> pour le client
-        d&apos;une agence : facturation, gestion de projet, API et
-        déploiement.
+        ERP développé from scratch <strong>en binôme</strong>{" "}
+        pour le client d&apos;une agence : facturation, gestion de projet, API
+        et déploiement.
       </>
     ),
     faces: ["front", "back", "quality", "deploy", "suivi"],
