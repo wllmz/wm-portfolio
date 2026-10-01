@@ -115,13 +115,6 @@ body::after {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-/* zone de clic invisible autour du point : 10px, c'est trop petit pour un
-   doigt (cible tactile ≥ 44px), sans changer le dessin du point */
-.slider-dots button::before {
-  content: "";
-  position: absolute;
-  inset: -6px -14px;
-}
 .slider-dots button.on {
   height: 26px;
   border-radius: 6px;
@@ -1223,9 +1216,10 @@ body::after {
   .about-grid {
     grid-template-columns: 190px minmax(0, 1fr);
     align-items: start;
-    align-content: center;
+    /* safe : si le texte dépasse (téléphone en paysage), le haut reste
+       atteignable au scroll au lieu de sortir du conteneur */
+    align-content: safe center;
     gap: 32px;
-    height: 100%;
   }
   .about-photo {
     width: 190px;
@@ -1770,12 +1764,31 @@ body::after {
     position: relative;
   }
   .case-back::before,
-  .xp-more::before,
-  .app-dots button::before,
   footer a::before {
     content: "";
     position: absolute;
     inset: -12px -8px;
+  }
+  /* rien sous le lien : il ferme le panneau qui défile, une zone qui
+     dépasserait vers le bas le rendrait défilable de quelques pixels */
+  .xp-more::before {
+    content: "";
+    position: absolute;
+    inset: -12px -8px 0;
+  }
+  /* points espacés de 9px : la zone ne déborde presque pas sur les côtés,
+     sinon le point voisin capte le tap */
+  .app-dots button::before {
+    content: "";
+    position: absolute;
+    inset: -12px -4px;
+  }
+  /* même principe pour les points du slider : agrandis au doigt, sans
+     chevaucher leurs voisins (gap de 10px) */
+  .slider-dots button::before {
+    content: "";
+    position: absolute;
+    inset: -5px -14px;
   }
   .facenav button {
     min-height: 40px;
@@ -1823,8 +1836,7 @@ body::after {
   .track,
   .face-card,
   .face-card .fc-inner,
-  .xpanel,
-  .xp-reveal {
+  .xpanel {
     transition: none;
     animation: none;
   }

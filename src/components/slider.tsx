@@ -60,7 +60,12 @@ export function Slider({
       animating.current = true;
       idxRef.current = t;
       setIdx(t);
-      window.setTimeout(() => (animating.current = false), 950);
+      /* le verrou couvre la durée du glissement ; sans animation (mouvement
+         réduit), l'écran change d'un coup et le verrou se raccourcit */
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      window.setTimeout(() => (animating.current = false), reduce ? 300 : 950);
     },
     [n],
   );
