@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FACES } from "@/components/cube/cube-data";
-import { projects, ALL_FACES } from "@/components/cube/projects-data";
+import { FACES, FACE_ORDER } from "@/data/cube-faces";
+import { projects } from "@/data/projects";
 import { Showcase } from "@/components/showcase";
 
 type Params = { params: Promise<{ slug: string }> };
+
+/* seuls les projets connus existent : tout autre slug répond 404 sans
+   tenter de rendu à la demande */
+export const dynamicParams = false;
+
+const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProject((await params).slug);
   if (!project) return {};
   return {
     title: `${project.title} · William Martinez`,
@@ -22,8 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function ProjetPage({ params }: Params) {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProject((await params).slug);
   if (!project) notFound();
 
   return (
@@ -41,7 +45,7 @@ export default async function ProjetPage({ params }: Params) {
           <p className="case-tagline">{project.tagline}</p>
 
           <div className="pp-faces" aria-label="Faces couvertes">
-            {ALL_FACES.filter((face) => project.faces.includes(face)).map(
+            {FACE_ORDER.filter((face) => project.faces.includes(face)).map(
               (face) => (
                 <span key={face} className="pp-chip on">
                   {FACES[face].title}

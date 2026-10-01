@@ -7,6 +7,7 @@ import {
   contactSchema,
   PROJECT_TYPES,
   type ContactInput,
+  type ContactValues,
 } from "@/lib/contact-schema";
 
 // Endpoint Formspree (formspree.io > le formulaire > Integration).
@@ -22,12 +23,12 @@ export function ContactForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ContactInput>({
+  } = useForm<ContactInput, unknown, ContactValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: { projectType: "" },
   });
 
-  async function onSubmit(data: ContactInput) {
+  async function onSubmit(data: ContactValues) {
     setStatus("idle");
 
     // honeypot rempli -> bot : on simule un succès sans rien envoyer
@@ -54,17 +55,16 @@ export function ContactForm() {
           message: data.message,
           _subject: `Nouveau projet (${data.projectType}) · ${fullName}`,
           _replyto: data.email,
-          _gotcha: data.company ?? "",
         }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        console.error("[contact] formspree", res.status, body);
-        throw new Error("send failed");
+        throw new Error(`Formspree ${res.status}: ${JSON.stringify(body)}`);
       }
       reset();
       setStatus("success");
-    } catch {
+    } catch (err) {
+      console.error("[contact] envoi", err);
       setStatus("error");
     }
   }
@@ -91,10 +91,13 @@ export function ContactForm() {
             type="text"
             placeholder="Camille"
             aria-invalid={!!errors.firstName}
+            aria-describedby={errors.firstName ? "firstName-error" : undefined}
             {...register("firstName")}
           />
           {errors.firstName && (
-            <p className="cfield-error">{errors.firstName.message}</p>
+            <p id="firstName-error" className="cfield-error">
+              {errors.firstName.message}
+            </p>
           )}
         </div>
 
@@ -105,10 +108,13 @@ export function ContactForm() {
             type="text"
             placeholder="Durand"
             aria-invalid={!!errors.lastName}
+            aria-describedby={errors.lastName ? "lastName-error" : undefined}
             {...register("lastName")}
           />
           {errors.lastName && (
-            <p className="cfield-error">{errors.lastName.message}</p>
+            <p id="lastName-error" className="cfield-error">
+              {errors.lastName.message}
+            </p>
           )}
         </div>
       </div>
@@ -120,9 +126,14 @@ export function ContactForm() {
           type="email"
           placeholder="vous@exemple.com"
           aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? "email-error" : undefined}
           {...register("email")}
         />
-        {errors.email && <p className="cfield-error">{errors.email.message}</p>}
+        {errors.email && (
+          <p id="email-error" className="cfield-error">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
       <div className="cfield">
@@ -130,7 +141,7 @@ export function ContactForm() {
         <select
           id="projectType"
           aria-invalid={!!errors.projectType}
-          defaultValue=""
+          aria-describedby={errors.projectType ? "projectType-error" : undefined}
           {...register("projectType")}
         >
           <option value="" disabled>
@@ -143,7 +154,9 @@ export function ContactForm() {
           ))}
         </select>
         {errors.projectType && (
-          <p className="cfield-error">{errors.projectType.message}</p>
+          <p id="projectType-error" className="cfield-error">
+            {errors.projectType.message}
+          </p>
         )}
       </div>
 
@@ -154,10 +167,13 @@ export function ContactForm() {
           rows={4}
           placeholder="Votre besoin, votre échéance, votre budget indicatif…"
           aria-invalid={!!errors.message}
+          aria-describedby={errors.message ? "message-error" : undefined}
           {...register("message")}
         />
         {errors.message && (
-          <p className="cfield-error">{errors.message.message}</p>
+          <p id="message-error" className="cfield-error">
+            {errors.message.message}
+          </p>
         )}
       </div>
 

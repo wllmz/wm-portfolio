@@ -24,12 +24,12 @@ export const contactSchema = z.object({
     .string()
     .trim()
     .min(1, "L'email est requis.")
-    .email("Cet email n'a pas l'air valide."),
+    .pipe(z.email("Cet email n'a pas l'air valide.")),
+  // le select part de "" (aucun choix) : chaîne en entrée, type de projet
+  // connu en sortie
   projectType: z
     .string()
-    .refine((v) => (PROJECT_TYPES as readonly string[]).includes(v), {
-      message: "Choisissez un type de projet.",
-    }),
+    .pipe(z.enum(PROJECT_TYPES, { error: "Choisissez un type de projet." })),
   message: z
     .string()
     .trim()
@@ -37,8 +37,11 @@ export const contactSchema = z.object({
     .max(3000, "3 000 caractères maximum."),
   // honeypot anti-spam : doit rester vide, mais on ne le valide pas —
   // sinon le formulaire serait rejeté silencieusement au lieu d'être
-  // traité comme un bot par onSubmit et par Formspree (_gotcha).
+  // traité comme un bot par onSubmit (succès simulé, rien n'est envoyé).
   company: z.string().optional(),
 });
 
-export type ContactInput = z.infer<typeof contactSchema>;
+/** valeurs du formulaire, telles que saisies */
+export type ContactInput = z.input<typeof contactSchema>;
+/** valeurs validées, envoyées à Formspree */
+export type ContactValues = z.output<typeof contactSchema>;

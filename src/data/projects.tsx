@@ -1,14 +1,5 @@
 import type { ReactNode } from "react";
-import type { FaceKey } from "./cube-data";
-
-export const ALL_FACES: FaceKey[] = [
-  "design",
-  "front",
-  "back",
-  "quality",
-  "deploy",
-  "suivi",
-];
+import type { FaceKey } from "./cube-faces";
 
 export type Shot = {
   src: string;
@@ -33,8 +24,6 @@ export type Project = {
   tileIcon?: { src: string; w: number; h: number; bg: string };
   desc: ReactNode;
   faces: FaceKey[];
-  // face dominante : celle vers laquelle le cube pivote pour ce projet
-  lead: FaceKey;
 
   /* ── page de détail ── */
   tagline: string;
@@ -60,7 +49,6 @@ export const projects: Project[] = [
       </>
     ),
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
-    lead: "deploy",
     tagline: "La boutique en ligne d'une marque de sacs faits main à Paris.",
     contexte:
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
@@ -165,7 +153,6 @@ export const projects: Project[] = [
       </>
     ),
     faces: ["front", "back", "quality", "deploy", "suivi"],
-    lead: "back",
     tagline:
       "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
@@ -247,7 +234,6 @@ export const projects: Project[] = [
       </>
     ),
     faces: ["front", "back", "quality"],
-    lead: "front",
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
       "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
@@ -384,7 +370,6 @@ export const projects: Project[] = [
       </>
     ),
     faces: ["front", "back", "quality", "suivi"],
-    lead: "back",
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
       "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",

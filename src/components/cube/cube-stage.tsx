@@ -10,11 +10,11 @@ import {
 import {
   FACES,
   FACE_LAYOUT,
-  NAV_ORDER,
+  FACE_ORDER,
   ORIENT,
   type FaceKey,
-  type PanelKey,
-} from "./cube-data";
+} from "@/data/cube-faces";
+import { Clock } from "./clock";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
 type CubeState = {
@@ -51,15 +51,13 @@ export function CubeStage() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const cubeRef = useRef<HTMLDivElement>(null);
   const centerRef = useRef<HTMLDivElement>(null);
-  const facenavRef = useRef<HTMLElement>(null);
 
   const [loaded, setLoaded] = useState(false);
-  const [clock, setClock] = useState("--:--:--");
-  const [openKey, setOpenKey] = useState<PanelKey | null>(null);
+  const [openKey, setOpenKey] = useState<FaceKey | null>(null);
   // dernière face sélectionnée — garde le contenu pendant l'animation de sortie
-  const [activeKey, setActiveKey] = useState<PanelKey>("design");
+  const [activeKey, setActiveKey] = useState<FaceKey>("design");
 
-  const openKeyRef = useRef<PanelKey | null>(null);
+  const openKeyRef = useRef<FaceKey | null>(null);
   const reduceRef = useRef(false);
 
   const state = useRef<CubeState>({
@@ -84,7 +82,7 @@ export function CubeStage() {
   });
 
   /* ── ouverture / fermeture des faces ── */
-  const openFace = useCallback((key: PanelKey) => {
+  const openFace = useCallback((key: FaceKey) => {
     const s = state.current;
     stageRef.current?.classList.add("interacting");
     openKeyRef.current = key;
@@ -104,7 +102,7 @@ export function CubeStage() {
   }, []);
 
   const toggleFace = useCallback(
-    (key: PanelKey) => {
+    (key: FaceKey) => {
       if (openKeyRef.current === key) closeFace();
       else openFace(key);
     },
@@ -154,14 +152,6 @@ export function CubeStage() {
     s.downFace = null;
   };
 
-  /* ── horloge ── */
-  useEffect(() => {
-    const upd = () => setClock(new Date().toLocaleTimeString("fr-FR"));
-    upd();
-    const id = setInterval(upd, 1000);
-    return () => clearInterval(id);
-  }, []);
-
   /* ── listeners globaux ── */
   useEffect(() => {
     reduceRef.current = window.matchMedia(
@@ -199,7 +189,7 @@ export function CubeStage() {
 
   /* ── boucle : rotation du cube, parallaxe souris, ouverture des faces ── */
   useEffect(() => {
-    requestAnimationFrame(() => setLoaded(true));
+    const loadId = requestAnimationFrame(() => setLoaded(true));
 
     const s = state.current;
     const reduceMotion = reduceRef.current;
@@ -209,11 +199,18 @@ export function CubeStage() {
 
     const cube = cubeRef.current;
     const center = centerRef.current;
-    if (!cube || !center) return;
+    const stage = stageRef.current;
+    if (!cube || !center || !stage) {
+      return () => {
+        cancelAnimationFrame(loadId);
+        window.clearTimeout(startTimer);
+      };
+    }
 
     const faces = Array.from(cube.querySelectorAll<HTMLElement>(".face"));
 
-    let rafId: number;
+    let rafId = 0;
+    let running = false;
 
     const tick = () => {
       s.cmx += (s.mx - s.cmx) * 0.06;
@@ -255,12 +252,34 @@ export function CubeStage() {
       if (!reduceMotion) {
         center.style.transform = `translate(${s.cmx * 12}px, ${s.cmy * 9}px)`;
       }
-      rafId = requestAnimationFrame(tick);
+      if (running) rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
+
+    /* la boucle ne tourne que quand le hero est à l'écran : sur les autres
+       écrans du slider, elle écrirait des styles pour rien à chaque frame */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        /* un ratio plutôt que isIntersecting : sur l'écran suivant, le hero
+           touche le haut du viewport bord à bord, ce qui compte encore
+           comme une intersection (d'aire nulle) */
+        const visible = entries[entries.length - 1].intersectionRatio >= 0.01;
+        if (visible && !running) {
+          running = true;
+          rafId = requestAnimationFrame(tick);
+        } else if (!visible && running) {
+          running = false;
+          cancelAnimationFrame(rafId);
+        }
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(stage);
 
     return () => {
+      running = false;
+      observer.disconnect();
       cancelAnimationFrame(rafId);
+      cancelAnimationFrame(loadId);
       window.clearTimeout(startTimer);
     };
   }, []);
@@ -274,22 +293,22 @@ export function CubeStage() {
       <section className="hero" aria-label="William Martinez, fullstack">
         <div className="frame" aria-hidden="true" />
 
-        <p className="corner tl">
-          <span className="wm-mini" aria-label="wm">
+        {/* le titre de la page : le nom, dans le coin du hero (le preflight
+            Tailwind remet h1 à la taille et à la graisse du texte courant) */}
+        <h1 className="corner tl">
+          <span className="wm-mini" aria-hidden="true">
             wm<span className="accent">.</span>
           </span>
           <br />
           William Martinez
-        </p>
+        </h1>
         <p className="corner tr">
           Fullstack
           <br />
           <span className="accent">React · Node</span>
         </p>
         <p className="corner bl">
-          <span className="clock" suppressHydrationWarning>
-            {clock}
-          </span>
+          <Clock />
         </p>
         <p className="corner br">
           <span className="dot-live" aria-hidden="true" />
@@ -324,10 +343,9 @@ export function CubeStage() {
 
         <nav
           className="facenav"
-          ref={facenavRef}
           aria-label="Explorer les six faces"
         >
-          {NAV_ORDER.map((key) => (
+          {FACE_ORDER.map((key) => (
             <button
               key={key}
               className={openKey === key ? "active" : undefined}
@@ -337,8 +355,6 @@ export function CubeStage() {
             </button>
           ))}
         </nav>
-
-        {/* <div className="scroll-line" aria-hidden="true" /> */}
 
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}

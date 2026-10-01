@@ -15,8 +15,6 @@ export type FacePosition =
   | "top"
   | "bottom";
 
-export type PanelKey = FaceKey;
-
 export type FaceInfo = {
   num: number | string;
   title: string;
@@ -108,8 +106,9 @@ export const FACE_LAYOUT: { position: FacePosition; key: FaceKey }[] = [
   { position: "back", key: "deploy" },
 ];
 
-/** Ordre des boutons de navigation — le cycle complet d'un projet. */
-export const NAV_ORDER: FaceKey[] = [
+/** Ordre des faces — le cycle complet d'un projet : boutons de navigation
+    du cube et pastilles des projets suivent cet ordre. */
+export const FACE_ORDER: FaceKey[] = [
   "design",
   "front",
   "back",
@@ -126,14 +125,4 @@ export const ORIENT: Record<FaceKey, [number, number]> = {
   deploy: [-10, 196],
   back: [-80, 16],
   suivi: [80, 16],
-};
-
-/** Rotation chaotique propre à chaque face pendant la déstructuration. */
-export const CHAOS: Record<FacePosition, number> = {
-  front: -38,
-  right: 46,
-  top: -52,
-  left: 34,
-  bottom: -30,
-  back: 58,
 };

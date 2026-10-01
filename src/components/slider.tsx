@@ -60,7 +60,12 @@ export function Slider({
       animating.current = true;
       idxRef.current = t;
       setIdx(t);
-      window.setTimeout(() => (animating.current = false), 950);
+      /* le verrou couvre la durée du glissement ; sans animation (mouvement
+         réduit), l'écran change d'un coup et le verrou se raccourcit */
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      window.setTimeout(() => (animating.current = false), reduce ? 300 : 950);
     },
     [n],
   );
@@ -148,7 +153,7 @@ export function Slider({
   }, [go]);
 
   return (
-    <div className="deck">
+    <main className="deck">
       <div
         className="track"
         style={{ transform: `translateY(-${idx * 100}svh)` }}
@@ -176,6 +181,6 @@ export function Slider({
           />
         ))}
       </nav>
-    </div>
+    </main>
   );
 }

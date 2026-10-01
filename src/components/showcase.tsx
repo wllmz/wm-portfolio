@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { Shot } from "@/components/cube/projects-data";
+import type { Project, Shot } from "@/data/projects";
 
 type Device = "phone" | "browser";
 
-type TileIcon = { src: string; w: number; h: number; bg: string };
+type TileIcon = NonNullable<Project["tileIcon"]>;
 
 type Props = {
   title: string;
@@ -30,12 +30,38 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
 
   const go = useCallback((d: number) => setI((p) => (p + d + n) % n), [n]);
 
+  const tileRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (!open) return;
+    /* le focus entre dans la galerie à l'ouverture, y reste tant qu'elle
+       est ouverte, et revient sur la tuile à la fermeture */
+    const tile = tileRef.current;
+    closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
       else if (e.key === "ArrowRight") go(1);
       else if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "Tab") {
+        const focusables = Array.from(
+          modalRef.current?.querySelectorAll<HTMLElement>("button") ?? [],
+          /* getClientRects et non offsetParent : le bouton Fermer est en
+             position fixed (offsetParent null), et les flèches passent en
+             display: none sur mobile */
+        ).filter((el) => el.getClientRects().length > 0);
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (!first || !last) return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -43,6 +69,7 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      tile?.focus();
     };
   }, [open, go]);
 
@@ -78,6 +105,7 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
   return (
     <section className="app-showcase" aria-label="Le projet en images">
       <button
+        ref={tileRef}
         type="button"
         className="app-tile"
         onClick={() => {
@@ -129,6 +157,7 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
 
       {open && (
         <div
+          ref={modalRef}
           className="app-modal"
           role="dialog"
           aria-modal="true"
@@ -136,6 +165,7 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
           onClick={() => setOpen(false)}
         >
           <button
+            ref={closeRef}
             type="button"
             className="app-modal-close"
             aria-label="Fermer"
