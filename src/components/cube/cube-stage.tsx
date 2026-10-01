@@ -316,20 +316,11 @@ export function CubeStage() {
         </p>
 
         {/* mobile uniquement (masqué sur desktop) : la page y défile, le hero
-            a besoin d'une accroche lisible et de deux portes d'entrée */}
-        <div className="hero-pitch">
-          <p className="hero-tagline">
-            sites, apps mobiles et API, de la maquette à la mise en ligne.
-          </p>
-          <div className="hero-cta">
-            <a href="#projets" className="hero-btn">
-              Voir les projets
-            </a>
-            <a href="#contact" className="hero-btn hero-btn--ghost">
-              Me contacter
-            </a>
-          </div>
-        </div>
+            a besoin d'une accroche lisible. La navigation, elle, reste dans
+            la barre du haut. */}
+        <p className="hero-pitch">
+          sites, apps mobiles et API, de la maquette à la mise en ligne.
+        </p>
 
         <div className="center" ref={centerRef}>
           <div
