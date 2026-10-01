@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FACES } from "@/components/cube/cube-data";
-import { projects, ALL_FACES } from "@/components/cube/projects-data";
+import { FACES, FACE_ORDER } from "@/data/cube-faces";
+import { projects } from "@/data/projects";
 
 /* même seuil que l'accordéon vertical en CSS. À quatre projets, l'accordéon
    horizontal ne tient plus sous 1024px : les panneaux repliés n'ont plus la
@@ -91,7 +91,7 @@ export function Projects() {
                 <div className="pp-faces" aria-label="Faces couvertes">
                   {/* seules les faces couvertes s'affichent — l'ordre reste
                       celui du cube */}
-                  {ALL_FACES.filter((face) => project.faces.includes(face)).map(
+                  {FACE_ORDER.filter((face) => project.faces.includes(face)).map(
                     (face) => (
                       <span key={face} className="pp-chip on">
                         {FACES[face].title}

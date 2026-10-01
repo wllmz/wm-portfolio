@@ -10,11 +10,10 @@ import {
 import {
   FACES,
   FACE_LAYOUT,
-  NAV_ORDER,
+  FACE_ORDER,
   ORIENT,
   type FaceKey,
-  type PanelKey,
-} from "./cube-data";
+} from "@/data/cube-faces";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
 type CubeState = {
@@ -51,15 +50,14 @@ export function CubeStage() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const cubeRef = useRef<HTMLDivElement>(null);
   const centerRef = useRef<HTMLDivElement>(null);
-  const facenavRef = useRef<HTMLElement>(null);
 
   const [loaded, setLoaded] = useState(false);
   const [clock, setClock] = useState("--:--:--");
-  const [openKey, setOpenKey] = useState<PanelKey | null>(null);
+  const [openKey, setOpenKey] = useState<FaceKey | null>(null);
   // dernière face sélectionnée — garde le contenu pendant l'animation de sortie
-  const [activeKey, setActiveKey] = useState<PanelKey>("design");
+  const [activeKey, setActiveKey] = useState<FaceKey>("design");
 
-  const openKeyRef = useRef<PanelKey | null>(null);
+  const openKeyRef = useRef<FaceKey | null>(null);
   const reduceRef = useRef(false);
 
   const state = useRef<CubeState>({
@@ -84,7 +82,7 @@ export function CubeStage() {
   });
 
   /* ── ouverture / fermeture des faces ── */
-  const openFace = useCallback((key: PanelKey) => {
+  const openFace = useCallback((key: FaceKey) => {
     const s = state.current;
     stageRef.current?.classList.add("interacting");
     openKeyRef.current = key;
@@ -104,7 +102,7 @@ export function CubeStage() {
   }, []);
 
   const toggleFace = useCallback(
-    (key: PanelKey) => {
+    (key: FaceKey) => {
       if (openKeyRef.current === key) closeFace();
       else openFace(key);
     },
@@ -324,10 +322,9 @@ export function CubeStage() {
 
         <nav
           className="facenav"
-          ref={facenavRef}
           aria-label="Explorer les six faces"
         >
-          {NAV_ORDER.map((key) => (
+          {FACE_ORDER.map((key) => (
             <button
               key={key}
               className={openKey === key ? "active" : undefined}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { Shot } from "@/components/cube/projects-data";
+import type { Shot } from "@/data/projects";
 
 type Device = "phone" | "browser";
 
