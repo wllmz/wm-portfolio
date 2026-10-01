@@ -59,8 +59,7 @@ export function ContactForm() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        console.error("[contact] formspree", res.status, body);
-        throw new Error("send failed");
+        throw new Error(`Formspree ${res.status}: ${JSON.stringify(body)}`);
       }
       reset();
       setStatus("success");

@@ -47,7 +47,10 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
       else if (e.key === "Tab") {
         const focusables = Array.from(
           modalRef.current?.querySelectorAll<HTMLElement>("button") ?? [],
-        ).filter((el) => el.offsetParent !== null);
+          /* getClientRects et non offsetParent : le bouton Fermer est en
+             position fixed (offsetParent null), et les flèches passent en
+             display: none sur mobile */
+        ).filter((el) => el.getClientRects().length > 0);
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
         if (!first || !last) return;

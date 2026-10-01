@@ -257,15 +257,22 @@ export function CubeStage() {
 
     /* la boucle ne tourne que quand le hero est à l'écran : sur les autres
        écrans du slider, elle écrirait des styles pour rien à chaque frame */
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !running) {
-        running = true;
-        rafId = requestAnimationFrame(tick);
-      } else if (!entry.isIntersecting && running) {
-        running = false;
-        cancelAnimationFrame(rafId);
-      }
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        /* un ratio plutôt que isIntersecting : sur l'écran suivant, le hero
+           touche le haut du viewport bord à bord, ce qui compte encore
+           comme une intersection (d'aire nulle) */
+        const visible = entries[entries.length - 1].intersectionRatio >= 0.01;
+        if (visible && !running) {
+          running = true;
+          rafId = requestAnimationFrame(tick);
+        } else if (!visible && running) {
+          running = false;
+          cancelAnimationFrame(rafId);
+        }
+      },
+      { threshold: 0.01 },
+    );
     observer.observe(stage);
 
     return () => {
@@ -348,7 +355,6 @@ export function CubeStage() {
             </button>
           ))}
         </nav>
-
 
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}

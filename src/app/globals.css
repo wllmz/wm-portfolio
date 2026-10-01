@@ -1477,8 +1477,6 @@ body::after {
   color: var(--color-cream);
 }
 
-/* ══════════════ CARTE PLEIN ÉCRAN — détail projet ══════════════ */
-
 @media (max-width: 820px) {
   :root {
     /* 68vw débordait du cadre sur un téléphone de 375px */
@@ -1649,7 +1647,6 @@ body::after {
 /* écrans courts (téléphone en paysage, petites fenêtres) :
    on épure pour que rien ne se chevauche */
 @media (max-height: 560px) {
-  
   .corner.bl,
   .corner.br {
     display: none;
@@ -1688,6 +1685,11 @@ body::after {
   .xpanel {
     transition: none;
     animation: none;
+  }
+  /* l'animation d'apparition est déjà coupée par le bloc 1024px plus haut
+     (règle plus spécifique) ; ici, la transition d'ouverture */
+  .xp-reveal {
+    transition: none;
   }
   .corner .dot-live {
     animation: none;

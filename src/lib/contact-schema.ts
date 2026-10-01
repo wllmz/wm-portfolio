@@ -37,7 +37,7 @@ export const contactSchema = z.object({
     .max(3000, "3 000 caractères maximum."),
   // honeypot anti-spam : doit rester vide, mais on ne le valide pas —
   // sinon le formulaire serait rejeté silencieusement au lieu d'être
-  // traité comme un bot par onSubmit et par Formspree (_gotcha).
+  // traité comme un bot par onSubmit (succès simulé, rien n'est envoyé).
   company: z.string().optional(),
 });
 

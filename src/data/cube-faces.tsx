@@ -126,4 +126,3 @@ export const ORIENT: Record<FaceKey, [number, number]> = {
   back: [-80, 16],
   suivi: [80, 16],
 };
-
