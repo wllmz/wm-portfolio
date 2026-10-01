@@ -24,6 +24,9 @@ export type Project = {
   tileIcon?: { src: string; w: number; h: number; bg: string };
   desc: ReactNode;
   faces: FaceKey[];
+  /* les deux mentions courtes de la carte sur l'accueil */
+  kind: string;
+  status: string;
 
   /* ── page de détail ── */
   tagline: string;
@@ -40,6 +43,8 @@ export const projects: Project[] = [
     slug: "freia-paris",
     num: "01",
     title: "Freïa Paris",
+    kind: "E-commerce",
+    status: "En production",
     logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
     desc: (
       <>
@@ -144,6 +149,8 @@ export const projects: Project[] = [
     slug: "alcma",
     num: "02",
     title: "Alcma",
+    kind: "ERP",
+    status: "Mission livrée",
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     desc: (
       <>
@@ -217,6 +224,8 @@ export const projects: Project[] = [
     slug: "dernier-mot",
     num: "03",
     title: "Dernier Mot",
+    kind: "Jeu mobile",
+    status: "En cours",
     logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
     // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
     // lequel le liseré crème du logotype a été dessiné.
@@ -353,6 +362,8 @@ export const projects: Project[] = [
     slug: "mylizy",
     num: "04",
     title: "MyLizy",
+    kind: "Santé B2B",
+    status: "En production",
     logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
