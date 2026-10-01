@@ -8,6 +8,7 @@ import {
   Children,
   type ReactNode,
 } from "react";
+import { FLOW_QUERY, useFlow } from "@/hooks/use-flow";
 
 /* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
    sinon dragger le cube change d'écran. */
@@ -52,6 +53,48 @@ export function Slider({
   const [idx, setIdx] = useState(0);
   const idxRef = useRef(0);
   const animating = useRef(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  /* Sous 820px, l'accueil n'est plus un slider mais une page qui défile :
+     chaque section prend sa hauteur naturelle. Le rendu serveur est celui du
+     slider (écrans 2 à 4 inert) : sur mobile, ils ne réagissent qu'une fois
+     l'hydratation faite, ce qui est sans gêne puisque le formulaire dépend
+     de toute façon du JS. */
+  const flow = useFlow();
+
+  /* Passage d'un mode à l'autre (tablette qu'on tourne, fenêtre qu'on
+     redimensionne) : on garde la section en cours au lieu de repartir du
+     haut. null tant que le premier état réel n'est pas connu. */
+  const prevFlow = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (prevFlow.current === null) {
+      prevFlow.current = window.matchMedia(FLOW_QUERY).matches;
+      return;
+    }
+    if (prevFlow.current === flow) return;
+    prevFlow.current = flow;
+    const track = trackRef.current;
+    if (!track) return;
+    const sections = Array.from(track.children);
+    if (flow) {
+      sections[idxRef.current]?.scrollIntoView({ block: "start" });
+      return;
+    }
+    // la section qui a le focus (un champ en cours de saisie), sinon celle
+    // qui occupe le haut de l'écran
+    let i = sections.findIndex((el) => el.contains(document.activeElement));
+    if (i < 0) {
+      i = sections.findIndex((el) => el.getBoundingClientRect().bottom > 80);
+    }
+    i = Math.max(0, i);
+    window.scrollTo(0, 0);
+    // arrivée directe sur la section, sans glissement depuis le haut
+    track.style.transition = "none";
+    idxRef.current = i;
+    setIdx(i);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => track.style.removeProperty("transition")),
+    );
+  }, [flow]);
 
   const go = useCallback(
     (i: number) => {
@@ -77,6 +120,8 @@ export function Slider({
      lien de ce genre aujourd'hui, à gérer explicitement s'il en apparaît. */
   useEffect(() => {
     const toHash = () => {
+      // page qui défile : le navigateur gère l'ancre lui-même
+      if (window.matchMedia(FLOW_QUERY).matches) return;
       const id = decodeURIComponent(window.location.hash.slice(1));
       if (!id) return;
       const target = document.getElementById(id);
@@ -93,6 +138,8 @@ export function Slider({
   }, []);
 
   useEffect(() => {
+    // page qui défile : le geste et les touches reviennent au navigateur
+    if (flow) return;
     /* Instant du dernier wheel absorbé par une zone défilante : l'inertie
        d'un trackpad continue d'envoyer des événements une fois la butée
        atteinte, ils ne doivent pas changer d'écran à la place du geste. */
@@ -150,11 +197,12 @@ export function Slider({
       window.removeEventListener("touchstart", onTS);
       window.removeEventListener("touchend", onTE);
     };
-  }, [go]);
+  }, [go, flow]);
 
   return (
     <main className="deck">
       <div
+        ref={trackRef}
         className="track"
         style={{ transform: `translateY(-${idx * 100}svh)` }}
       >
@@ -164,7 +212,7 @@ export function Slider({
           <div
             key={i}
             className={`slide${i === idx ? " on" : ""}`}
-            inert={i !== idx}
+            inert={!flow && i !== idx}
           >
             {slide}
           </div>

@@ -4,21 +4,25 @@ import { Projects } from "@/components/projects";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
+import { MobileBar } from "@/components/mobile-bar";
 
 export default function Home() {
   return (
-    <Slider labels={["Accueil", "Projets", "À propos", "Contact"]}>
-      {/* écran 1 : le hero (cube) */}
-      <CubeStage />
-      {/* écran 2 : les projets */}
-      <Projects />
-      {/* écran 3 : à propos */}
-      <About />
-      {/* écran 4 : contact + footer */}
-      <div className="contact-slide">
-        <Contact />
-        <Footer />
-      </div>
-    </Slider>
+    <>
+      <MobileBar />
+      <Slider labels={["Accueil", "Projets", "À propos", "Contact"]}>
+        {/* écran 1 : le hero (cube) */}
+        <CubeStage />
+        {/* écran 2 : les projets */}
+        <Projects />
+        {/* écran 3 : à propos */}
+        <About />
+        {/* écran 4 : contact + footer */}
+        <div className="contact-slide">
+          <Contact />
+          <Footer />
+        </div>
+      </Slider>
+    </>
   );
 }

@@ -15,6 +15,7 @@ import {
   type FaceKey,
 } from "@/data/cube-faces";
 import { Clock } from "./clock";
+import { useFlow } from "@/hooks/use-flow";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
 type CubeState = {
@@ -53,6 +54,10 @@ export function CubeStage() {
   const centerRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
+  /* page qui défile (mobile) : la carte d'une face y est une surcouche plein
+     écran, le focus doit y entrer et y rester */
+  const flow = useFlow();
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [openKey, setOpenKey] = useState<FaceKey | null>(null);
   // dernière face sélectionnée — garde le contenu pendant l'animation de sortie
   const [activeKey, setActiveKey] = useState<FaceKey>("design");
@@ -151,6 +156,16 @@ export function CubeStage() {
     }
     s.downFace = null;
   };
+
+  /* mobile : à l'ouverture, le focus passe dans la carte (bouton fermer).
+     La carte reste en visibility: hidden pendant les 200ms de délai de son
+     apparition, et un élément caché refuse le focus : on attend qu'elle
+     soit visible. */
+  useEffect(() => {
+    if (!flow || !openKey) return;
+    const id = window.setTimeout(() => closeBtnRef.current?.focus(), 260);
+    return () => window.clearTimeout(id);
+  }, [flow, openKey]);
 
   /* ── listeners globaux ── */
   useEffect(() => {
@@ -315,6 +330,13 @@ export function CubeStage() {
           Dispo <span className="accent">Freelance · Paris / remote</span>
         </p>
 
+        {/* mobile uniquement (masqué sur desktop) : la page y défile, le hero
+            a besoin d'une accroche lisible. La navigation, elle, reste dans
+            la barre du haut. */}
+        <p className="hero-pitch">
+          sites, apps mobiles et API, de la maquette à la mise en ligne.
+        </p>
+
         <div className="center" ref={centerRef}>
           <div
             className="scene"
@@ -359,8 +381,24 @@ export function CubeStage() {
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
           aria-live="polite"
+          /* surcouche mobile : un focus qui part ailleurs (Tab au-delà du
+             dernier lien) ferme la carte plutôt que de filer, invisible,
+             dans la page cachée dessous */
+          onBlur={(e) => {
+            if (
+              flow &&
+              openKey &&
+              !e.currentTarget.contains(e.relatedTarget as Node | null)
+            )
+              closeFace();
+          }}
         >
-          <button className="fc-close" aria-label="Fermer" onClick={closeFace}>
+          <button
+            ref={closeBtnRef}
+            className="fc-close"
+            aria-label="Fermer"
+            onClick={closeFace}
+          >
             ✕
           </button>
           <div className="fc-inner" key={activeKey}>

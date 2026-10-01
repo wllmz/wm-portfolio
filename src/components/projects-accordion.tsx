@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFlow } from "@/hooks/use-flow";
 
 /* Sous 1024px, l'accordéon passe à la verticale (CSS) : à quatre projets,
    les panneaux horizontaux repliés n'ont plus la largeur d'un titre. Une
@@ -31,6 +32,8 @@ export function ProjectsAccordion({ items }: { items: ProjectPanel[] }) {
      serveur ne connaît pas l'écran — mais la section n'est pas le premier
      slide, donc l'effet a joué bien avant qu'on y arrive. */
   const [active, setActive] = useState<number | null>(0);
+  // page qui défile (mobile) : toutes les cartes sont affichées ouvertes
+  const flow = useFlow();
 
   useEffect(() => {
     if (window.matchMedia(COLLAPSED).matches) setActive(null);
@@ -54,7 +57,7 @@ export function ProjectsAccordion({ items }: { items: ProjectPanel[] }) {
           <button
             type="button"
             className="xp-toggle sr-only"
-            aria-expanded={active === i}
+            aria-expanded={flow || active === i}
             aria-controls={`xp-reveal-${project.slug}`}
           >
             {`Projet ${project.num} : ${project.title}`}
