@@ -10,13 +10,8 @@ import {
 } from "react";
 
 /* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
-   sinon dragger le cube ou lire une étude de cas change d'écran. */
-const OWN_GESTURE = ".scene, .proj-modal, .face-card";
-
-/* Zones qui défilent à l'intérieur de leur écran. Elles ne confisquent pas le
-   geste : elles le gardent tant qu'il leur reste de la course, et le rendent
-   au slider une fois en butée — sinon on reste prisonnier de l'écran. */
-const SCROLLER = ".about-grid, #contact, .xp-reveal, .xpanels";
+   sinon dragger le cube change d'écran. */
+const OWN_GESTURE = ".scene, .face-card";
 
 /* Les touches de navigation servent d'abord au champ qui a le focus :
    déplacer le curseur dans le message ne doit pas changer d'écran. */
@@ -38,26 +33,6 @@ function canScroll(target: EventTarget | null, dir: 1 | -1): boolean {
       if (dir === -1 && el.scrollTop > 1) return true;
     }
     el = el.parentElement;
-  }
-  return false;
-}
-
-/** Le conteneur sous le doigt (ou le curseur) peut-il encore défiler dans ce
-    sens ? `dy > 0` = on descend, donc vers l'écran suivant. */
-function stillScrolls(target: EventTarget | null, dy: number) {
-  /* on remonte toute la chaîne : selon la taille d'écran, c'est le texte
-     révélé OU la pile de cartes qui porte le défilement */
-  let el = (target as HTMLElement | null)?.closest?.<HTMLElement>(SCROLLER);
-  while (el) {
-    /* un contenu plus haut que son cadre ne défile pas pour autant : sur
-       grand écran ces mêmes blocs sont en overflow visible */
-    const oy = getComputedStyle(el).overflowY;
-    if (oy === "auto" || oy === "scroll") {
-      const room = el.scrollHeight - el.clientHeight;
-      if (room > 2 && (dy > 0 ? el.scrollTop < room - 1 : el.scrollTop > 1))
-        return true;
-    }
-    el = el.parentElement?.closest<HTMLElement>(SCROLLER) ?? null;
   }
   return false;
 }
@@ -118,10 +93,16 @@ export function Slider({
        atteinte, ils ne doivent pas changer d'écran à la place du geste. */
     let lastInner = 0;
     const onWheel = (e: WheelEvent) => {
-      if (animating.current || modalOpen()) return;
-      if (stillScrolls(e.target, e.deltaY)) return;
-      if (e.deltaY > 24) go(idxRef.current + 1);
-      else if (e.deltaY < -24) go(idxRef.current - 1);
+      // ctrl + molette, c'est le pinch-zoom du trackpad
+      if (animating.current || e.ctrlKey) return;
+      const dir = e.deltaY > 24 ? 1 : e.deltaY < -24 ? -1 : 0;
+      if (!dir) return;
+      if (canScroll(e.target, dir)) {
+        lastInner = performance.now();
+        return;
+      }
+      if (performance.now() - lastInner < 250) return;
+      go(idxRef.current + dir);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
@@ -151,10 +132,8 @@ export function Slider({
     const onTE = (e: TouchEvent) => {
       if (held) return;
       const dy = ty - e.changedTouches[0].clientY;
-      /* la cible d'un touchend reste celle du touchstart : on interroge donc
-         bien le conteneur d'où le geste est parti */
-      if (stillScrolls(e.target, dy)) return;
-      if (Math.abs(dy) > 40) go(idxRef.current + (dy > 0 ? 1 : -1));
+      if (dy > 40 && !scrollDown) go(idxRef.current + 1);
+      else if (dy < -40 && !scrollUp) go(idxRef.current - 1);
     };
     window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("keydown", onKey);
