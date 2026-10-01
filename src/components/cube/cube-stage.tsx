@@ -242,8 +242,10 @@ export function CubeStage() {
         s.rotY += s.velY;
         s.rotX += s.velX;
         s.idle++;
-        if (s.idle > 30) {
-          s.rotY += reduceMotion ? 0.04 : 0.12;
+        /* rotation automatique : coupée si l'utilisateur demande moins
+           d'animations, le cube reste tournable à la main */
+        if (s.idle > 30 && !reduceMotion) {
+          s.rotY += 0.12;
           s.rotX += (-12 - s.rotX) * 0.012;
         }
       }
