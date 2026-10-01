@@ -14,6 +14,7 @@ import {
   ORIENT,
   type FaceKey,
 } from "@/data/cube-faces";
+import { Clock } from "./clock";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
 type CubeState = {
@@ -52,7 +53,6 @@ export function CubeStage() {
   const centerRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
-  const [clock, setClock] = useState("--:--:--");
   const [openKey, setOpenKey] = useState<FaceKey | null>(null);
   // dernière face sélectionnée — garde le contenu pendant l'animation de sortie
   const [activeKey, setActiveKey] = useState<FaceKey>("design");
@@ -152,14 +152,6 @@ export function CubeStage() {
     s.downFace = null;
   };
 
-  /* ── horloge ── */
-  useEffect(() => {
-    const upd = () => setClock(new Date().toLocaleTimeString("fr-FR"));
-    upd();
-    const id = setInterval(upd, 1000);
-    return () => clearInterval(id);
-  }, []);
-
   /* ── listeners globaux ── */
   useEffect(() => {
     reduceRef.current = window.matchMedia(
@@ -197,7 +189,7 @@ export function CubeStage() {
 
   /* ── boucle : rotation du cube, parallaxe souris, ouverture des faces ── */
   useEffect(() => {
-    requestAnimationFrame(() => setLoaded(true));
+    const loadId = requestAnimationFrame(() => setLoaded(true));
 
     const s = state.current;
     const reduceMotion = reduceRef.current;
@@ -207,11 +199,18 @@ export function CubeStage() {
 
     const cube = cubeRef.current;
     const center = centerRef.current;
-    if (!cube || !center) return;
+    const stage = stageRef.current;
+    if (!cube || !center || !stage) {
+      return () => {
+        cancelAnimationFrame(loadId);
+        window.clearTimeout(startTimer);
+      };
+    }
 
     const faces = Array.from(cube.querySelectorAll<HTMLElement>(".face"));
 
-    let rafId: number;
+    let rafId = 0;
+    let running = false;
 
     const tick = () => {
       s.cmx += (s.mx - s.cmx) * 0.06;
@@ -253,12 +252,27 @@ export function CubeStage() {
       if (!reduceMotion) {
         center.style.transform = `translate(${s.cmx * 12}px, ${s.cmy * 9}px)`;
       }
-      rafId = requestAnimationFrame(tick);
+      if (running) rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
+
+    /* la boucle ne tourne que quand le hero est à l'écran : sur les autres
+       écrans du slider, elle écrirait des styles pour rien à chaque frame */
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        rafId = requestAnimationFrame(tick);
+      } else if (!entry.isIntersecting && running) {
+        running = false;
+        cancelAnimationFrame(rafId);
+      }
+    });
+    observer.observe(stage);
 
     return () => {
+      running = false;
+      observer.disconnect();
       cancelAnimationFrame(rafId);
+      cancelAnimationFrame(loadId);
       window.clearTimeout(startTimer);
     };
   }, []);
@@ -285,9 +299,7 @@ export function CubeStage() {
           <span className="accent">React · Node</span>
         </p>
         <p className="corner bl">
-          <span className="clock" suppressHydrationWarning>
-            {clock}
-          </span>
+          <Clock />
         </p>
         <p className="corner br">
           <span className="dot-live" aria-hidden="true" />
