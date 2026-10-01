@@ -79,6 +79,7 @@ body::after {
 .deck {
   position: fixed;
   inset: 0;
+  overflow: hidden; /* repli pour Safari < 16 */
   overflow: clip;
 }
 .track {
@@ -1182,6 +1183,12 @@ body::after {
     flex 0.6s var(--ease-out),
     border-color 0.3s ease,
     background 0.3s ease;
+}
+/* le bouton d'ouverture est invisible : c'est le panneau qui montre le
+   focus clavier */
+.xpanel:has(.xp-toggle:focus-visible) {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 3px;
 }
 .xpanel:hover {
   border-color: var(--color-burgundy);

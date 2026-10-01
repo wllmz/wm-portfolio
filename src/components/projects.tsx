@@ -43,17 +43,18 @@ export function Projects() {
               className={`xpanel${active === i ? " active" : ""}`}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
+              /* onFocus remonte depuis le bouton comme depuis le lien : un
+                 retour en Shift+Tab sur le lien rouvre aussi son panneau */
+              onFocus={() => setActive(i)}
             >
               {/* le panneau s'ouvre au survol ou au clic ; ce bouton invisible
                   l'ouvre aussi au clavier, sinon seul le premier projet est
-                  atteignable en tabulant */}
+                  atteignable en tabulant. Le focus se voit sur le panneau. */}
               <button
                 type="button"
-                className="sr-only"
+                className="xp-toggle sr-only"
                 aria-expanded={active === i}
                 aria-controls={`xp-reveal-${project.slug}`}
-                onFocus={() => setActive(i)}
-                onClick={() => setActive(i)}
               >
                 {`Projet ${project.num} : ${project.title}`}
               </button>
@@ -64,7 +65,7 @@ export function Projects() {
                 <span className="xp-logo">
                   <Image
                     src={project.logo.src}
-                    alt={project.title}
+                    alt=""
                     width={project.logo.w}
                     height={project.logo.h}
                     priority

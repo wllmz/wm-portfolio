@@ -15,7 +15,8 @@ const OWN_GESTURE = ".scene, .face-card";
 
 /* Les touches de navigation servent d'abord au champ qui a le focus :
    déplacer le curseur dans le message ne doit pas changer d'écran. */
-const EDITABLE = "input, textarea, select, [contenteditable]";
+const EDITABLE =
+  'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
 
 /** Une zone défilante entre la cible et le slide peut encore défiler dans
     ce sens : le geste lui revient, le slider ne bouge qu'en butée. */
@@ -29,7 +30,7 @@ function canScroll(target: EventTarget | null, dir: 1 | -1): boolean {
     ) {
       if (dir === 1 && el.scrollTop + el.clientHeight < el.scrollHeight - 1)
         return true;
-      if (dir === -1 && el.scrollTop > 0) return true;
+      if (dir === -1 && el.scrollTop > 1) return true;
     }
     el = el.parentElement;
   }
@@ -38,7 +39,14 @@ function canScroll(target: EventTarget | null, dir: 1 | -1): boolean {
 
 /** Slider vertical plein écran : chaque enfant devient un écran, on glisse
     de l'un à l'autre à la molette / aux flèches / au swipe. */
-export function Slider({ children }: { children: ReactNode }) {
+export function Slider({
+  children,
+  labels = [],
+}: {
+  children: ReactNode;
+  /** nom de chaque écran, pour les points de navigation */
+  labels?: string[];
+}) {
   const slides = Children.toArray(children);
   const n = slides.length;
   const [idx, setIdx] = useState(0);
@@ -59,7 +67,9 @@ export function Slider({ children }: { children: ReactNode }) {
 
   /* Une ancre (/#contact) ouvre directement l'écran qui la contient. Le
      navigateur ne peut plus faire défiler .deck lui-même (overflow: clip),
-     c'est donc au slider de s'y rendre. */
+     c'est donc au slider de s'y rendre. Limite : un <Link href="/#x"> sur
+     la même page passe par pushState sans déclencher hashchange — aucun
+     lien de ce genre aujourd'hui, à gérer explicitement s'il en apparaît. */
   useEffect(() => {
     const toHash = () => {
       const id = decodeURIComponent(window.location.hash.slice(1));
@@ -78,17 +88,31 @@ export function Slider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    /* Instant du dernier wheel absorbé par une zone défilante : l'inertie
+       d'un trackpad continue d'envoyer des événements une fois la butée
+       atteinte, ils ne doivent pas changer d'écran à la place du geste. */
+    let lastInner = 0;
     const onWheel = (e: WheelEvent) => {
-      if (animating.current) return;
-      if (e.deltaY > 24 && !canScroll(e.target, 1)) go(idxRef.current + 1);
-      else if (e.deltaY < -24 && !canScroll(e.target, -1))
-        go(idxRef.current - 1);
+      // ctrl + molette, c'est le pinch-zoom du trackpad
+      if (animating.current || e.ctrlKey) return;
+      const dir = e.deltaY > 24 ? 1 : e.deltaY < -24 ? -1 : 0;
+      if (!dir) return;
+      if (canScroll(e.target, dir)) {
+        lastInner = performance.now();
+        return;
+      }
+      if (performance.now() - lastInner < 250) return;
+      go(idxRef.current + dir);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       if (e.target instanceof Element && e.target.closest(EDITABLE)) return;
-      if (["ArrowDown", "PageDown"].includes(e.key)) go(idxRef.current + 1);
-      if (["ArrowUp", "PageUp"].includes(e.key)) go(idxRef.current - 1);
+      const dir = ["ArrowDown", "PageDown"].includes(e.key)
+        ? 1
+        : ["ArrowUp", "PageUp"].includes(e.key)
+          ? -1
+          : 0;
+      if (dir && !canScroll(e.target, dir)) go(idxRef.current + dir);
     };
     /* Le geste tactile est verrouillé s'il démarre dans une zone qui gère
        elle-même le glissement (le cube), ou dans une zone qui pouvait encore
@@ -146,7 +170,7 @@ export function Slider({ children }: { children: ReactNode }) {
           <button
             key={i}
             className={i === idx ? "on" : undefined}
-            aria-label={`Écran ${i + 1}`}
+            aria-label={labels[i] ?? `Écran ${i + 1}`}
             aria-current={i === idx}
             onClick={() => go(i)}
           />
