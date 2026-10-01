@@ -66,15 +66,26 @@ export const projects: Project[] = [
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
     livre: [
       "La boutique : collection, fiches produit, panier et commande.",
-      "La gestion du stock, affichée en direct sur chaque fiche produit.",
       "La mise en page éditoriale : visuels pleine largeur, bandeau défilant, mise en avant du fait-main.",
-      "L'hébergement de bout en bout : serveur, nom de domaine, HTTPS, sauvegardes.",
-      "Le suivi après la mise en ligne.",
+      "La gestion du stock, affichée en direct sur chaque fiche produit.",
+      "Le paiement Stripe et la livraison en point relais ou à domicile avec Mondial Relay.",
+      "Les e-mails automatiques : confirmation, expédition, relance de panier abandonné, demande d'avis.",
       "Authentification et autorisations pour l'accès à l'administration.",
       "L'administration : gestion des produits, des stocks et des commandes.",
       "Suivi statistiques et commandes, avec export CSV pour la comptabilité.",
+      "L'hébergement de bout en bout : serveur, nom de domaine, HTTPS, sauvegardes.",
+      "Le suivi après la mise en ligne.",
     ],
-    stack: ["React", "Node.js", "Docker", "Traefik", "VPS"],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Express",
+      "MongoDB",
+      "Stripe",
+      "Mondial Relay",
+      "Docker",
+      "Traefik",
+    ],
     shots: [
       {
         src: "/projets/freia/accueil.png",
@@ -148,24 +159,35 @@ export const projects: Project[] = [
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     desc: (
       <>
-        Logiciel de facturation développé <strong>en équipe</strong> pour un
-        client : interfaces, API et logique métier, tests et suivi des
-        évolutions.
+        ERP développé from scratch <strong>en binôme</strong> pour le client
+        d&apos;une agence : facturation, gestion de projet, API et
+        déploiement.
       </>
     ),
-    faces: ["front", "back", "quality", "suivi"],
+    faces: ["front", "back", "quality", "deploy", "suivi"],
     lead: "back",
     tagline:
-      "Un logiciel de facturation en SaaS, vendu en licence à des entreprises.",
+      "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
-      "Alcma n'est pas un outil de facturation pour une seule société : chaque entreprise cliente a son espace, ses utilisateurs et son quota. Un back-office permet de gérer les licences vendues et de suivre l'ensemble des comptes. J'ai travaillé dessus en équipe.",
+      "Mission freelance pour Alcma, agence web : un ERP développé from scratch en binôme pour l'un de ses clients, avec un designer UX/UI pour les interfaces. Chaque entreprise cliente a son espace, ses utilisateurs et sa licence ; un back-office permet de gérer les licences vendues et de suivre l'ensemble des comptes.",
     livre: [
-      "Les écrans de facturation : devis et factures, statuts, échéances, montants HT et TTC.",
+      "La facturation conforme aux réglementations 2026 : devis et factures, statuts, échéances, relances, export PDF.",
+      "La gestion de projet : kanban, tâches et sous-tâches, jalons, suivi d'avancement.",
       "Le tableau de bord de trésorerie : revenus, dépenses, résultat après impôts, charges.",
       "Le back-office : licences et formules, quotas, modules activables, entreprises rattachées.",
+      "La sécurité : authentification JWT, rôles du super-admin à l'employé, données sensibles chiffrées en base.",
+      "Trois environnements (staging, pré-prod, prod) déployés avec Docker et Traefik.",
       "Les tests sur ce que j'ai livré, et le suivi des évolutions.",
     ],
-    stack: ["React", "TypeScript", "Node.js"],
+    stack: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+      "Docker",
+      "Traefik",
+    ],
     shots: [
       {
         src: "/projets/alcma/dashboard.png",
@@ -220,26 +242,33 @@ export const projects: Project[] = [
     desc: (
       <>
         Jeu mobile de mots au tour par tour,{" "}
-        <strong>multijoueur temps réel</strong>. Conçu, développé et déployé en
-        solo, les six faces d&apos;un coup.
+        <strong>multijoueur temps réel</strong>. Projet personnel en cours,
+        développé seul, du moteur de jeu à l&apos;app.
       </>
     ),
-    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
+    faces: ["front", "back", "quality"],
     lead: "front",
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
-      "Projet mené seul, de l'idée à la mise en ligne : c'est le seul des trois où j'ai couvert les six faces sans personne d'autre.",
+      "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
     livre: [
       "Le jeu : parties au tour par tour, de 2 à 8 joueurs, sur un seul téléphone ou en ligne.",
       "Le temps réel : chaque coup arrive chez l'adversaire sans rechargement.",
       "Les rooms en ligne : un code à partager, les joueurs qui rejoignent et l'état de la connexion en direct.",
       "Deux modes de jeu, chacun avec ses réglages : classique au chrono, et time-bomb à mèche cachée.",
       "Le catalogue de questions : univers, sous-thèmes et banques de réponses.",
-      "Les achats intégrés : boutique, déblocage définitif des sous-thèmes et restauration des achats.",
-      "L'identité visuelle et les écrans de l'application.",
-      "La mise en ligne et le suivi.",
+      "Le moteur de jeu arbitré par le serveur : réponses, chronos et éliminations, avec une API testée avec Vitest.",
+      "La boutique : déblocage des sous-thèmes en achat unique, validé côté serveur (le paiement App Store reste à brancher).",
+      "L'intégration de la direction artistique fournie, écran par écran.",
     ],
-    stack: ["React Native", "Expo", "Node.js", "Socket.io"],
+    stack: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Fastify",
+      "Socket.IO",
+      "MongoDB",
+    ],
     shots: [
       {
         src: "/projets/dernier-mot/accueil.jpeg",
@@ -267,7 +296,7 @@ export const projects: Project[] = [
         alt: "Boutique de l'application : déblocage des 34 sous-thèmes pour 4,99 € et restauration des achats",
         w: 946,
         h: 2048,
-        caption: "La boutique : un achat unique, sans abonnement ni pub, restaurable sur tous les appareils.",
+        caption: "La boutique : un achat unique, sans abonnement ni pub (paiement App Store à brancher).",
       },
       {
         src: "/projets/dernier-mot/player-choose.jpeg",
@@ -337,7 +366,7 @@ export const projects: Project[] = [
   {
     slug: "mylizy",
     num: "04",
-    title: "Mylizy",
+    title: "MyLizy",
     logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
@@ -350,7 +379,7 @@ export const projects: Project[] = [
     desc: (
       <>
         <strong>Flow</strong>, la plateforme d&apos;accompagnement à la
-        parentalité de Mylizy : contenus calés sur l&apos;âge de l&apos;enfant,
+        parentalité de MyLizy : contenus calés sur l&apos;âge de l&apos;enfant,
         ateliers et rendez-vous avec des professionnels.
       </>
     ),
@@ -358,7 +387,7 @@ export const projects: Project[] = [
     lead: "back",
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
-      "Mylizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
+      "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
     livre: [
       "L'espace parent : la famille, les enfants, le suivi du parcours et les contenus mis de côté.",
       "Les recommandations : des articles calés sur la situation du parent et sur l'âge de chaque enfant.",

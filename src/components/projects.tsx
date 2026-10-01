@@ -30,7 +30,7 @@ export function Projects() {
       <div className="proj-frame">
         <header className="proj-head">
           <span className="block text-[0.72rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
-            Projets, les vrais en prod
+            Projets livrés et en cours
           </span>
           <h2 className="mt-3 font-title text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.08] tracking-tight">
             quatre projets,{" "}

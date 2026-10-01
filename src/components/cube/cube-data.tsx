@@ -53,7 +53,7 @@ export const FACES: Record<FaceKey, FaceInfo> = {
   back: {
     num: 3,
     title: "back",
-    skills: ["Node.js", "REST · Socket.io", "MongoDB"],
+    skills: ["Node.js", "REST · Socket.IO", "MongoDB"],
     ex: (
       <>
         Le moteur invisible : la logique métier, les données et le temps réel

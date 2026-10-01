@@ -3,7 +3,7 @@ import Image from "next/image";
 /* les repères pratiques — ce qu'un client veut savoir avant d'écrire */
 const FACTS = [
   { k: "Statut", v: "Freelance" },
-  { k: "Où", v: "Remote" },
+  { k: "Où", v: "Paris ou remote" },
   { k: "Réponse", v: "Sous 24 h" },
   { k: "Premier échange", v: "Gratuit" },
 ];
@@ -49,9 +49,10 @@ export function About() {
             </p>
             <p>
               En solo, vous avez un seul interlocuteur du premier échange à la
-              maintenance. En équipe, je m&apos;intègre à celle qui existe déjà.
-              C&apos;est ce que j&apos;ai fait sur <strong>Alcma</strong>, un
-              logiciel de facturation développé à plusieurs.
+              maintenance. En équipe, je travaille avec vos développeurs et vos
+              designers. C&apos;est ce que j&apos;ai fait chez{" "}
+              <strong>Alcma</strong>, agence web : un ERP développé en binôme,
+              avec un designer UX/UI.
             </p>
             <dl className="about-facts">
               {FACTS.map((f) => (
