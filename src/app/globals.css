@@ -73,10 +73,14 @@ body::after {
 
 /* ══════════════ SLIDER VERTICAL ══════════════
    Chaque écran fait 100vh ; on glisse de l'un à l'autre. */
+/* clip et non hidden : un conteneur hidden reste défilable par programme, et
+   une ancre ou un focus clavier le faisait défiler en plus du translateY —
+   l'écran se retrouvait à cheval entre deux sections. */
 .deck {
   position: fixed;
   inset: 0;
-  overflow: hidden;
+  overflow: hidden; /* repli pour Safari < 16 */
+  overflow: clip;
 }
 .track {
   height: 100%;
@@ -1063,6 +1067,10 @@ body::after {
 .about-frame {
   position: relative;
   flex: 1;
+  /* min-width: 0 : sans lui, l'encadré s'élargit à la largeur minimale de
+     son contenu (les pastilles en nowrap des panneaux repliés) et déborde
+     de l'écran à droite */
+  min-width: 0;
   min-height: 0;
   /* `min-width: auto` sur un flex-item en ligne fait grandir le cadre jusqu'à
      la largeur minimale de son contenu : à quatre panneaux, il débordait de
@@ -1216,6 +1224,12 @@ body::after {
     flex 0.6s var(--ease-out),
     border-color 0.3s ease,
     background 0.3s ease;
+}
+/* le bouton d'ouverture est invisible : c'est le panneau qui montre le
+   focus clavier */
+.xpanel:has(.xp-toggle:focus-visible) {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 3px;
 }
 .xpanel:hover {
   border-color: var(--color-burgundy);

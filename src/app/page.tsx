@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer";
 
 export default function Home() {
   return (
-    <Slider>
+    <Slider labels={["Accueil", "Projets", "À propos", "Contact"]}>
       {/* écran 1 : le hero (cube) */}
       <CubeStage />
       {/* écran 2 : les projets */}
