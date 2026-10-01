@@ -334,4 +334,112 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    slug: "mylizy",
+    num: "04",
+    title: "Mylizy",
+    logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
+    /* le logotype porte ses propres couleurs sur fond transparent : il lui
+       faut un fond clair pour tenir sur la tuile */
+    tileIcon: {
+      src: "/projets/mylizy/logo.png",
+      w: 500,
+      h: 500,
+      bg: "#fbfaf7",
+    },
+    desc: (
+      <>
+        <strong>Flow</strong>, la plateforme d&apos;accompagnement à la
+        parentalité de Mylizy : contenus calés sur l&apos;âge de l&apos;enfant,
+        ateliers et rendez-vous avec des professionnels.
+      </>
+    ),
+    faces: ["front", "back", "quality", "suivi"],
+    lead: "back",
+    tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
+    contexte:
+      "Mylizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
+    livre: [
+      "L'espace parent : la famille, les enfants, le suivi du parcours et les contenus mis de côté.",
+      "Les recommandations : des articles calés sur la situation du parent et sur l'âge de chaque enfant.",
+      "Les ateliers : catalogue, places restantes, inscription et avis après coup.",
+      "La prise de rendez-vous avec les professionnels de la périnatalité, depuis leurs contenus.",
+      "Le parcours d'entrée : création de compte, vérification de l'adresse, profil parent puis enfant.",
+      "L'abonnement : formules Premium, paiement en ligne, et bascule sur l'offre de l'entreprise partenaire.",
+      "L'espace entreprise : contrat, collaborateurs rattachés et droits associés.",
+      "L'administration : utilisateurs, contenus, ateliers et pages légales.",
+      "Les données de santé chiffrées en base, et l'API protégée contre les abus.",
+      "Le suivi et les évolutions après la mise en ligne.",
+    ],
+    stack: ["React", "Vite", "Tailwind CSS", "Node.js", "MongoDB", "Stripe"],
+    shots: [
+      {
+        src: "/projets/mylizy/accueil.png",
+        alt: "Accueil de Flow : la famille, les articles recommandés et les prochains ateliers",
+        w: 370,
+        h: 702,
+        caption:
+          "L'accueil : la famille, les articles calés sur l'âge de chaque enfant, les prochains ateliers.",
+      },
+      {
+        src: "/projets/mylizy/article.png",
+        alt: "Article rédigé par une psychologue clinicienne, avec un bouton Prendre RDV",
+        w: 407,
+        h: 706,
+        caption:
+          "Un contenu signé par une professionnelle — et le rendez-vous se prend depuis l'article.",
+      },
+      {
+        src: "/projets/mylizy/inscription.png",
+        alt: "Page d'inscription à Flow : email, mot de passe et confirmation",
+        w: 1232,
+        h: 715,
+        caption: "La création de compte.",
+      },
+      {
+        src: "/projets/mylizy/cgu.png",
+        alt: "Conditions générales d'utilisation et politique de confidentialité de Flow",
+        w: 1230,
+        h: 712,
+        caption:
+          "Le consentement, explicite : données de santé chiffrées, lisibles par le seul parent.",
+      },
+      {
+        src: "/projets/mylizy/verification-email.png",
+        alt: "Écran demandant la confirmation de l'adresse e-mail avant d'activer le compte",
+        w: 1230,
+        h: 717,
+        caption: "L'adresse est vérifiée avant que le compte s'ouvre.",
+      },
+      {
+        src: "/projets/mylizy/onboarding-parent.png",
+        alt: "Première étape du profil : prénom, situation personnelle et professionnelle",
+        w: 1232,
+        h: 713,
+        caption: "Le profil du parent : c'est lui qui décide du contenu proposé ensuite.",
+      },
+      {
+        src: "/projets/mylizy/onboarding-enfant.png",
+        alt: "Étape enfant : né ou à naître, date de naissance et lien de parenté",
+        w: 1230,
+        h: 712,
+        caption: "L'enfant : né ou à naître, sa date, le lien de parenté.",
+      },
+      {
+        src: "/projets/mylizy/onboarding-prenom.png",
+        alt: "Étape enfant : saisie du prénom et choix du sexe",
+        w: 1231,
+        h: 712,
+        caption: "Son prénom, pour que l'application parle de lui par son nom.",
+      },
+      {
+        src: "/projets/mylizy/abonnement.png",
+        alt: "Choix de l'abonnement Flow Premium, avec l'encart offre partenaire",
+        w: 1225,
+        h: 708,
+        caption:
+          "L'abonnement — et l'offre partenaire qui prend le relais quand l'employeur a souscrit.",
+      },
+    ],
+  },
 ];

@@ -87,7 +87,16 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
       >
         <span
           className={icon ? "app-icon app-icon--logo" : `app-icon app-icon--${device}`}
-          style={icon ? { background: icon.bg } : undefined}
+          /* le pavé se resserre sur le logotype : dessiné pour un mot large,
+             il laissait deux bandes vides autour d'un logo carré */
+          style={
+            icon
+              ? {
+                  background: icon.bg,
+                  width: `min(104px, calc(44px * ${icon.w / icon.h} + 20px))`,
+                }
+              : undefined
+          }
           aria-hidden="true"
         >
           {icon ? (
@@ -158,6 +167,14 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
                 className="browser"
                 onTouchStart={onTouchStart}
                 onTouchEnd={onTouchEnd}
+                /* le cadre épouse la capture affichée : un même projet peut
+                   mêler pages hautes et écrans larges, et `cover` ne rogne
+                   rien tant que le cadre a le ratio de l'image. La largeur
+                   est bornée par la hauteur dispo pour qu'une page haute ne
+                   déborde jamais de l'écran. */
+                style={{
+                  width: `min(var(--browser-max), calc(66vh * ${shots[i].w / shots[i].h}))`,
+                }}
               >
                 <div className="browser-bar" aria-hidden="true">
                   <span className="browser-dots">
@@ -168,7 +185,7 @@ export function Showcase({ title, subtitle, shots, device, icon }: Props) {
                 </div>
                 <div
                   className="browser-view"
-                  style={{ aspectRatio: `${shots[0].w} / ${shots[0].h}` }}
+                  style={{ aspectRatio: `${shots[i].w} / ${shots[i].h}` }}
                 >
                   {track}
                 </div>

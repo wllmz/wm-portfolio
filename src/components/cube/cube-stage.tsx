@@ -264,7 +264,11 @@ export function CubeStage() {
   }, []);
 
   return (
-    <div ref={stageRef} className={`stage${loaded ? " loaded" : ""}`} id="stage">
+    <div
+      ref={stageRef}
+      className={`stage${loaded ? " loaded" : ""}`}
+      id="stage"
+    >
       <section className="hero" aria-label="William Martinez, fullstack">
         <div className="frame" aria-hidden="true" />
 
@@ -332,7 +336,7 @@ export function CubeStage() {
           ))}
         </nav>
 
-        <div className="scroll-line" aria-hidden="true" />
+        {/* <div className="scroll-line" aria-hidden="true" /> */}
 
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
