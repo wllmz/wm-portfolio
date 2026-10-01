@@ -73,10 +73,13 @@ body::after {
 
 /* ══════════════ SLIDER VERTICAL ══════════════
    Chaque écran fait 100vh ; on glisse de l'un à l'autre. */
+/* clip et non hidden : un conteneur hidden reste défilable par programme, et
+   une ancre ou un focus clavier le faisait défiler en plus du translateY —
+   l'écran se retrouvait à cheval entre deux sections. */
 .deck {
   position: fixed;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
 }
 .track {
   height: 100%;
@@ -134,10 +137,12 @@ body::after {
   display: flex;
 }
 /* centrage par margin plutôt que par align-items : quand le contenu dépasse,
-   `center` rend le haut inatteignable au scroll, `auto` non. */
+   `center` rend le haut inatteignable au scroll, `auto` non. Auto aussi à
+   l'horizontale : ce sélecteur écrase le `margin: 0 auto` de .contact-frame,
+   qui se collait sinon à gauche dès que l'écran dépasse sa max-width. */
 .contact-slide > #contact > * {
   width: 100%;
-  margin: auto 0;
+  margin: auto;
 }
 
 /* ══════════════ LE HERO ══════════════
@@ -1028,6 +1033,10 @@ body::after {
 .about-frame {
   position: relative;
   flex: 1;
+  /* min-width: 0 : sans lui, l'encadré s'élargit à la largeur minimale de
+     son contenu (les pastilles en nowrap des panneaux repliés) et déborde
+     de l'écran à droite */
+  min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
