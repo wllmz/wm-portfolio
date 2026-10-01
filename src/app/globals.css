@@ -41,10 +41,13 @@ body {
   user-select: none;
   -webkit-touch-callout: none;
 }
-/* …sauf les champs de saisie, sinon on ne peut plus éditer ce qu'on tape */
+/* …sauf les champs de saisie, sinon on ne peut plus éditer ce qu'on tape,
+   et le message d'erreur du formulaire : l'adresse de secours qu'il donne
+   doit pouvoir se copier */
 input,
 textarea,
-select {
+select,
+.cform-status {
   -webkit-user-select: text;
   user-select: text;
 }

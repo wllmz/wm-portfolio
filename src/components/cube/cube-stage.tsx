@@ -286,13 +286,15 @@ export function CubeStage() {
       <section className="hero" aria-label="William Martinez, fullstack">
         <div className="frame" aria-hidden="true" />
 
-        <p className="corner tl">
-          <span className="wm-mini" aria-label="wm">
+        {/* le titre de la page : le nom, dans le coin du hero (le preflight
+            Tailwind remet h1 à la taille et à la graisse du texte courant) */}
+        <h1 className="corner tl">
+          <span className="wm-mini" aria-hidden="true">
             wm<span className="accent">.</span>
           </span>
           <br />
           William Martinez
-        </p>
+        </h1>
         <p className="corner tr">
           Fullstack
           <br />

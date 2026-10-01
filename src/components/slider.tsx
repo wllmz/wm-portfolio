@@ -153,7 +153,7 @@ export function Slider({
   }, [go]);
 
   return (
-    <div className="deck">
+    <main className="deck">
       <div
         className="track"
         style={{ transform: `translateY(-${idx * 100}svh)` }}
@@ -181,6 +181,6 @@ export function Slider({
           />
         ))}
       </nav>
-    </div>
+    </main>
   );
 }
