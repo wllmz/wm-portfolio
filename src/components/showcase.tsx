@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { Shot } from "@/data/projects";
+import type { Project, Shot } from "@/data/projects";
 
 type Device = "phone" | "browser";
 
-type TileIcon = { src: string; w: number; h: number; bg: string };
+type TileIcon = NonNullable<Project["tileIcon"]>;
 
 type Props = {
   title: string;

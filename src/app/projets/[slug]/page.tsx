@@ -7,13 +7,18 @@ import { Showcase } from "@/components/showcase";
 
 type Params = { params: Promise<{ slug: string }> };
 
+/* seuls les projets connus existent : tout autre slug répond 404 sans
+   tenter de rendu à la demande */
+export const dynamicParams = false;
+
+const getProject = (slug: string) => projects.find((p) => p.slug === slug);
+
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProject((await params).slug);
   if (!project) return {};
   return {
     title: `${project.title} · William Martinez`,
@@ -22,8 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function ProjetPage({ params }: Params) {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = getProject((await params).slug);
   if (!project) notFound();
 
   return (
