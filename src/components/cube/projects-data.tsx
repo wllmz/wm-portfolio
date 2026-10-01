@@ -66,6 +66,7 @@ export const projects: Project[] = [
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
     livre: [
       "La boutique : collection, fiches produit, panier et commande.",
+      "Le paiement Stripe et la livraison en point relais ou à domicile avec Mondial Relay.",
       "La gestion du stock, affichée en direct sur chaque fiche produit.",
       "La mise en page éditoriale : visuels pleine largeur, bandeau défilant, mise en avant du fait-main.",
       "L'hébergement de bout en bout : serveur, nom de domaine, HTTPS, sauvegardes.",
@@ -73,8 +74,17 @@ export const projects: Project[] = [
       "Authentification et autorisations pour l'accès à l'administration.",
       "L'administration : gestion des produits, des stocks et des commandes.",
       "Suivi statistiques et commandes, avec export CSV pour la comptabilité.",
+      "Les emails automatiques : confirmation, expédition, relance de panier abandonné, demande d'avis.",
     ],
-    stack: ["React", "Node.js", "Docker", "Traefik", "VPS"],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Express",
+      "MongoDB",
+      "Stripe",
+      "Docker",
+      "Traefik",
+    ],
     shots: [
       {
         src: "/projets/freia/accueil.png",
@@ -148,24 +158,35 @@ export const projects: Project[] = [
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     desc: (
       <>
-        Logiciel de facturation développé <strong>en équipe</strong> pour un
-        client : interfaces, API et logique métier, tests et suivi des
-        évolutions.
+        ERP développé from scratch <strong>en binôme</strong> pour le client
+        d&apos;une agence : facturation, gestion de projet, API et
+        déploiement.
       </>
     ),
-    faces: ["front", "back", "quality", "suivi"],
+    faces: ["front", "back", "quality", "deploy", "suivi"],
     lead: "back",
     tagline:
-      "Un logiciel de facturation en SaaS, vendu en licence à des entreprises.",
+      "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
-      "Alcma n'est pas un outil de facturation pour une seule société : chaque entreprise cliente a son espace, ses utilisateurs et son quota. Un back-office permet de gérer les licences vendues et de suivre l'ensemble des comptes. J'ai travaillé dessus en équipe.",
+      "Mission freelance pour Alcma, agence web : un ERP développé from scratch en binôme pour l'un de ses clients, avec un designer UX/UI pour les interfaces. Chaque entreprise cliente a son espace, ses utilisateurs et sa licence ; un back-office permet de gérer les licences vendues et de suivre l'ensemble des comptes.",
     livre: [
-      "Les écrans de facturation : devis et factures, statuts, échéances, montants HT et TTC.",
+      "Les écrans de facturation conformes à la réglementation 2026 : devis et factures, statuts, échéances, relances, export PDF.",
+      "La gestion de projet : kanban, tâches et sous-tâches, jalons, suivi d'avancement.",
       "Le tableau de bord de trésorerie : revenus, dépenses, résultat après impôts, charges.",
       "Le back-office : licences et formules, quotas, modules activables, entreprises rattachées.",
+      "La sécurité : authentification JWT, rôles du super-admin à l'employé, données sensibles chiffrées en base.",
+      "Trois environnements (staging, pré-prod, prod) déployés avec Docker et Traefik.",
       "Les tests sur ce que j'ai livré, et le suivi des évolutions.",
     ],
-    stack: ["React", "TypeScript", "Node.js"],
+    stack: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+      "Docker",
+      "Traefik",
+    ],
     shots: [
       {
         src: "/projets/alcma/dashboard.png",
@@ -220,26 +241,33 @@ export const projects: Project[] = [
     desc: (
       <>
         Jeu mobile de mots au tour par tour,{" "}
-        <strong>multijoueur temps réel</strong>. Conçu, développé et déployé en
-        solo, les six faces d&apos;un coup.
+        <strong>multijoueur temps réel</strong>. Projet personnel en cours,
+        développé seul, du moteur de jeu à l&apos;app.
       </>
     ),
-    faces: ["design", "front", "back", "quality", "deploy", "suivi"],
+    faces: ["front", "back", "quality"],
     lead: "front",
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
-      "Projet mené seul, de l'idée à la mise en ligne : c'est le seul des trois où j'ai couvert les six faces sans personne d'autre.",
+      "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
     livre: [
       "Le jeu : parties au tour par tour, de 2 à 8 joueurs, sur un seul téléphone ou en ligne.",
       "Le temps réel : chaque coup arrive chez l'adversaire sans rechargement.",
       "Les rooms en ligne : un code à partager, les joueurs qui rejoignent et l'état de la connexion en direct.",
       "Deux modes de jeu, chacun avec ses réglages : classique au chrono, et time-bomb à mèche cachée.",
       "Le catalogue de questions : univers, sous-thèmes et banques de réponses.",
-      "Les achats intégrés : boutique, déblocage définitif des sous-thèmes et restauration des achats.",
-      "L'identité visuelle et les écrans de l'application.",
-      "La mise en ligne et le suivi.",
+      "Le moteur de jeu arbitré par le serveur : réponses, chronos et éliminations, avec une API testée avec Vitest.",
+      "La boutique : déblocage des sous-thèmes en achat unique, validé côté serveur (le paiement App Store reste à brancher).",
+      "L'intégration de la direction artistique fournie, sur tous les écrans de préparation de partie.",
     ],
-    stack: ["React Native", "Expo", "Node.js", "Socket.io"],
+    stack: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Fastify",
+      "Socket.IO",
+      "MongoDB",
+    ],
     shots: [
       {
         src: "/projets/dernier-mot/accueil.jpeg",

@@ -3,7 +3,7 @@ import Image from "next/image";
 /* les repères pratiques — ce qu'un client veut savoir avant d'écrire */
 const FACTS = [
   { k: "Statut", v: "Freelance" },
-  { k: "Où", v: "Remote" },
+  { k: "Où", v: "Paris ou remote" },
   { k: "Réponse", v: "Sous 24 h" },
   { k: "Premier échange", v: "Gratuit" },
 ];
@@ -51,7 +51,7 @@ export function About() {
               En solo, vous avez un seul interlocuteur du premier échange à la
               maintenance. En équipe, je m&apos;intègre à celle qui existe déjà.
               C&apos;est ce que j&apos;ai fait sur <strong>Alcma</strong>, un
-              logiciel de facturation développé à plusieurs.
+              ERP développé en binôme pour le client d&apos;une agence.
             </p>
             <dl className="about-facts">
               {FACTS.map((f) => (
