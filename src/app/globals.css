@@ -662,7 +662,7 @@ body::after {
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--color-navy);
-  opacity: 0.7;
+  opacity: 0.75;
   transition: opacity 0.2s ease;
 }
 .case-back:hover {
@@ -1164,7 +1164,7 @@ body::after {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(45, 54, 96, 0.45);
+  color: rgba(45, 54, 96, 0.75); /* 4,7:1 sur le crème */
 }
 .about-facts dd {
   margin-top: 4px;
@@ -1866,7 +1866,7 @@ body::after {
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(45, 54, 96, 0.5);
+  color: rgba(45, 54, 96, 0.75);
 }
 .contact-title {
   margin-top: 8px;
@@ -1934,7 +1934,7 @@ body::after {
 }
 .cfield input::placeholder,
 .cfield textarea::placeholder {
-  color: rgba(45, 54, 96, 0.45);
+  color: rgba(45, 54, 96, 0.62);
 }
 /* flèche custom pour le select */
 .cfield select {
