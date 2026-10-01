@@ -365,7 +365,7 @@ export const projects: Project[] = [
   {
     slug: "mylizy",
     num: "04",
-    title: "Mylizy",
+    title: "MyLizy",
     logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
@@ -378,7 +378,7 @@ export const projects: Project[] = [
     desc: (
       <>
         <strong>Flow</strong>, la plateforme d&apos;accompagnement à la
-        parentalité de Mylizy : contenus calés sur l&apos;âge de l&apos;enfant,
+        parentalité de MyLizy : contenus calés sur l&apos;âge de l&apos;enfant,
         ateliers et rendez-vous avec des professionnels.
       </>
     ),
@@ -386,7 +386,7 @@ export const projects: Project[] = [
     lead: "back",
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
-      "Mylizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
+      "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
     livre: [
       "L'espace parent : la famille, les enfants, le suivi du parcours et les contenus mis de côté.",
       "Les recommandations : des articles calés sur la situation du parent et sur l'âge de chaque enfant.",
