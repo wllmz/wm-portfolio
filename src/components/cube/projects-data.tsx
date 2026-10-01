@@ -66,15 +66,15 @@ export const projects: Project[] = [
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
     livre: [
       "La boutique : collection, fiches produit, panier et commande.",
-      "Le paiement Stripe et la livraison en point relais ou à domicile avec Mondial Relay.",
-      "La gestion du stock, affichée en direct sur chaque fiche produit.",
       "La mise en page éditoriale : visuels pleine largeur, bandeau défilant, mise en avant du fait-main.",
-      "L'hébergement de bout en bout : serveur, nom de domaine, HTTPS, sauvegardes.",
-      "Le suivi après la mise en ligne.",
+      "La gestion du stock, affichée en direct sur chaque fiche produit.",
+      "Le paiement Stripe et la livraison en point relais ou à domicile avec Mondial Relay.",
+      "Les e-mails automatiques : confirmation, expédition, relance de panier abandonné, demande d'avis.",
       "Authentification et autorisations pour l'accès à l'administration.",
       "L'administration : gestion des produits, des stocks et des commandes.",
       "Suivi statistiques et commandes, avec export CSV pour la comptabilité.",
-      "Les emails automatiques : confirmation, expédition, relance de panier abandonné, demande d'avis.",
+      "L'hébergement de bout en bout : serveur, nom de domaine, HTTPS, sauvegardes.",
+      "Le suivi après la mise en ligne.",
     ],
     stack: [
       "Next.js",
@@ -82,6 +82,7 @@ export const projects: Project[] = [
       "Express",
       "MongoDB",
       "Stripe",
+      "Mondial Relay",
       "Docker",
       "Traefik",
     ],
@@ -170,7 +171,7 @@ export const projects: Project[] = [
     contexte:
       "Mission freelance pour Alcma, agence web : un ERP développé from scratch en binôme pour l'un de ses clients, avec un designer UX/UI pour les interfaces. Chaque entreprise cliente a son espace, ses utilisateurs et sa licence ; un back-office permet de gérer les licences vendues et de suivre l'ensemble des comptes.",
     livre: [
-      "Les écrans de facturation conformes à la réglementation 2026 : devis et factures, statuts, échéances, relances, export PDF.",
+      "La facturation conforme aux réglementations 2026 : devis et factures, statuts, échéances, relances, export PDF.",
       "La gestion de projet : kanban, tâches et sous-tâches, jalons, suivi d'avancement.",
       "Le tableau de bord de trésorerie : revenus, dépenses, résultat après impôts, charges.",
       "Le back-office : licences et formules, quotas, modules activables, entreprises rattachées.",
@@ -258,7 +259,7 @@ export const projects: Project[] = [
       "Le catalogue de questions : univers, sous-thèmes et banques de réponses.",
       "Le moteur de jeu arbitré par le serveur : réponses, chronos et éliminations, avec une API testée avec Vitest.",
       "La boutique : déblocage des sous-thèmes en achat unique, validé côté serveur (le paiement App Store reste à brancher).",
-      "L'intégration de la direction artistique fournie, sur tous les écrans de préparation de partie.",
+      "L'intégration de la direction artistique fournie, écran par écran.",
     ],
     stack: [
       "React Native",
@@ -295,7 +296,7 @@ export const projects: Project[] = [
         alt: "Boutique de l'application : déblocage des 34 sous-thèmes pour 4,99 € et restauration des achats",
         w: 946,
         h: 2048,
-        caption: "La boutique : un achat unique, sans abonnement ni pub, restaurable sur tous les appareils.",
+        caption: "La boutique : un achat unique, sans abonnement ni pub (paiement App Store à brancher).",
       },
       {
         src: "/projets/dernier-mot/player-choose.jpeg",

@@ -49,9 +49,10 @@ export function About() {
             </p>
             <p>
               En solo, vous avez un seul interlocuteur du premier échange à la
-              maintenance. En équipe, je m&apos;intègre à celle qui existe déjà.
-              C&apos;est ce que j&apos;ai fait sur <strong>Alcma</strong>, un
-              ERP développé en binôme pour le client d&apos;une agence.
+              maintenance. En équipe, je travaille avec vos développeurs et vos
+              designers. C&apos;est ce que j&apos;ai fait chez{" "}
+              <strong>Alcma</strong>, agence web : un ERP développé en binôme,
+              avec un designer UX/UI.
             </p>
             <dl className="about-facts">
               {FACTS.map((f) => (

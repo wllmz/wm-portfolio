@@ -9,7 +9,7 @@ import {
   type ContactInput,
 } from "@/lib/contact-schema";
 
-// Endpoint Formspree (formspree.io > ton formulaire > Integration).
+// Endpoint Formspree (formspree.io > le formulaire > Integration).
 // Cet identifiant est public par nature : il apparaît dans le HTML du site déployé.
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkpqboz";
 

@@ -291,7 +291,7 @@ export function CubeStage() {
         </p>
         <p className="corner br">
           <span className="dot-live" aria-hidden="true" />
-          Dispo <span className="accent">Freelance · Remote</span>
+          Dispo <span className="accent">Freelance · Paris / remote</span>
         </p>
 
         <div className="center" ref={centerRef}>
