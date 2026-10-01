@@ -1010,7 +1010,7 @@ body::after {
     animation: none;
   }
 }
-/* ══════════════ PROJETS — pastilles et panneaux ══════════════ */
+/* ══════════════ PROJETS — pastilles et grille ══════════════ */
 .pp-faces {
   display: flex;
   flex-wrap: wrap;
@@ -1028,15 +1028,10 @@ body::after {
 .about-frame {
   position: relative;
   flex: 1;
-  /* min-width: 0 : sans lui, l'encadré s'élargit à la largeur minimale de
-     son contenu (les pastilles en nowrap des panneaux repliés) et déborde
-     de l'écran à droite */
+  /* `min-width: auto` sur un flex-item en ligne fait grandir le cadre jusqu'à
+     la largeur minimale de son contenu, qui déborde alors de l'écran */
   min-width: 0;
   min-height: 0;
-  /* `min-width: auto` sur un flex-item en ligne fait grandir le cadre jusqu'à
-     la largeur minimale de son contenu : à quatre panneaux, il débordait de
-     l'écran de 266px et le dernier projet sortait du cadre. */
-  min-width: 0;
   display: flex;
   flex-direction: column;
   margin: 18px;
@@ -1176,162 +1171,293 @@ body::after {
   }
 }
 
-/* panneaux extensibles : survol → le panneau s'ouvre, les autres se resserrent */
-.xpanels {
-  display: flex;
-  gap: 12px;
+/* grille bento : chaque projet montre sa capture. Le premier en grande
+   carte, le deuxième en carte large, les suivants en petites cartes. */
+.bento {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   flex: 1;
   min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 16px);
 }
-/* même matière qu'une face du cube : contour fin sur le crème, aucun aplat,
-   le bordeaux ne sert que d'accent au survol et à l'ouverture */
-.xpanel {
+.bento-card {
   position: relative;
-  flex: 0.7;
   min-width: 0;
-  border: 1.5px solid rgba(45, 54, 96, 0.42);
-  border-radius: 10px;
-  background: transparent;
+  min-height: 0;
+  border: 1.5px solid rgba(45, 54, 96, 0.14);
+  border-radius: 22px;
+  background: var(--color-paper);
   color: var(--color-navy);
   overflow: hidden;
-  cursor: pointer;
-  padding: clamp(28px, 3vw, 44px);
+  transition:
+    border-color 0.3s ease,
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+.bento-card:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.bento-card:nth-child(2) {
+  grid-column: span 2;
+}
+/* la carte se soulève au survol (pas au tap : l'effet resterait collé) et
+   au focus clavier */
+@media (hover: hover) {
+  .bento-card:hover {
+    border-color: var(--color-burgundy);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -24px rgba(45, 54, 96, 0.5);
+  }
+  .bento-card:hover .bc-shot img {
+    transform: scale(1.03);
+  }
+  .bento-card:hover .bc-arrow {
+    transform: translateX(3px);
+  }
+}
+.bento-card:has(.bc-link:focus-visible) {
+  border-color: var(--color-burgundy);
+  transform: translateY(-3px);
+}
+.bc-link {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  transition:
-    flex 0.6s var(--ease-out),
-    border-color 0.3s ease,
-    background 0.3s ease;
-}
-/* le bouton d'ouverture est invisible : c'est le panneau qui montre le
-   focus clavier */
-.xpanel:has(.xp-toggle:focus-visible) {
-  outline: 2px solid var(--color-burgundy);
-  outline-offset: 3px;
-}
-.xpanel:hover {
-  border-color: var(--color-burgundy);
-  background: rgba(92, 14, 32, 0.045);
-}
-.xpanel.active {
-  flex: 3.6;
-  border-color: var(--color-burgundy);
-  background: rgba(92, 14, 32, 0.045);
-}
-.xp-num {
-  font-family: var(--font-hand);
-  font-weight: 700;
-  font-size: 1.4rem;
-  color: var(--color-burgundy);
-}
-.xp-title {
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 2.6vw, 2.4rem);
-  letter-spacing: -0.02em;
-  line-height: 1.02;
-  margin-top: 8px;
-  overflow-wrap: break-word;
-}
-/* panneau replié : la largeur est réduite, le titre se compacte pour tenir
-   dans le cadre au lieu d'être rogné */
-.xpanel:not(.active) .xp-title {
-  font-size: clamp(1rem, 1.45vw, 1.35rem);
-}
-/* le logotype du client tient la place du titre, à la même hauteur optique */
-.xp-logo {
-  display: block;
-  margin-top: 6px;
-}
-/* Les logotypes n'ont pas le même rapport (Dernier Mot 2,1 — Freïa 2,6 —
-   Alcma 4,6). Caler sur la seule hauteur rendait Alcma deux fois plus large et
-   écrasait Freïa : on borne les DEUX dimensions pour un poids visuel
-   comparable. */
-.xp-logo img {
-  width: auto;
-  height: auto;
-  max-height: clamp(32px, 3.4vw, 52px);
-  max-width: min(100%, 210px);
-  object-fit: contain;
-}
-.xpanel:not(.active) .xp-logo img {
-  max-height: clamp(21px, 2vw, 30px);
-  max-width: 100%;
-}
-/* un logo carré n'occupe pas la largeur d'un mot : on lui rend de la hauteur
-   pour qu'il tienne le même poids visuel dans le panneau ouvert. Replié, il
-   garde la hauteur commune — la ligne y est déjà compacte. */
-.xpanel.active .xp-logo--square img {
-  max-height: clamp(52px, 6vw, 84px);
-}
-/* Ce logotype est livré sur un fond blanc opaque. Le laisser brut poserait le
-   seul aplat franc de la page ; on l'assume donc en pastille, avec le rayon et
-   le filet du reste du site — la même lecture que la tuile de la page projet.
-   (`mix-blend-mode` ne servirait à rien ici : le crème est peint sur le body,
-   hors du groupe de fusion créé par la piste du slider.) */
-.xp-logo--square img {
-  border-radius: 14px;
-  border: 1.5px solid rgba(45, 54, 96, 0.18);
-}
-.xp-reveal {
-  overflow: hidden;
-  opacity: 0;
-  max-height: 0;
-  /* visibility retire le lien « voir le détail » de l'ordre de tabulation
-     tant que le panneau est replié — sinon on tabule dans le vide */
-  visibility: hidden;
-  transition:
-    opacity 0.4s ease,
-    max-height 0.6s var(--ease-out),
-    visibility 0.6s;
-}
-.xpanel.active .xp-reveal {
-  opacity: 1;
-  max-height: 520px;
-  visibility: visible;
-  margin-top: 26px;
-}
-/* le texte garde une largeur de lecture confortable… */
-.xp-reveal p {
-  max-width: 46ch;
-  line-height: 1.75;
-  font-size: 1rem;
-  opacity: 0.9;
-}
-/* …mais les pastilles s'étalent sur toute la largeur, sur une seule ligne */
-.xp-reveal .pp-faces {
-  margin-top: 26px;
-  gap: 6px;
-  flex-wrap: nowrap;
-}
-.xp-more {
-  display: inline-block;
-  margin-top: 34px;
-  align-self: flex-start;
-  font-family: var(--font-title);
-  font-weight: 600;
-  font-size: 0.92rem;
+  height: 100%;
   color: inherit;
-  background: none;
-  border: none;
-  border-bottom: 1.5px solid currentColor;
-  padding: 0 0 4px;
-  cursor: pointer;
-  transition: gap 0.25s var(--ease-out);
+  text-decoration: none;
 }
-.xp-more:hover {
-  border-color: var(--color-burgundy);
-  color: var(--color-burgundy);
-}
-/* panneau replié : il n'a que quelques dizaines de pixels utiles une fois à
-   quatre. Le padding se resserre pour que le titre y tienne encore. */
-.xpanel:not(.active) {
-  padding: clamp(16px, 1.8vw, 30px);
+/* le lien couvre toute la carte : c'est elle qui montre le focus clavier.
+   Sans :has(), le lien garde son propre contour. */
+@supports selector(:has(*)) {
+  .bento-card:has(.bc-link:focus-visible) {
+    outline: 2px solid var(--color-burgundy);
+    outline-offset: 3px;
+  }
+  .bc-link:focus-visible {
+    outline: none;
+  }
 }
 
+/* ── la capture, dans une fenêtre de navigateur ou un écran de téléphone ── */
+.bc-media {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(14px, 1.5vw, 22px) clamp(14px, 1.5vw, 22px) 0;
+}
+.bc-bar {
+  flex: none;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 10px 10px 0 0;
+  background: var(--color-navy);
+}
+.bc-bar span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-cream);
+}
+.bc-shot {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.bc-shot img {
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.6s var(--ease-out);
+}
+.is-phone .bc-media {
+  align-items: center;
+}
+.is-phone .bc-shot {
+  width: min(48%, 220px);
+  border: 1.5px solid rgba(45, 54, 96, 0.14);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+}
+/* sur l'aplat de l'app, l'écran se confond avec le fond : un liseré crème
+   et une ombre redessinent le téléphone */
+.is-dark .bc-shot {
+  border-color: rgba(234, 227, 210, 0.35);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* ── le texte ── */
+.bc-body {
+  flex: none;
+  display: grid;
+  gap: 6px;
+  /* place réservée à la flèche, en bas à droite */
+  padding: 16px 64px 18px 20px;
+}
+.bc-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+/* le titre ne fait que porter le logo : il n'a ni marge ni taille propre */
+.bc-name {
+  display: flex;
+  min-width: 0;
+  max-width: 60%;
+  margin: 0;
+  font: inherit;
+}
+/* les logotypes n'ont pas le même rapport : on borne hauteur ET largeur */
+.bc-logo {
+  width: auto;
+  height: auto;
+  max-height: 24px;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* logo carré livré sur fond blanc : posé en pastille, comme sur la tuile
+   de la page projet */
+.bc-logo--square {
+  max-height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(45, 54, 96, 0.18);
+}
+.bc-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.bc-status {
+  padding: 3px 9px;
+  border: 1.5px solid rgba(45, 54, 96, 0.3);
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.bc-kind,
+.bc-stack {
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+}
+.bc-stack {
+  letter-spacing: 0.03em;
+}
+.bc-tagline {
+  max-width: 46ch;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.bc-arrow {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-burgundy);
+  color: var(--color-cream);
+  font-size: 1.05rem;
+  transition: transform 0.3s var(--ease-out);
+}
+
+/* grande carte : le logo et le texte prennent plus de place */
+.bento-card:nth-child(1) .bc-body {
+  padding: 20px 80px 22px 24px;
+  gap: 8px;
+}
+.bento-card:nth-child(1) .bc-logo {
+  max-height: 32px;
+}
+.bento-card:nth-child(1) .bc-status {
+  border-color: var(--color-navy);
+  background: var(--color-navy);
+  color: var(--color-cream);
+}
+.bento-card:nth-child(1) .bc-tagline {
+  font-size: 1.02rem;
+}
+.bento-card:nth-child(1) .bc-arrow {
+  right: 22px;
+  bottom: 22px;
+  width: 46px;
+  height: 46px;
+}
+/* carte large : capture à gauche, texte à droite */
+.bento-card:nth-child(2) .bc-link {
+  flex-direction: row;
+}
+.bento-card:nth-child(2) .bc-media {
+  flex: 0 0 54%;
+  padding: 18px 0 0 18px;
+}
+.bento-card:nth-child(2) .bc-body {
+  flex: 1;
+  min-width: 0;
+  align-content: start;
+  padding: 20px 20px 64px;
+}
+/* écran peu haut : la carte large n'a plus la hauteur de tout son texte,
+   la stack reste sur la page du projet */
+@media (min-width: 1025px) and (max-height: 820px) {
+  .bento-card:nth-child(2) .bc-stack {
+    display: none;
+  }
+}
+/* petites cartes : le nom, le type et le statut, le détail est à un clic */
+.bento-card:nth-child(n + 3) .bc-tagline,
+.bento-card:nth-child(n + 3) .bc-stack {
+  display: none;
+}
+.bento-card:nth-child(n + 3) .bc-body {
+  padding: 12px 56px 14px 16px;
+}
+.bento-card:nth-child(n + 3) .bc-arrow {
+  right: 12px;
+  bottom: 12px;
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+}
+
+/* app sur aplat foncé : texte crème */
+.is-dark {
+  border-color: transparent;
+  color: var(--color-cream);
+}
+.is-dark .bc-body {
+  background: rgba(0, 0, 0, 0.18);
+}
+.is-dark .bc-kind,
+.is-dark .bc-stack {
+  color: rgba(234, 227, 210, 0.82);
+}
+.is-dark .bc-status {
+  border-color: rgba(234, 227, 210, 0.45);
+}
+.is-dark .bc-arrow {
+  background: var(--color-cream);
+  color: var(--color-navy);
+}
+
+/* tablette (le slider est encore là) : deux colonnes, les deux premières
+   cartes en largeur, capture à gauche */
 @media (max-width: 1024px) {
-  /* l'encadré respire moins pour laisser la place aux cartes empilées */
   .proj-frame {
     margin: 12px;
     padding: clamp(16px, 4.5vw, 26px);
@@ -1339,118 +1465,42 @@ body::after {
   .proj-head {
     margin-bottom: clamp(12px, 2vh, 18px);
   }
-  /* mobile : on n'anime PAS le flex (direction row→column non animable →
-     transition saccadée). Le contenu apparaît en fondu via le reveal ;
-     seuls bordure et fond gardent une transition. */
-  .xpanel {
-    transition:
-      border-color 0.3s ease,
-      background 0.3s ease;
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 1.25fr 1fr 1fr;
   }
-  /* accordéon vertical : les cartes remplissent la hauteur dispo. La carte
-     ouverte prend tout l'espace restant, les autres restent compactes —
-     ainsi tout tient dans l'écran du slider, sans rognage ni débordement. */
-  .xpanels {
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    gap: 10px;
+  .bento-card:nth-child(1) {
+    grid-row: span 1;
   }
-  /* carte repliée : une ligne compacte « numéro + titre/logo ». À quatre,
-     chaque ligne gagnée est de la place rendue à la carte ouverte. */
-  .xpanel:not(.active) {
-    flex: 0 0 auto;
+  .bento-card:nth-child(1) .bc-link {
     flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 14px;
-    min-height: 52px;
-    padding: 10px 18px;
   }
-  .xpanel:not(.active) .xp-num {
-    font-size: 1.2rem;
+  .bento-card:nth-child(1) .bc-media {
+    flex: 0 0 56%;
+    padding: 18px 0 0 18px;
   }
-  .xpanel:not(.active) .xp-title {
-    margin-top: 0;
-    font-size: clamp(1.25rem, 4.6vw, 1.6rem);
-  }
-  .xpanel:not(.active) .xp-logo {
-    margin-top: 0;
-  }
-  /* rien à révéler tant que la carte est fermée */
-  .xpanel:not(.active) .xp-reveal {
-    display: none;
-  }
-  /* carte ouverte : contenu lu du haut vers le bas, remplit l'espace libre */
-  .xpanel.active {
-    flex: 1 1 auto;
-    min-height: 0;
-    justify-content: flex-start;
-    padding: clamp(20px, 5vw, 30px);
-  }
-  .xpanel.active .xp-reveal {
-    margin-top: 16px;
-    max-height: none;
-    /* la carte ouverte n'a pas toujours la hauteur de son contenu (quatre
-       cartes sur un écran court) : le texte défile au lieu d'être rogné.
-       Le slider rend la main tant qu'il reste de la course — cf. SCROLLER
-       dans slider.tsx. */
+  .bento-card:nth-child(1) .bc-body {
     flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    /* fondu + léger glissé à l'ouverture (l'animation se déclenche au
-       passage display:none → visible, contrairement à une transition) */
-    animation: xp-reveal-in 0.4s var(--ease-out);
-  }
-  .xp-reveal p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-  .xp-reveal .pp-faces {
-    margin-top: 16px;
-    flex-wrap: wrap;
-  }
-  .xp-more {
-    margin-top: 20px;
-  }
-}
-@keyframes xp-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+    min-width: 0;
+    align-content: start;
+    padding: 20px 20px 72px;
   }
 }
 
-/* Écran court (téléphone en paysage) : quatre cartes empilées ne peuvent plus
-   tenir en hauteur — la carte ouverte se retrouvait comprimée sous sa propre
-   hauteur minimale, donc rognée. On renonce à tout faire tenir : l'accordéon
-   défile, chaque carte reprend sa hauteur naturelle. */
-@media (max-width: 1024px) and (max-height: 620px) {
-  .xpanels {
+/* écran court mais large : les cartes ne tiennent plus en hauteur, la
+   grille défile (le slider rend la main tant qu'il reste de la course) */
+@media (max-height: 620px) and (min-width: 821px) {
+  .bento {
+    /* la grille rogne ce qui dépasse : on lui rend de quoi montrer le
+       contour de focus et le soulèvement des cartes */
+    margin: -8px;
+    padding: 8px;
+    /* une carte qui prend le focus défile avec sa marge, contour compris */
+    scroll-padding: 8px;
     overflow-y: auto;
     overscroll-behavior: contain;
-  }
-  .xpanel.active {
-    flex: 0 0 auto;
-    padding: 16px 18px;
-  }
-  .xpanel.active .xp-title {
-    font-size: 1.4rem;
-  }
-  .xpanel.active .xp-reveal {
-    flex: none;
-    min-height: auto;
-    overflow: visible;
-    margin-top: 12px;
-  }
-  .xp-more {
-    margin-top: 14px;
-  }
-}
-@media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
-  .xpanel.active .xp-reveal {
-    animation: none;
+    grid-template-rows: none;
+    grid-auto-rows: 240px;
   }
 }
 .pp-chip {
@@ -1607,7 +1657,6 @@ body::after {
    zone invisible les agrandit au doigt */
 @media (pointer: coarse) {
   .case-back,
-  .xp-more,
   .app-dots button,
   footer a {
     position: relative;
@@ -1617,13 +1666,6 @@ body::after {
     content: "";
     position: absolute;
     inset: -12px -8px;
-  }
-  /* rien sous le lien : il ferme le panneau qui défile, une zone qui
-     dépasserait vers le bas le rendrait défilable de quelques pixels */
-  .xp-more::before {
-    content: "";
-    position: absolute;
-    inset: -12px -8px 0;
   }
   /* points espacés de 9px : la zone ne déborde presque pas sur les côtés,
      sinon le point voisin capte le tap */
@@ -1678,18 +1720,21 @@ body::after {
   html {
     scroll-behavior: auto;
   }
-  /* glissement d'écran, pulsation, cartes et panneaux : sans animation */
+  /* glissement d'écran, pulsation, cartes : sans animation */
   .track,
   .face-card,
   .face-card .fc-inner,
-  .xpanel {
+  .bento-card,
+  .bc-shot img,
+  .bc-arrow {
     transition: none;
     animation: none;
   }
-  /* l'animation d'apparition est déjà coupée par le bloc 1024px plus haut
-     (règle plus spécifique) ; ici, la transition d'ouverture */
-  .xp-reveal {
-    transition: none;
+  .bento-card:hover,
+  .bento-card:has(.bc-link:focus-visible),
+  .bento-card:hover .bc-shot img,
+  .bento-card:hover .bc-arrow {
+    transform: none;
   }
   .corner .dot-live {
     animation: none;
@@ -2170,58 +2215,66 @@ body::after {
     margin-bottom: 28px;
   }
 
-  /* ── projets : toutes les cartes ouvertes, empilées ── */
-  .proj-slide .xpanels {
+  /* ── projets : la grille bento s'empile, les deux applis côte à côte ── */
+  .bento {
     flex: none;
-    flex-direction: column;
-    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 14px;
     overflow: visible;
   }
-  .proj-slide .xpanel,
-  .proj-slide .xpanel.active,
-  .proj-slide .xpanel:not(.active) {
-    flex: none;
+  .bento-card:nth-child(1),
+  .bento-card:nth-child(2) {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+  .bento-card:nth-child(1) .bc-link,
+  .bento-card:nth-child(2) .bc-link {
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 0;
-    min-height: 0;
-    padding: 24px 22px;
-    cursor: default;
-    border-color: rgba(45, 54, 96, 0.22);
-    background: rgba(255, 255, 255, 0.22);
-    border-radius: 18px;
   }
-  .proj-slide .xpanel .xp-num {
-    font-size: 1.1rem;
+  .bento-card:nth-child(1) .bc-media,
+  .bento-card:nth-child(2) .bc-media {
+    flex: none;
+    padding: 14px 14px 0;
   }
-  .proj-slide .xpanel .xp-logo {
-    margin-top: 10px;
+  .bento-card:nth-child(1) .bc-body,
+  .bento-card:nth-child(2) .bc-body {
+    padding: 16px 64px 18px 18px;
   }
-  .proj-slide .xpanel .xp-logo img {
-    max-height: 34px;
-    max-width: 70%;
+  .bento-card:nth-child(1) .bc-arrow {
+    right: 16px;
+    bottom: 16px;
+    width: 38px;
+    height: 38px;
   }
-  .proj-slide .xpanel .xp-logo--square img {
-    max-height: 48px;
+  .bc-media {
+    flex: none;
+    padding: 14px 14px 0;
   }
-  .proj-slide .xpanel .xp-reveal {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    max-height: none;
-    overflow: visible;
-    animation: none;
-    margin-top: 14px;
+  .bc-shot {
+    flex: none;
+    height: 180px;
   }
-  .proj-slide .xp-reveal p {
-    max-width: none;
+  .is-phone .bc-shot {
+    width: 62%;
+    height: 170px;
   }
-  .proj-slide .xp-reveal .pp-faces {
-    margin-top: 16px;
+  .bc-tagline {
+    font-size: 0.92rem;
   }
-  .proj-slide .xp-more {
-    margin-top: 18px;
+  /* les deux petites cartes partagent une ligne : le texte remplit la
+     hauteur de la plus haute, l'aplat foncé descend jusqu'en bas */
+  .bento-card:nth-child(n + 3) .bc-body {
+    flex: 1;
+    align-content: start;
+    padding: 12px 14px 48px;
+  }
+  .bento-card:nth-child(n + 3) .bc-name {
+    max-width: 100%;
+  }
+  /* 0.6rem en capitales : illisible sur un téléphone (cf. .pp-chip) */
+  .bc-status {
+    font-size: 0.66rem;
   }
 
   /* ── à propos : hauteur naturelle ── */
