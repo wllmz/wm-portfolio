@@ -8,8 +8,11 @@ import { projects, ALL_FACES } from "@/components/cube/projects-data";
 
 /* même seuil que l'accordéon vertical en CSS. À quatre projets, l'accordéon
    horizontal ne tient plus sous 1024px : les panneaux repliés n'ont plus la
-   largeur d'un titre. */
-const MOBILE = "(max-width: 1024px)";
+   largeur d'un titre. Sur une tablette en portrait, l'écran est assez haut
+   pour garder la première carte ouverte : seuls les téléphones et les
+   écrans courts replient tout. */
+const COLLAPSED =
+  "(max-width: 560px), (max-width: 1024px) and (max-height: 900px)";
 
 export function Projects() {
   /* Desktop : le premier panneau est ouvert d'emblée, sinon la section ne
@@ -21,7 +24,7 @@ export function Projects() {
   const [active, setActive] = useState<number | null>(0);
 
   useEffect(() => {
-    if (window.matchMedia(MOBILE).matches) setActive(null);
+    if (window.matchMedia(COLLAPSED).matches) setActive(null);
   }, []);
 
   return (
