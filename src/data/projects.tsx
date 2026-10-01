@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { FaceKey } from "./cube-faces";
 
 export type Shot = {
@@ -15,15 +14,18 @@ export type Project = {
   num: string;
   title: string;
   /* logotype du client, quand il y en a un : il remplace le titre écrit
-     dans le panneau. `title` reste la source pour l'alt et les métadonnées. */
+     sur la carte. `title` reste la source pour l'alt et les métadonnées. */
   logo?: { src: string; w: number; h: number };
   /* icône de la tuile sur la page de détail. Les logotypes posés sur fond
      transparent (Freïa, Alcma sont noirs) disparaîtraient sur le pavé
      dégradé : seuls ceux qui embarquent leur propre fond tiennent ici, d'où
-     la couleur déclarée avec. À défaut, la tuile garde son pictogramme. */
+     la couleur déclarée avec (au format #rrggbb : la carte de l'accueil en
+     déduit la couleur du texte). À défaut, la tuile garde son pictogramme. */
   tileIcon?: { src: string; w: number; h: number; bg: string };
-  desc: ReactNode;
   faces: FaceKey[];
+  /* les deux mentions courtes de la carte sur l'accueil */
+  kind: string;
+  status: "En production" | "Mission livrée" | "En cours";
 
   /* ── page de détail ── */
   tagline: string;
@@ -35,19 +37,16 @@ export type Project = {
   // TODO: ajouter `url` quand les sites sont accessibles publiquement
 };
 
+/* la grille de l'accueil place les projets selon leur rang et est dessinée
+   pour quatre : en ajouter un demande de revoir `.bento` */
 export const projects: Project[] = [
   {
     slug: "freia-paris",
     num: "01",
     title: "Freïa Paris",
+    kind: "E-commerce",
+    status: "En production",
     logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
-    desc: (
-      <>
-        E-commerce d&apos;une marque de sacs artisanaux : front sur mesure et{" "}
-        <strong>toute l&apos;infra derrière</strong> : VPS, Traefik, Docker. Un
-        vrai site marchand.
-      </>
-    ),
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
     tagline: "La boutique en ligne d'une marque de sacs faits main à Paris.",
     contexte:
@@ -101,7 +100,8 @@ export const projects: Project[] = [
         alt: "Page de création de compte client Freïa avec prénom, nom, email et mot de passe",
         w: 1890,
         h: 851,
-        caption: "Le compte client : connexion, inscription, mot de passe oublié.",
+        caption:
+          "Le compte client : connexion, inscription, mot de passe oublié.",
       },
       {
         src: "/projets/freia/panier.png",
@@ -115,7 +115,8 @@ export const projects: Project[] = [
         alt: "Tunnel de commande : coordonnées et choix du point relais Mondial Relay",
         w: 1892,
         h: 858,
-        caption: "Le tunnel de commande : coordonnées et livraison en point relais.",
+        caption:
+          "Le tunnel de commande : coordonnées et livraison en point relais.",
       },
       {
         src: "/projets/freia/paiement-carte.png",
@@ -129,7 +130,8 @@ export const projects: Project[] = [
         alt: "Back-office Freïa : tableau de bord avec stock, commandes et chiffre d'affaires",
         w: 1887,
         h: 845,
-        caption: "Le back-office : vue d'ensemble du stock, des commandes et du chiffre d'affaires.",
+        caption:
+          "Le back-office : vue d'ensemble du stock, des commandes et du chiffre d'affaires.",
       },
       {
         src: "/projets/freia/admin-produits.png",
@@ -144,14 +146,9 @@ export const projects: Project[] = [
     slug: "alcma",
     num: "02",
     title: "Alcma",
+    kind: "ERP",
+    status: "Mission livrée",
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
-    desc: (
-      <>
-        ERP développé from scratch <strong>en binôme</strong>{" "}
-        pour le client d&apos;une agence : facturation, gestion de projet, API
-        et déploiement.
-      </>
-    ),
     faces: ["front", "back", "quality", "deploy", "suivi"],
     tagline:
       "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
@@ -217,6 +214,8 @@ export const projects: Project[] = [
     slug: "dernier-mot",
     num: "03",
     title: "Dernier Mot",
+    kind: "Jeu mobile",
+    status: "En cours",
     logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
     // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
     // lequel le liseré crème du logotype a été dessiné.
@@ -226,13 +225,6 @@ export const projects: Project[] = [
       h: 227,
       bg: "#032fac",
     },
-    desc: (
-      <>
-        Jeu mobile de mots au tour par tour,{" "}
-        <strong>multijoueur temps réel</strong>. Projet personnel en cours,
-        développé seul, du moteur de jeu à l&apos;app.
-      </>
-    ),
     faces: ["front", "back", "quality"],
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
@@ -261,7 +253,8 @@ export const projects: Project[] = [
         alt: "Écran d'accueil de Dernier Mot avec les boutons Jouer ici, Room et Rejoindre",
         w: 739,
         h: 1600,
-        caption: "L'accueil : jouer sur un seul téléphone, ou créer et rejoindre une partie en ligne.",
+        caption:
+          "L'accueil : jouer sur un seul téléphone, ou créer et rejoindre une partie en ligne.",
       },
       {
         src: "/projets/dernier-mot/themes.jpeg",
@@ -275,14 +268,16 @@ export const projects: Project[] = [
         alt: "Sous-thèmes du thème Pays, certains gratuits, d'autres verrouillés",
         w: 739,
         h: 1600,
-        caption: "Les sous-thèmes, gratuits ou à débloquer, avec leur nombre de réponses.",
+        caption:
+          "Les sous-thèmes, gratuits ou à débloquer, avec leur nombre de réponses.",
       },
       {
         src: "/projets/dernier-mot/boutique.jpeg",
         alt: "Boutique de l'application : déblocage des 34 sous-thèmes pour 4,99 € et restauration des achats",
         w: 946,
         h: 2048,
-        caption: "La boutique : un achat unique, sans abonnement ni pub (paiement App Store à brancher).",
+        caption:
+          "La boutique : un achat unique, sans abonnement ni pub (paiement App Store à brancher).",
       },
       {
         src: "/projets/dernier-mot/player-choose.jpeg",
@@ -296,14 +291,16 @@ export const projects: Project[] = [
         alt: "Réglages de la partie en mode classique : chrono, vies, mode secret, mort subite",
         w: 739,
         h: 1600,
-        caption: "Les réglages : chrono par tour, vies, mode secret, mort subite.",
+        caption:
+          "Les réglages : chrono par tour, vies, mode secret, mort subite.",
       },
       {
         src: "/projets/dernier-mot/regles.jpeg",
         alt: "Écran expliquant comment on joue en trois étapes",
         w: 739,
         h: 1600,
-        caption: "Les règles rappelées avant de lancer, adaptées aux options choisies.",
+        caption:
+          "Les règles rappelées avant de lancer, adaptées aux options choisies.",
       },
       {
         src: "/projets/dernier-mot/player.jpeg",
@@ -317,28 +314,32 @@ export const projects: Project[] = [
         alt: "Manche en cours en mort subite : compte à rebours, vies et saisie de la réponse",
         w: 739,
         h: 1600,
-        caption: "La manche : compte à rebours, vies restantes, réponse au clavier.",
+        caption:
+          "La manche : compte à rebours, vies restantes, réponse au clavier.",
       },
       {
         src: "/projets/dernier-mot/time-bombe-set.jpeg",
         alt: "Réglages du mode Time-bomb : longueur de mèche, tic-tac audible, vibration",
         w: 739,
         h: 1600,
-        caption: "Le mode time-bomb et ses propres réglages : mèche, son, vibration.",
+        caption:
+          "Le mode time-bomb et ses propres réglages : mèche, son, vibration.",
       },
       {
         src: "/projets/dernier-mot/time-bombe.jpeg",
         alt: "Manche en mode Time-bomb avec la bombe allumée et le message Passe vite",
         w: 739,
         h: 1600,
-        caption: "En time-bomb, personne ne sait quand ça explose : celui qui tient le téléphone paie.",
+        caption:
+          "En time-bomb, personne ne sait quand ça explose : celui qui tient le téléphone paie.",
       },
       {
         src: "/projets/dernier-mot/room.jpeg",
         alt: "Room créée avec son code à partager et l'état de la connexion",
         w: 739,
         h: 1600,
-        caption: "La room en ligne : un code à dicter, l'état de la connexion en direct.",
+        caption:
+          "La room en ligne : un code à dicter, l'état de la connexion en direct.",
       },
       {
         src: "/projets/dernier-mot/join-room.jpeg",
@@ -353,6 +354,8 @@ export const projects: Project[] = [
     slug: "mylizy",
     num: "04",
     title: "MyLizy",
+    kind: "Santé B2B",
+    status: "En production",
     logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
@@ -362,13 +365,6 @@ export const projects: Project[] = [
       h: 500,
       bg: "#fbfaf7",
     },
-    desc: (
-      <>
-        <strong>Flow</strong>, la plateforme d&apos;accompagnement à la
-        parentalité de MyLizy : contenus calés sur l&apos;âge de l&apos;enfant,
-        ateliers et rendez-vous avec des professionnels.
-      </>
-    ),
     faces: ["front", "back", "quality", "suivi"],
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
@@ -430,7 +426,8 @@ export const projects: Project[] = [
         alt: "Première étape du profil : prénom, situation personnelle et professionnelle",
         w: 1232,
         h: 713,
-        caption: "Le profil du parent : c'est lui qui décide du contenu proposé ensuite.",
+        caption:
+          "Le profil du parent : c'est lui qui décide du contenu proposé ensuite.",
       },
       {
         src: "/projets/mylizy/onboarding-enfant.png",
