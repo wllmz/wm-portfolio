@@ -43,13 +43,29 @@ export function Projects() {
               className={`xpanel${active === i ? " active" : ""}`}
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
+              /* onFocus remonte depuis le bouton comme depuis le lien : un
+                 retour en Shift+Tab sur le lien rouvre aussi son panneau */
+              onFocus={() => setActive(i)}
             >
-              <span className="xp-num">{project.num}</span>
+              {/* le panneau s'ouvre au survol ou au clic ; ce bouton invisible
+                  l'ouvre aussi au clavier, sinon seul le premier projet est
+                  atteignable en tabulant. Le focus se voit sur le panneau. */}
+              <button
+                type="button"
+                className="xp-toggle sr-only"
+                aria-expanded={active === i}
+                aria-controls={`xp-reveal-${project.slug}`}
+              >
+                {`Projet ${project.num} : ${project.title}`}
+              </button>
+              <span className="xp-num" aria-hidden="true">
+                {project.num}
+              </span>
               {project.logo ? (
                 <span className="xp-logo">
                   <Image
                     src={project.logo.src}
-                    alt={project.title}
+                    alt=""
                     width={project.logo.w}
                     height={project.logo.h}
                     priority
@@ -58,7 +74,7 @@ export function Projects() {
               ) : (
                 <span className="xp-title">{project.title}</span>
               )}
-              <div className="xp-reveal">
+              <div className="xp-reveal" id={`xp-reveal-${project.slug}`}>
                 <p>{project.desc}</p>
                 <div className="pp-faces" aria-label="Faces couvertes">
                   {/* seules les faces couvertes s'affichent — l'ordre reste
