@@ -44,7 +44,22 @@ export function Projects() {
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
             >
-              <span className="xp-num">{project.num}</span>
+              {/* le panneau s'ouvre au survol ou au clic ; ce bouton invisible
+                  l'ouvre aussi au clavier, sinon seul le premier projet est
+                  atteignable en tabulant */}
+              <button
+                type="button"
+                className="sr-only"
+                aria-expanded={active === i}
+                aria-controls={`xp-reveal-${project.slug}`}
+                onFocus={() => setActive(i)}
+                onClick={() => setActive(i)}
+              >
+                {`Projet ${project.num} : ${project.title}`}
+              </button>
+              <span className="xp-num" aria-hidden="true">
+                {project.num}
+              </span>
               {project.logo ? (
                 <span className="xp-logo">
                   <Image
@@ -58,7 +73,7 @@ export function Projects() {
               ) : (
                 <span className="xp-title">{project.title}</span>
               )}
-              <div className="xp-reveal">
+              <div className="xp-reveal" id={`xp-reveal-${project.slug}`}>
                 <p>{project.desc}</p>
                 <div className="pp-faces" aria-label="Faces couvertes">
                   {/* seules les faces couvertes s'affichent — l'ordre reste
