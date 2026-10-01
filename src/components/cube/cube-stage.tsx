@@ -338,7 +338,6 @@ export function CubeStage() {
           ))}
         </nav>
 
-        {/* <div className="scroll-line" aria-hidden="true" /> */}
 
         <div
           className={`face-card pos-${activeKey}${openKey ? " open" : ""}`}
