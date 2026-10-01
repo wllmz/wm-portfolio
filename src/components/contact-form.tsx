@@ -89,7 +89,7 @@ export function ContactForm() {
           <input
             id="firstName"
             type="text"
-            placeholder="William"
+            placeholder="Camille"
             aria-invalid={!!errors.firstName}
             {...register("firstName")}
           />
@@ -103,7 +103,7 @@ export function ContactForm() {
           <input
             id="lastName"
             type="text"
-            placeholder="Martinez"
+            placeholder="Durand"
             aria-invalid={!!errors.lastName}
             {...register("lastName")}
           />
@@ -134,7 +134,7 @@ export function ContactForm() {
           {...register("projectType")}
         >
           <option value="" disabled>
-            Sélectionne…
+            Sélectionnez…
           </option>
           {PROJECT_TYPES.map((type) => (
             <option key={type} value={type}>

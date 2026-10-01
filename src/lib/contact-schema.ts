@@ -13,12 +13,12 @@ export const contactSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(2, "Ton prénom, s'il te plaît.")
+    .min(2, "Votre prénom, s'il vous plaît.")
     .max(60, "60 caractères maximum."),
   lastName: z
     .string()
     .trim()
-    .min(2, "Ton nom, s'il te plaît.")
+    .min(2, "Votre nom, s'il vous plaît.")
     .max(60, "60 caractères maximum."),
   email: z
     .string()
@@ -28,12 +28,12 @@ export const contactSchema = z.object({
   projectType: z
     .string()
     .refine((v) => (PROJECT_TYPES as readonly string[]).includes(v), {
-      message: "Choisis un type de projet.",
+      message: "Choisissez un type de projet.",
     }),
   message: z
     .string()
     .trim()
-    .min(10, "Décris ton projet en quelques mots.")
+    .min(10, "Décrivez votre projet en quelques mots.")
     .max(3000, "3000 caractères maximum."),
   // honeypot anti-spam : doit rester vide, mais on ne le valide pas —
   // sinon le formulaire serait rejeté silencieusement au lieu d'être

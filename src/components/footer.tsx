@@ -10,9 +10,8 @@ export function Footer() {
           Martinez, fullstack freelance
         </p>
         <div className="flex gap-6">
-          {/* TODO: remplace par tes vrais liens */}
           <a
-            href="https://github.com/"
+            href="https://github.com/wllmz"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-burgundy focus-visible:rounded focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-burgundy"
@@ -20,7 +19,7 @@ export function Footer() {
             GitHub
           </a>
           <a
-            href="https://www.linkedin.com/"
+            href="https://www.linkedin.com/in/william-martinez-/"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-burgundy focus-visible:rounded focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-burgundy"
