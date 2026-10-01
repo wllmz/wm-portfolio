@@ -5,23 +5,10 @@ import {
   useEffect,
   useRef,
   useState,
-  useSyncExternalStore,
   Children,
   type ReactNode,
 } from "react";
-
-/* Sous ce seuil, l'accueil n'est plus un slider mais une page qui défile
-   (même seuil que le bloc « page qui défile » de globals.css) : chaque
-   section prend sa hauteur naturelle au lieu d'être forcée à celle de
-   l'écran. */
-const FLOW = "(max-width: 820px)";
-
-function subscribeFlow(onChange: () => void) {
-  const mq = window.matchMedia(FLOW);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-}
-const isFlow = () => window.matchMedia(FLOW).matches;
+import { FLOW_QUERY, useFlow } from "@/hooks/use-flow";
 
 /* Zones qui gèrent leur propre geste : le slider doit les laisser tranquilles,
    sinon dragger le cube change d'écran. */
@@ -66,9 +53,48 @@ export function Slider({
   const [idx, setIdx] = useState(0);
   const idxRef = useRef(0);
   const animating = useRef(false);
-  /* faux côté serveur : le rendu initial est celui du slider, le CSS mobile
-     l'aplatit déjà avant l'hydratation */
-  const flow = useSyncExternalStore(subscribeFlow, isFlow, () => false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  /* Sous 820px, l'accueil n'est plus un slider mais une page qui défile :
+     chaque section prend sa hauteur naturelle. Le rendu serveur est celui du
+     slider (écrans 2 à 4 inert) : sur mobile, ils ne réagissent qu'une fois
+     l'hydratation faite, ce qui est sans gêne puisque le formulaire dépend
+     de toute façon du JS. */
+  const flow = useFlow();
+
+  /* Passage d'un mode à l'autre (tablette qu'on tourne, fenêtre qu'on
+     redimensionne) : on garde la section en cours au lieu de repartir du
+     haut. null tant que le premier état réel n'est pas connu. */
+  const prevFlow = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (prevFlow.current === null) {
+      prevFlow.current = window.matchMedia(FLOW_QUERY).matches;
+      return;
+    }
+    if (prevFlow.current === flow) return;
+    prevFlow.current = flow;
+    const track = trackRef.current;
+    if (!track) return;
+    const sections = Array.from(track.children);
+    if (flow) {
+      sections[idxRef.current]?.scrollIntoView({ block: "start" });
+      return;
+    }
+    // la section qui a le focus (un champ en cours de saisie), sinon celle
+    // qui occupe le haut de l'écran
+    let i = sections.findIndex((el) => el.contains(document.activeElement));
+    if (i < 0) {
+      i = sections.findIndex((el) => el.getBoundingClientRect().bottom > 80);
+    }
+    i = Math.max(0, i);
+    window.scrollTo(0, 0);
+    // arrivée directe sur la section, sans glissement depuis le haut
+    track.style.transition = "none";
+    idxRef.current = i;
+    setIdx(i);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => track.style.removeProperty("transition")),
+    );
+  }, [flow]);
 
   const go = useCallback(
     (i: number) => {
@@ -95,7 +121,7 @@ export function Slider({
   useEffect(() => {
     const toHash = () => {
       // page qui défile : le navigateur gère l'ancre lui-même
-      if (isFlow()) return;
+      if (window.matchMedia(FLOW_QUERY).matches) return;
       const id = decodeURIComponent(window.location.hash.slice(1));
       if (!id) return;
       const target = document.getElementById(id);
@@ -112,12 +138,13 @@ export function Slider({
   }, []);
 
   useEffect(() => {
+    // page qui défile : le geste et les touches reviennent au navigateur
+    if (flow) return;
     /* Instant du dernier wheel absorbé par une zone défilante : l'inertie
        d'un trackpad continue d'envoyer des événements une fois la butée
        atteinte, ils ne doivent pas changer d'écran à la place du geste. */
     let lastInner = 0;
     const onWheel = (e: WheelEvent) => {
-      if (isFlow()) return;
       // ctrl + molette, c'est le pinch-zoom du trackpad
       if (animating.current || e.ctrlKey) return;
       const dir = e.deltaY > 24 ? 1 : e.deltaY < -24 ? -1 : 0;
@@ -130,7 +157,6 @@ export function Slider({
       go(idxRef.current + dir);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (isFlow()) return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       if (e.target instanceof Element && e.target.closest(EDITABLE)) return;
       const dir = ["ArrowDown", "PageDown"].includes(e.key)
@@ -156,7 +182,7 @@ export function Slider({
       ty = e.touches[0].clientY;
     };
     const onTE = (e: TouchEvent) => {
-      if (held || isFlow()) return;
+      if (held) return;
       const dy = ty - e.changedTouches[0].clientY;
       if (dy > 40 && !scrollDown) go(idxRef.current + 1);
       else if (dy < -40 && !scrollUp) go(idxRef.current - 1);
@@ -171,11 +197,12 @@ export function Slider({
       window.removeEventListener("touchstart", onTS);
       window.removeEventListener("touchend", onTE);
     };
-  }, [go]);
+  }, [go, flow]);
 
   return (
     <main className="deck">
       <div
+        ref={trackRef}
         className="track"
         style={{ transform: `translateY(-${idx * 100}svh)` }}
       >

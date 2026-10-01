@@ -5,7 +5,7 @@
 export function MobileBar() {
   return (
     <nav className="mobile-bar" aria-label="Sections">
-      <a href="#stage" className="mobile-bar-logo" aria-label="Haut de page">
+      <a href="#stage" className="mobile-bar-logo" aria-label="wm., haut de page">
         wm<span className="text-burgundy">.</span>
       </a>
       <div className="mobile-bar-links">

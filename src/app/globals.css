@@ -1696,7 +1696,8 @@ body::after {
   }
   .corner,
   .face,
-  .facenav {
+  .facenav,
+  .hero-pitch {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
@@ -1953,10 +1954,14 @@ body::after {
   body:has(.deck) {
     overflow: visible;
   }
+  /* les ancres s'arrêtent sous la barre fixe (le défilement doux vient de
+     la règle html de base, que le mouvement réduit coupe) */
   html:has(.deck) {
-    scroll-behavior: smooth;
-    /* les ancres s'arrêtent sous la barre fixe */
     scroll-padding-top: 64px;
+  }
+  /* carte d'une face ouverte : la page ne défile plus dessous */
+  html:has(.face-card.open) {
+    overflow: hidden;
   }
   .deck {
     position: static;
@@ -2011,7 +2016,12 @@ body::after {
     color: var(--color-navy);
   }
   .mobile-bar-links a {
-    padding: 8px 0;
+    padding: 12px 0;
+  }
+  .mobile-bar a:focus-visible {
+    outline: 2px dashed var(--color-burgundy);
+    outline-offset: 3px;
+    border-radius: 6px;
   }
   .mobile-bar-links .mobile-bar-cta {
     padding: 7px 14px;
@@ -2023,7 +2033,6 @@ body::after {
   /* ── hero : l'intro passe dans le flux, le cube en dessous ── */
   .hero {
     height: auto;
-    min-height: calc(100svh - 56px);
     overflow: visible;
     display: flex;
     flex-direction: column;
@@ -2069,27 +2078,44 @@ body::after {
   .hero-pitch {
     order: 3;
     display: block;
+    /* même apparition en fondu que le nom et les coins */
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.6s ease 0.4s,
+      transform 0.6s var(--ease-out) 0.4s;
     margin-top: 18px;
     font-family: var(--font-hand);
     font-size: clamp(1.25rem, 5.4vw, 1.6rem);
     line-height: 1.25;
     color: var(--color-burgundy);
   }
-  /* la dispo, sous l'accroche */
+  .stage.loaded .hero-pitch {
+    opacity: 1;
+    transform: none;
+  }
+  /* la dispo, sous l'accroche ; visible même sur écran court (la règle
+     max-height: 560px la masquait quand tout devait tenir dans l'écran) */
   .corner.br {
+    display: block;
     order: 4;
     margin-top: 18px;
     font-size: 0.68rem;
     letter-spacing: 0.16em;
   }
-  /* le cube : un bloc dans le flux, à sa taille */
+  /* le cube : un bloc dans le flux, nettement plus petit qu'en plein
+     écran — c'est un élément de décor, pas le sujet de la page */
+  :root {
+    --face: min(18vh, 36vw);
+    --face: min(18svh, 36vw);
+  }
+  /* juste la place du cube en perspective (il déborde de sa face) */
   .center {
     order: 5;
     position: relative;
     inset: auto;
-    flex: 1;
-    min-height: calc(var(--face) * 1.45);
-    margin-top: 12px;
+    height: calc(var(--face) * 1.75);
+    margin-top: 28px;
   }
   .scene {
     translate: 0 0;
@@ -2099,6 +2125,12 @@ body::after {
     position: static;
     translate: none;
     margin: 4px auto 0;
+    gap: 6px;
+  }
+  .facenav button {
+    min-height: 32px;
+    padding: 5px 11px 6px;
+    font-size: 0.62rem;
   }
   /* carte d'une face : au-dessus de tout, plein écran */
   .face-card,
@@ -2217,5 +2249,9 @@ body::after {
   }
   .contact-head {
     text-align: left;
+  }
+  /* la page défile : plus besoin de gagner de la hauteur sur petit écran */
+  .contact-sub {
+    display: block;
   }
 }
