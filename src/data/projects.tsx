@@ -23,25 +23,10 @@ export type Project = {
      déduit la couleur du texte). À défaut, la tuile garde son pictogramme. */
   tileIcon?: { src: string; w: number; h: number; bg: string };
   faces: FaceKey[];
-  /* le panneau du projet sur l'accueil : son univers (les couleurs de la
-     marque), un titre court et une phrase. `visual` choisit la mise en
-     scène des captures : photo plein cadre, fenêtre de navigateur, ou
-     deux écrans de téléphone (les deux premières captures). */
-  panel: {
-    title: string;
-    text: string;
-    visual: "photo" | "browser" | "phones";
-    /* moitié visuel */
-    stage: string;
-    /* moitié texte : fond, texte, bouton (fond et texte) */
-    bg: string;
-    fg: string;
-    cta: string;
-    ctaText: string;
-    /* bordure des téléphones */
-    frame?: string;
-  };
-  /* les deux mentions courtes du panneau sur l'accueil */
+  /* trois livrables courts, pour l'accueil (la liste complète, `livre`,
+     reste sur la page projet) */
+  highlights: [string, string, string];
+  /* les deux mentions courtes du projet sur l'accueil */
   kind: string;
   status: "En production" | "Mission livrée" | "En cours" | "Projet perso";
 
@@ -65,16 +50,11 @@ export const projects: Project[] = [
     status: "En production",
     logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
-    panel: {
-      title: "la boutique d'une marque faite main",
-      text: "Collection, panier, paiement Stripe et livraison Mondial Relay, hébergée et suivie de bout en bout.",
-      visual: "photo",
-      stage: "#171615",
-      bg: "#e8dcc8",
-      fg: "#171615",
-      cta: "#171615",
-      ctaText: "#e8dcc8",
-    },
+    highlights: [
+      "La boutique, le panier et la commande.",
+      "Le paiement Stripe et la livraison Mondial Relay.",
+      "L'hébergement de bout en bout, et le suivi.",
+    ],
     tagline: "La boutique en ligne d'une marque de sacs faits main à Paris.",
     contexte:
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
@@ -177,16 +157,11 @@ export const projects: Project[] = [
     status: "Mission livrée",
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     faces: ["front", "back", "quality", "deploy", "suivi"],
-    panel: {
-      title: "un ERP vendu en licence",
-      text: "Facturation conforme 2026, gestion de projet en kanban, back-office des licences et trois environnements Docker.",
-      visual: "browser",
-      stage: "#1d2747",
-      bg: "#dfe6ff",
-      fg: "#1d2747",
-      cta: "#3451d1",
-      ctaText: "#ffffff",
-    },
+    highlights: [
+      "La facturation conforme 2026.",
+      "La gestion de projet en kanban.",
+      "Le back-office des licences, trois environnements Docker.",
+    ],
     tagline:
       "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
@@ -263,17 +238,11 @@ export const projects: Project[] = [
       bg: "#032fac",
     },
     faces: ["front", "back", "quality"],
-    panel: {
-      title: "un jeu de mots en temps réel",
-      text: "De 2 à 8 joueurs, sur un téléphone ou en ligne : chaque coup arrive chez l'adversaire sans rechargement.",
-      visual: "phones",
-      stage: "#032fac",
-      bg: "#ff8a2a",
-      fg: "#14123d",
-      cta: "#14123d",
-      ctaText: "#ff8a2a",
-      frame: "#0b0b1e",
-    },
+    highlights: [
+      "Des parties de 2 à 8 joueurs.",
+      "Le temps réel, sans rechargement.",
+      "Deux modes : classique et time-bomb.",
+    ],
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
       "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
@@ -414,17 +383,11 @@ export const projects: Project[] = [
       bg: "#fbfaf7",
     },
     faces: ["front", "back", "quality", "suivi"],
-    panel: {
-      title: "la parentalité, famille par famille",
-      text: "Des contenus calés sur l'âge de chaque enfant, des ateliers, des rendez-vous, et l'offre de l'employeur.",
-      visual: "phones",
-      stage: "#a8bf9a",
-      bg: "#ffd9c2",
-      fg: "#4a3428",
-      cta: "#b5541a",
-      ctaText: "#ffffff",
-      frame: "#4a3428",
-    },
+    highlights: [
+      "Des contenus selon l'âge de chaque enfant.",
+      "Les ateliers et les rendez-vous.",
+      "L'abonnement et l'offre de l'employeur.",
+    ],
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
       "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
@@ -526,16 +489,11 @@ export const projects: Project[] = [
       bg: "#edebe6",
     },
     faces: ["design", "front", "back", "quality", "deploy"],
-    panel: {
-      title: "un mentor IA qui fait rendre des comptes",
-      text: "La journée de travail jouée comme une partie classée : missions notées par un mentor IA, relances aux pauses, rangs et saisons.",
-      visual: "browser",
-      stage: "#000000",
-      bg: "#f3c969",
-      fg: "#000000",
-      cta: "#000000",
-      ctaText: "#f3c969",
-    },
+    highlights: [
+      "La journée jouée comme une partie classée.",
+      "Le mentor IA qui note les missions.",
+      "L'app Windows, installée en un clic.",
+    ],
     tagline:
       "Un mentor IA qui cadre la journée de travail, relance au bon moment et fait rendre des comptes.",
     contexte:

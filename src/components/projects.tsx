@@ -3,76 +3,36 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { projects, type Project, type Shot } from "@/data/projects";
-
-/* TypeScript est partout : il ne distingue aucun projet, le panneau montre
-   le reste de la stack */
-const stackOf = (project: Project) =>
-  project.stack.filter((tool) => tool !== "TypeScript").slice(0, 4);
+import { FACES, FACE_ORDER } from "@/data/cube-faces";
+import { projects, type Project } from "@/data/projects";
 
 /* hauteur de la barre du haut : la scène se colle juste dessous */
 const TOP_BAR = 56;
 
-/** La mise en scène des captures dans la moitié visuel du panneau. */
-function PanelVisual({ project }: { project: Project }) {
-  const [first, second] = project.shots;
-  if (!first) return null;
+/* capture portrait → l'écran prend la forme d'un téléphone, paysage → celle
+   d'un navigateur */
+const isPhone = (project: Project) => {
+  const cover = project.shots[0];
+  return !!cover && cover.h > cover.w;
+};
 
-  if (project.panel.visual === "photo") {
-    return (
-      <Image
-        className="pn-photo"
-        src={first.src}
-        alt={first.alt}
-        fill
-        sizes="(max-width: 820px) 100vw, 50vw"
-      />
-    );
-  }
-  if (project.panel.visual === "browser") {
-    return (
-      <div className="pn-browser">
-        <span className="pn-browser-bar" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </span>
-        <Image
-          src={first.src}
-          alt={first.alt}
-          width={first.w}
-          height={first.h}
-          sizes="(max-width: 820px) 84vw, 42vw"
-        />
-      </div>
-    );
-  }
-  const frame = { "--frame": project.panel.frame } as CSSProperties;
-  return (
-    <div className="pn-phones" style={frame}>
-      {[first, second]
-        .filter((shot): shot is Shot => !!shot)
-        .map((shot) => (
-        <span key={shot.src} className="pn-phone">
-          <Image
-            src={shot.src}
-            alt={shot.alt}
-            fill
-            sizes="(max-width: 820px) 32vw, 260px"
-          />
-        </span>
-      ))}
-    </div>
+/* « Design, front, back. » : les faces du cube que couvre le projet */
+const facesOf = (project: Project) => {
+  const titles = FACE_ORDER.filter((face) => project.faces.includes(face)).map(
+    (face) => FACES[face].title,
   );
-}
+  if (titles.length === FACE_ORDER.length) return "Les six, du design au suivi.";
+  const text = titles.join(", ");
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
+};
 
-/** Les projets : un panneau plein écran par projet, chacun dans l'univers de
-    sa marque. La scène reste collée sous la barre du haut le temps de passer
-    les quatre panneaux : un écran de défilement par projet. Le défilement
-    choisit le panneau affiché, les flèches font défiler jusqu'au suivant
-    (une seule source de vérité : la position dans la page). Le suivant
-    monte du bas et recouvre le précédent, qui recule. Sans JS, les
-    panneaux s'empilent simplement. */
+/** Les projets, un écran à la fois. La scène reste collée sous la barre du
+    haut le temps d'un écran de défilement par projet. À gauche, le nom du
+    projet défile ; au centre, un écran prend la forme du projet (téléphone
+    ou navigateur) et en montre la capture ; à droite, le détail. Le
+    défilement choisit le projet affiché, les flèches font défiler jusqu'au
+    suivant (une seule source de vérité : la position dans la page). Sans
+    JS, la liste s'affiche simplement à plat. */
 export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -106,7 +66,7 @@ export function Projects() {
     };
   }, [count]);
 
-  /* les flèches défilent jusqu'au panneau voulu : le défilement fait le
+  /* les flèches défilent jusqu'au projet voulu : le défilement fait le
      reste, comme à la molette */
   const goTo = useCallback((target: number) => {
     const section = sectionRef.current;
@@ -121,67 +81,110 @@ export function Projects() {
     window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
   }, []);
 
+  /* position de chaque projet par rapport au projet affiché : -1 déjà vu,
+     0 affiché, 1 à venir. Sans JS (scène non collée), tous sont à plat. */
+  const offsetOf = (i: number) =>
+    !pinned ? 0 : i < index ? -1 : i === index ? 0 : 1;
+  const active = projects[index];
+
   return (
     <section
       id="projets"
       ref={sectionRef}
-      className={`panels${pinned ? " is-pinned" : ""}`}
+      className={`ecran${pinned ? " is-pinned" : ""}`}
       style={{ "--count": count } as CSSProperties}
       aria-labelledby="projets-titre"
     >
-      <div className="panels-stage" ref={stageRef}>
-        <h2 id="projets-titre" className="panels-label">
-          Projets livrés et en cours
-        </h2>
+      <div className="ecran-stage" ref={stageRef}>
+        <header className="ec-head">
+          <h2 id="projets-titre" className="ec-title">
+            projets
+          </h2>
+          <p className="ec-sub">livrés et en cours · du design à la prod</p>
+          <div className="ec-dashes" aria-hidden="true">
+            {projects.map((project, i) => (
+              <span
+                key={project.slug}
+                className={i === index ? "on" : undefined}
+              />
+            ))}
+          </div>
+        </header>
+
+        {/* au centre : l'écran, qui prend la forme du projet affiché */}
+        <div
+          className={`ec-screen ${isPhone(active) ? "is-phone" : "is-web"}`}
+          aria-hidden="true"
+        >
+          <span className="ec-bar">
+            <span />
+            <span />
+            <span />
+          </span>
+          <div className="ec-view">
+            {projects.map((project, i) => {
+              const cover = project.shots[0];
+              if (!cover) return null;
+              return (
+                <Image
+                  key={project.slug}
+                  className={i === index ? "on" : undefined}
+                  src={cover.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 820px) 90vw, 600px"
+                />
+              );
+            })}
+          </div>
+        </div>
 
         {projects.map((project, i) => {
-          const state =
-            i < index ? "is-past" : i === index ? "is-active" : "is-next";
-          /* scène collée : seul le panneau affiché est atteignable au
-             clavier et au lecteur d'écran (inert retire aussi le reste
-             de l'arbre d'accessibilité) */
-          const hidden = pinned && i !== index;
-          const universe = {
-            "--stage": project.panel.stage,
-            "--bg": project.panel.bg,
-            "--fg": project.panel.fg,
-            "--cta": project.panel.cta,
-            "--cta-text": project.panel.ctaText,
-            zIndex: i + 1,
-          } as CSSProperties;
+          const offset = offsetOf(i);
           return (
             <article
               key={project.slug}
-              className={`panel ${state}`}
-              style={universe}
-              inert={hidden}
+              className={`ec-item${offset === 0 ? " is-on" : ""}`}
+              style={{ "--offset": offset } as CSSProperties}
+              /* scène collée : seul le projet affiché est atteignable au
+                 clavier et au lecteur d'écran */
+              inert={pinned && offset !== 0}
             >
-              <div className="pn-visual">
-                <PanelVisual project={project} />
-              </div>
-              <div className="pn-body">
-                <p className="pn-name">
-                  {project.num}. {project.title}
-                  <span className="pn-kind">
-                    {project.kind} · {project.status}
-                  </span>
+              <div className="ec-name">
+                <p className="ec-num" aria-hidden="true">
+                  {project.num}
                 </p>
-                <h3 className="pn-title">{project.panel.title}</h3>
-                <p className="pn-text">{project.panel.text}</p>
-                <p className="pn-stack">{stackOf(project).join(" · ")}</p>
-                <Link href={`/projets/${project.slug}`} className="pn-cta">
+                <h3>{project.title}</h3>
+                <p className="ec-kind">{project.kind}</p>
+              </div>
+
+              <div className="ec-detail">
+                <p className="ec-role">{project.kind}</p>
+                <p className="ec-status">
+                  ({project.num}) · {project.status}
+                </p>
+                <p className="ec-label">Le projet</p>
+                <p>{project.tagline}</p>
+                <p className="ec-label">Ce que j&apos;ai livré</p>
+                <ul>
+                  {project.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <div className="ec-faces">
+                  <p className="ec-label">Faces couvertes</p>
+                  <p>{facesOf(project)}</p>
+                </div>
+                <Link href={`/projets/${project.slug}`} className="ec-link">
                   Voir le projet <span aria-hidden="true">→</span>
                 </Link>
-                <p className="pn-progress" aria-hidden="true">
-                  {project.num} / {String(count).padStart(2, "0")}
-                </p>
               </div>
             </article>
           );
         })}
 
         {pinned && (
-          <div className="panels-nav">
+          <div className="ec-nav">
             <button
               type="button"
               aria-label="Projet précédent"
@@ -198,6 +201,9 @@ export function Projects() {
             >
               ↓
             </button>
+            <span className="ec-hint" aria-hidden="true">
+              ou faites défiler
+            </span>
           </div>
         )}
       </div>
