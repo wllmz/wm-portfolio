@@ -1,28 +1,21 @@
-import { Slider } from "@/components/slider";
+import { TopBar } from "@/components/top-bar";
 import { CubeStage } from "@/components/cube/cube-stage";
 import { Projects } from "@/components/projects";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-import { MobileBar } from "@/components/mobile-bar";
 
 export default function Home() {
   return (
     <>
-      <MobileBar />
-      <Slider labels={["Accueil", "Projets", "À propos", "Contact"]}>
-        {/* écran 1 : le hero (cube) */}
+      <TopBar />
+      <main className="home">
         <CubeStage />
-        {/* écran 2 : les projets */}
         <Projects />
-        {/* écran 3 : à propos */}
         <About />
-        {/* écran 4 : contact + footer */}
-        <div className="contact-slide">
-          <Contact />
-          <Footer />
-        </div>
-      </Slider>
+        <Contact />
+      </main>
+      <Footer />
     </>
   );
 }

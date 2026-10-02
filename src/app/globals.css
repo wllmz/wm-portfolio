@@ -24,12 +24,12 @@
   --face: min(40vh, 38vw);
 }
 
-html,
-body {
-  height: 100%;
-}
 html {
   scroll-behavior: smooth;
+}
+/* les ancres s'arrêtent sous la barre du haut */
+html:has(.top-bar) {
+  scroll-padding-top: 64px;
 }
 
 body {
@@ -51,13 +51,6 @@ select,
   -webkit-user-select: text;
   user-select: text;
 }
-/* Le blocage du scroll ne concerne QUE l'accueil, qui porte le slider.
-   Appliqué au body sans condition, il rendait les pages projet illisibles :
-   le contenu sous la ligne de flottaison devenait inatteignable. */
-body:has(.deck) {
-  overflow: hidden;
-}
-
 /* grain */
 body::after {
   content: "";
@@ -74,106 +67,77 @@ body::after {
   color: var(--color-cream);
 }
 
-/* ══════════════ SLIDER VERTICAL ══════════════
-   Chaque écran fait 100vh ; on glisse de l'un à l'autre. */
-/* clip et non hidden : un conteneur hidden reste défilable par programme, et
-   une ancre ou un focus clavier le faisait défiler en plus du translateY —
-   l'écran se retrouvait à cheval entre deux sections. */
-.deck {
-  position: fixed;
-  inset: 0;
-  overflow: hidden; /* repli pour Safari < 16 */
-  overflow: clip;
-}
-.track {
-  height: 100%;
-  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
-  will-change: transform;
-}
-.slide {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-}
-.slider-dots {
-  position: fixed;
-  right: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 120;
+/* ══════════════ BARRE DU HAUT ══════════════
+   L'accueil est une page qui défile : la barre reste en haut et mène à
+   chaque section. */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+  padding: 0 40px;
+  background: rgba(234, 227, 210, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1.5px solid rgba(45, 54, 96, 0.12);
 }
-.slider-dots button {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  padding: 0;
-  border-radius: 50%;
-  border: 1.5px solid rgba(45, 54, 96, 0.4);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.top-bar-logo {
+  font-family: var(--font-logo);
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-navy);
 }
-.slider-dots button.on {
-  height: 26px;
+.top-bar-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+.top-bar-links a {
+  padding: 12px 0;
+  transition: color 0.2s ease;
+}
+/* survol : pas au tap, l'effet resterait collé */
+@media (hover: hover) {
+  .top-bar-links a:not(.top-bar-cta):hover {
+    color: var(--color-burgundy);
+  }
+  .top-bar-links .top-bar-cta:hover {
+    background: var(--color-navy-deep);
+  }
+}
+.top-bar a:focus-visible {
+  outline: 2px dashed var(--color-burgundy);
+  outline-offset: 3px;
   border-radius: 6px;
-  background: var(--color-burgundy);
-  border-color: var(--color-burgundy);
 }
-/* écran étroit : les encadrés viennent chercher les bords, les pastilles
-   se collent au bord de l'écran pour ne plus passer par-dessus le texte */
-@media (max-width: 1024px) {
-  .slider-dots {
-    right: 8px;
-    gap: 10px;
-  }
-}
-/* téléphone et tablette portrait : les encadrés sont à 12px du bord, les
-   points passent dans cette marge plutôt que sur la bordure */
-@media (max-width: 820px) {
-  .slider-dots {
-    right: 2px;
-  }
-}
-
-/* écran contact + footer : contact centré, footer en bas */
-.contact-slide {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-/* min-height: 0 est indispensable : sans lui la min-height:auto d'un enfant
-   flex l'empêche de descendre sous la hauteur de son contenu. Le formulaire
-   poussait alors le footer hors du slide, que .slide { overflow: hidden }
-   rognait — invisible sur desktop, systématique sur mobile. */
-.contact-slide > #contact {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: flex;
-}
-/* centrage par margin plutôt que par align-items / justify-content : quand le
-   contenu dépasse, `center` rend le haut inatteignable au scroll, une marge
-   `auto` non (elle retombe à zéro dès que l'espace libre devient négatif).
-   Sur les DEUX axes : `auto 0` annulait le `margin: 0 auto` du cadre, qui se
-   collait alors à gauche dès que l'écran passait les 600px. */
-.contact-slide > #contact > * {
-  width: 100%;
-  margin: auto;
+.top-bar-links .top-bar-cta {
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: var(--color-cream);
+  transition: background-color 0.2s ease;
 }
 
 /* ══════════════ LE HERO ══════════════
-   Un écran plein ; le cube ne vit QUE là. La suite scrolle normalement. */
+   Un écran plein sous la barre du haut ; le cube ne vit QUE là. La suite
+   scrolle normalement. */
 .hero {
   position: relative;
-  height: 100vh;
-  height: 100svh;
+  height: calc(100vh - 56px);
+  height: calc(100svh - 56px);
   overflow: hidden;
+}
+/* le logo est dans la barre du haut : le coin ne garde que le nom */
+.corner .wm-mini,
+.corner.tl br {
+  display: none;
 }
 .frame {
   position: absolute;
@@ -603,7 +567,7 @@ body::after {
 }
 
 /* ══════════════ PAGE PROJET ══════════════
-   Page classique, hors slider : elle scrolle normalement. Même matière que
+   Page classique, elle scrolle normalement. Même matière que
    le reste — crème, contour fin, accent bordeaux. */
 .case {
   min-height: 100vh;
@@ -1017,10 +981,8 @@ body::after {
   gap: 7px;
 }
 
-/* écran projets : l'encadré remplit tout l'écran du slider */
 .proj-slide,
 .about-slide {
-  height: 100%;
   display: flex;
 }
 /* encadré des sections projets et à propos — écho au cadre du hero */
@@ -1053,10 +1015,6 @@ body::after {
   grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
   gap: clamp(24px, 4vw, 56px);
   align-items: center;
-  /* pas seulement sur mobile : dans une fenêtre courte, le texte dépassait
-     du cadre et `.slide { overflow: hidden }` le coupait sans recours */
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 /* la photo reprend la matière d'une face du cube : contour fin, même rayon */
 .about-photo {
@@ -1125,7 +1083,6 @@ body::after {
     justify-items: start;
     gap: 18px;
     align-content: start;
-    overflow-y: auto;
   }
   .about-photo {
     width: 150px;
@@ -1181,7 +1138,7 @@ body::after {
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, clamp(260px, 22vw, 340px));
   gap: clamp(10px, 1.2vw, 16px);
 }
 .bento-card {
@@ -1412,13 +1369,6 @@ body::after {
   align-content: start;
   padding: 20px 20px 64px;
 }
-/* écran peu haut : la carte large n'a plus la hauteur de tout son texte,
-   la stack reste sur la page du projet */
-@media (min-width: 1025px) and (max-height: 820px) {
-  .bento-card:nth-child(2) .bc-stack {
-    display: none;
-  }
-}
 /* petites cartes : le nom, le type et le statut, le détail est à un clic */
 .bento-card:nth-child(n + 3) .bc-tagline,
 .bento-card:nth-child(n + 3) .bc-stack {
@@ -1455,8 +1405,8 @@ body::after {
   color: var(--color-navy);
 }
 
-/* tablette (le slider est encore là) : deux colonnes, les deux premières
-   cartes en largeur, capture à gauche */
+/* tablette : deux colonnes, les deux premières cartes en largeur, capture
+   à gauche */
 @media (max-width: 1024px) {
   .proj-frame {
     margin: 12px;
@@ -1467,7 +1417,8 @@ body::after {
   }
   .bento {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: 1.25fr 1fr 1fr;
+    grid-template-rows: 300px;
+    grid-auto-rows: 250px;
   }
   .bento-card:nth-child(1) {
     grid-row: span 1;
@@ -1487,22 +1438,6 @@ body::after {
   }
 }
 
-/* écran court mais large : les cartes ne tiennent plus en hauteur, la
-   grille défile (le slider rend la main tant qu'il reste de la course) */
-@media (max-height: 620px) and (min-width: 821px) {
-  .bento {
-    /* la grille rogne ce qui dépasse : on lui rend de quoi montrer le
-       contour de focus et le soulèvement des cartes */
-    margin: -8px;
-    padding: 8px;
-    /* une carte qui prend le focus défile avec sa marge, contour compris */
-    scroll-padding: 8px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    grid-template-rows: none;
-    grid-auto-rows: 240px;
-  }
-}
 .pp-chip {
   flex: none;
   white-space: nowrap;
@@ -1674,13 +1609,6 @@ body::after {
     position: absolute;
     inset: -12px -4px;
   }
-  /* même principe pour les points du slider : agrandis au doigt, sans
-     chevaucher leurs voisins (gap de 10px) */
-  .slider-dots button::before {
-    content: "";
-    position: absolute;
-    inset: -5px -14px;
-  }
   .facenav button {
     min-height: 40px;
   }
@@ -1720,8 +1648,7 @@ body::after {
   html {
     scroll-behavior: auto;
   }
-  /* glissement d'écran, pulsation, cartes : sans animation */
-  .track,
+  /* pulsation, cartes : sans animation */
   .face-card,
   .face-card .fc-inner,
   .bento-card,
@@ -1751,10 +1678,9 @@ body::after {
 }
 
 /* ══════════════ CONTACT — section + formulaire ══════════════ */
-/* Fond clair, simple et pro. Tout tient dans un encadré, compact pour
-   que le footer reste visible sous le formulaire dans le slide. */
+/* Fond clair, simple et pro. Tout tient dans un encadré. */
 .contact-section {
-  padding: clamp(20px, 3vh, 40px) 20px;
+  padding: clamp(40px, 8vh, 96px) 20px;
 }
 /* l'encadré, en écho au hero et à la section à propos */
 .contact-frame {
@@ -1944,29 +1870,6 @@ body::after {
   }
 }
 
-/* écrans peu hauts (laptops, fenêtres réduites) : on compacte pour
-   que le formulaire ET le footer tiennent dans le slide. */
-@media (max-height: 820px) {
-  .contact-sub {
-    display: none;
-  }
-  .contact-head {
-    margin-bottom: clamp(14px, 2vh, 20px);
-  }
-}
-@media (max-height: 700px) {
-  .cform-row + .cfield,
-  .cfield + .cfield {
-    margin-top: 11px;
-  }
-  .cfield textarea {
-    min-height: 68px;
-  }
-  .contact-title {
-    font-size: clamp(1.4rem, 3vw, 1.9rem);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .cform-submit,
   .cfield input,
@@ -1976,103 +1879,53 @@ body::after {
   }
 }
 
-/* ══════════════ MOBILE : PAGE QUI DÉFILE (≤ 820px) ══════════════
-   Sur desktop, l'accueil est un slider plein écran. Sur un téléphone, forcer
-   chaque écran à la hauteur du viewport laissait des écrans à moitié vides
-   (projets, hero) et en rognait d'autres (contact). Sous 820px, l'accueil
-   devient une page classique : chaque section prend sa hauteur naturelle,
-   une barre fixe en haut sert de navigation. Le slider JS se désactive au
-   même seuil (slider.tsx). Rien ici ne s'applique au-delà de 820px. */
+/* ══════════════ APPARITION AU SCROLL ══════════════
+   Les blocs des sections montent en fondu en entrant dans l'écran. Piloté
+   par le scroll lui-même (animation-timeline), sans JS : un navigateur qui
+   ne le gère pas affiche simplement tout, tout de suite. `translate` et non
+   `transform`, que le survol des cartes utilise déjà. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .proj-head,
+    .bento-card,
+    .about-head,
+    .about-grid,
+    .contact-frame {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
 
-/* éléments propres au mobile : absents du desktop */
-.mobile-bar,
+/* ══════════════ MOBILE (≤ 820px) ══════════════
+   Sur un téléphone, les sections perdent leurs cadres et le hero passe en
+   colonne : l'intro dans le flux, le cube en dessous. Rien ici ne
+   s'applique au-delà de 820px. */
+
+/* élément propre au mobile : absent du desktop */
 .hero-pitch {
   display: none;
 }
 
 @media (max-width: 820px) {
-  /* ── la page défile : c'est le document qui défile, pas le body ── */
-  html:has(.deck),
-  body:has(.deck) {
-    height: auto;
-  }
-  body:has(.deck) {
-    overflow: visible;
-  }
-  /* les ancres s'arrêtent sous la barre fixe (le défilement doux vient de
-     la règle html de base, que le mouvement réduit coupe) */
-  html:has(.deck) {
-    scroll-padding-top: 64px;
-  }
   /* carte d'une face ouverte : la page ne défile plus dessous */
   html:has(.face-card.open) {
     overflow: hidden;
   }
-  .deck {
-    position: static;
-    overflow: visible;
-  }
-  /* !important : le slider écrit son translateY en style inline.
-     will-change: auto : un will-change sur transform fait de la piste le
-     repère des éléments fixed (carte des faces), qui ne couvriraient plus
-     l'écran mais toute la hauteur de la page */
-  .track {
-    height: auto;
-    transform: none !important;
-    transition: none;
-    will-change: auto;
-  }
-  .slide {
-    height: auto;
-    overflow: visible;
-  }
-  .slider-dots {
-    display: none;
-  }
 
   /* ── barre de navigation ── */
-  .mobile-bar {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    height: 56px;
+  .top-bar {
     padding: 0 18px;
-    background: rgba(234, 227, 210, 0.92);
-    backdrop-filter: blur(8px);
-    border-bottom: 1.5px solid rgba(45, 54, 96, 0.12);
   }
-  .mobile-bar-logo {
-    font-family: var(--font-logo);
-    font-size: 1.25rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--color-navy);
-  }
-  .mobile-bar-links {
-    display: flex;
-    align-items: center;
+  .top-bar-links {
     gap: 16px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-navy);
-  }
-  .mobile-bar-links a {
-    padding: 12px 0;
-  }
-  .mobile-bar a:focus-visible {
-    outline: 2px dashed var(--color-burgundy);
-    outline-offset: 3px;
-    border-radius: 6px;
-  }
-  .mobile-bar-links .mobile-bar-cta {
-    padding: 7px 14px;
-    border-radius: 999px;
-    background: var(--color-navy);
-    color: var(--color-cream);
   }
 
   /* ── hero : l'intro passe dans le flux, le cube en dessous ── */
@@ -2084,9 +1937,7 @@ body::after {
     padding: 36px 22px 40px;
   }
   .frame,
-  .corner.bl,
-  .corner .wm-mini,
-  .corner.tl br {
+  .corner.bl {
     display: none;
   }
   .corner {
@@ -2199,7 +2050,6 @@ body::after {
   /* ── sections : plus de cadres, des blocs séparés par un filet ── */
   .proj-slide,
   .about-slide {
-    height: auto;
     display: block;
   }
   .proj-frame,
@@ -2220,8 +2070,8 @@ body::after {
     flex: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: none;
+    grid-auto-rows: auto;
     gap: 14px;
-    overflow: visible;
   }
   .bento-card:nth-child(1),
   .bento-card:nth-child(2) {
@@ -2277,20 +2127,7 @@ body::after {
     font-size: 0.66rem;
   }
 
-  /* ── à propos : hauteur naturelle ── */
-  .about-grid {
-    overflow: visible;
-  }
-
   /* ── contact : formulaire entier, sans cadre ── */
-  .contact-slide {
-    height: auto;
-  }
-  .contact-slide > #contact {
-    flex: none;
-    overflow: visible;
-    display: block;
-  }
   .contact-section {
     padding: 56px 22px 40px;
     border-top: 1.5px solid rgba(45, 54, 96, 0.12);
@@ -2302,9 +2139,5 @@ body::after {
   }
   .contact-head {
     text-align: left;
-  }
-  /* la page défile : plus besoin de gagner de la hauteur sur petit écran */
-  .contact-sub {
-    display: block;
   }
 }
