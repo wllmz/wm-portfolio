@@ -23,9 +23,27 @@ export type Project = {
      déduit la couleur du texte). À défaut, la tuile garde son pictogramme. */
   tileIcon?: { src: string; w: number; h: number; bg: string };
   faces: FaceKey[];
-  /* les deux mentions courtes de la carte sur l'accueil */
+  /* le panneau du projet sur l'accueil : son univers (les couleurs de la
+     marque), un titre court et une phrase. `visual` choisit la mise en
+     scène des captures : photo plein cadre, fenêtre de navigateur, ou
+     deux écrans de téléphone (les deux premières captures). */
+  panel: {
+    title: string;
+    text: string;
+    visual: "photo" | "browser" | "phones";
+    /* moitié visuel */
+    stage: string;
+    /* moitié texte : fond, texte, bouton (fond et texte) */
+    bg: string;
+    fg: string;
+    cta: string;
+    ctaText: string;
+    /* bordure des téléphones */
+    frame?: string;
+  };
+  /* les deux mentions courtes du panneau sur l'accueil */
   kind: string;
-  status: "En production" | "Mission livrée" | "En cours";
+  status: "En production" | "Mission livrée" | "En cours" | "Projet perso";
 
   /* ── page de détail ── */
   tagline: string;
@@ -37,8 +55,7 @@ export type Project = {
   // TODO: ajouter `url` quand les sites sont accessibles publiquement
 };
 
-/* la grille de l'accueil place les projets selon leur rang et est dessinée
-   pour quatre : en ajouter un demande de revoir `.bento` */
+/* l'accueil les présente dans cet ordre, un panneau par projet */
 export const projects: Project[] = [
   {
     slug: "freia-paris",
@@ -48,6 +65,16 @@ export const projects: Project[] = [
     status: "En production",
     logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
+    panel: {
+      title: "la boutique d'une marque faite main",
+      text: "Collection, panier, paiement Stripe et livraison Mondial Relay, hébergée et suivie de bout en bout.",
+      visual: "photo",
+      stage: "#171615",
+      bg: "#e8dcc8",
+      fg: "#171615",
+      cta: "#171615",
+      ctaText: "#e8dcc8",
+    },
     tagline: "La boutique en ligne d'une marque de sacs faits main à Paris.",
     contexte:
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
@@ -150,6 +177,16 @@ export const projects: Project[] = [
     status: "Mission livrée",
     logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     faces: ["front", "back", "quality", "deploy", "suivi"],
+    panel: {
+      title: "un ERP vendu en licence",
+      text: "Facturation conforme 2026, gestion de projet en kanban, back-office des licences et trois environnements Docker.",
+      visual: "browser",
+      stage: "#1d2747",
+      bg: "#dfe6ff",
+      fg: "#1d2747",
+      cta: "#3451d1",
+      ctaText: "#ffffff",
+    },
     tagline:
       "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
@@ -226,6 +263,17 @@ export const projects: Project[] = [
       bg: "#032fac",
     },
     faces: ["front", "back", "quality"],
+    panel: {
+      title: "un jeu de mots en temps réel",
+      text: "De 2 à 8 joueurs, sur un téléphone ou en ligne : chaque coup arrive chez l'adversaire sans rechargement.",
+      visual: "phones",
+      stage: "#032fac",
+      bg: "#ff8a2a",
+      fg: "#14123d",
+      cta: "#14123d",
+      ctaText: "#ff8a2a",
+      frame: "#0b0b1e",
+    },
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
       "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
@@ -366,6 +414,17 @@ export const projects: Project[] = [
       bg: "#fbfaf7",
     },
     faces: ["front", "back", "quality", "suivi"],
+    panel: {
+      title: "la parentalité, famille par famille",
+      text: "Des contenus calés sur l'âge de chaque enfant, des ateliers, des rendez-vous, et l'offre de l'employeur.",
+      visual: "phones",
+      stage: "#a8bf9a",
+      bg: "#ffd9c2",
+      fg: "#4a3428",
+      cta: "#b5541a",
+      ctaText: "#ffffff",
+      frame: "#4a3428",
+    },
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
       "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
@@ -450,6 +509,84 @@ export const projects: Project[] = [
         h: 708,
         caption:
           "L'abonnement — et l'offre partenaire qui prend le relais quand l'employeur a souscrit.",
+      },
+    ],
+  },
+  {
+    slug: "rigueur",
+    num: "05",
+    title: "Rigueur",
+    kind: "App desktop",
+    status: "Projet perso",
+    // le logo embarque son propre fond clair, coins transparents compris
+    tileIcon: {
+      src: "/projets/rigueur/logo.png",
+      w: 512,
+      h: 512,
+      bg: "#edebe6",
+    },
+    faces: ["design", "front", "back", "quality", "deploy"],
+    panel: {
+      title: "un mentor IA qui fait rendre des comptes",
+      text: "La journée de travail jouée comme une partie classée : missions notées par un mentor IA, relances aux pauses, rangs et saisons.",
+      visual: "browser",
+      stage: "#000000",
+      bg: "#f3c969",
+      fg: "#000000",
+      cta: "#000000",
+      ctaText: "#f3c969",
+    },
+    tagline:
+      "Un mentor IA qui cadre la journée de travail, relance au bon moment et fait rendre des comptes.",
+    contexte:
+      "Projet personnel. Seul devant l'écran, on décroche vite : il me fallait un cadre, des relances et quelqu'un à qui rendre des comptes. Rigueur joue la journée de travail comme une partie classée : des missions le matin, des relances au fil des pauses, un compte rendu le soir, et un classement façon jeu compétitif pour garder de l'enjeu.",
+    livre: [
+      "La journée en partie classée : 1 à 3 missions, sessions de 50 minutes, relances aux pauses, compte rendu en fin de partie.",
+      "Le mentor IA : il reformule les missions floues, les note de 1 à 5 et répond aux relances (Claude en local, un mentor à règles en secours).",
+      "Le classement : niveau caché, points gagnés ou perdus selon l'écart, rangs de Stagiaire à Légende, séries de promotion et saisons mensuelles.",
+      "Deux modes sans enjeu : la partie rapide au chrono et la liste perso.",
+      "Le journal, le profil, les badges et la boutique de skins.",
+      "L'application Windows : un installeur qui lance l'API et le front en local, la base sauvegardée avant chaque mise à jour.",
+    ],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Fastify",
+      "SQLite",
+      "Drizzle",
+      "Electron",
+      "Claude Code",
+      "Vitest",
+    ],
+    shots: [
+      {
+        src: "/projets/rigueur/menu.jpg",
+        alt: "Menu principal de Rigueur : partie rapide, ranked et partie perso",
+        w: 1568,
+        h: 698,
+        caption: "Le menu principal, comme celui d'un jeu.",
+      },
+      {
+        src: "/projets/rigueur/ranked-themes.jpg",
+        alt: "Préparation d'une Ranked : le choix des thèmes de la journée",
+        w: 1568,
+        h: 698,
+        caption: "La préparation : thèmes, terrain, missions, horaire.",
+      },
+      {
+        src: "/projets/rigueur/partie-rapide.jpg",
+        alt: "Partie rapide en cours : la mission et un grand chrono",
+        w: 1568,
+        h: 698,
+        caption: "En jeu : une mission, un chrono.",
+      },
+      {
+        src: "/projets/rigueur/regles.jpg",
+        alt: "Les règles de la Ranked présentées à l'accueil",
+        w: 1568,
+        h: 698,
+        caption: "Les règles, posées dès l'accueil.",
       },
     ],
   },
