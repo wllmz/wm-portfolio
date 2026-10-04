@@ -11,7 +11,6 @@ const FACTS = [
 export function About() {
   return (
     <section id="a-propos" className="about-slide">
-      {/* encadré en écho au hero et à la section projets */}
       <div className="about-frame">
         <header className="about-head">
           <span className="block text-[0.72rem] font-semibold tracking-[0.24em] text-burgundy uppercase">

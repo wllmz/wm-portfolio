@@ -984,7 +984,7 @@ body::after {
 .about-slide {
   display: flex;
 }
-/* encadré de la section à propos — écho au cadre du hero */
+/* bloc de la section à propos : sans bordure, seul le hero garde un cadre */
 .about-frame {
   position: relative;
   flex: 1;
@@ -995,8 +995,6 @@ body::after {
   display: flex;
   flex-direction: column;
   margin: 18px;
-  border: 1.5px solid rgba(45, 54, 96, 0.2);
-  border-radius: 26px;
   padding: clamp(24px, 3.5vw, 52px) clamp(22px, 3.5vw, 52px);
 }
 .about-head {
@@ -1777,18 +1775,15 @@ body::after {
 }
 
 /* ══════════════ CONTACT — section + formulaire ══════════════ */
-/* Fond clair, simple et pro. Tout tient dans un encadré. */
+/* Fond clair, simple et pro. */
 .contact-section {
   padding: clamp(40px, 8vh, 96px) 20px;
 }
-/* l'encadré, en écho au hero et à la section à propos */
+/* bloc du contact : sans bordure, seul le hero garde un cadre */
 .contact-frame {
   max-width: 600px;
   margin: 0 auto;
   padding: clamp(22px, 3.2vh, 40px) clamp(20px, 3.2vw, 44px);
-  border: 1.5px solid rgba(45, 54, 96, 0.2);
-  border-radius: 24px;
-  background: transparent;
 }
 .contact-head {
   text-align: center;
@@ -2151,9 +2146,7 @@ body::after {
   .about-frame {
     margin: 0;
     padding: 56px 22px;
-    border: none;
     border-top: 1.5px solid rgba(45, 54, 96, 0.12);
-    border-radius: 0;
   }
   .about-head {
     margin-bottom: 28px;
@@ -2166,8 +2159,6 @@ body::after {
   }
   .contact-frame {
     padding: 0;
-    border: none;
-    border-radius: 0;
   }
   .contact-head {
     text-align: left;
