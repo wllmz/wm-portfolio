@@ -22,6 +22,8 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-boing: cubic-bezier(0.34, 1.6, 0.4, 1);
   --face: min(40vh, 38vw);
+  /* la marge latérale commune : barre du haut, hero, sections, pied de page */
+  --gx: clamp(24px, 4.5vw, 64px);
 }
 
 html {
@@ -79,7 +81,7 @@ body::after {
   justify-content: space-between;
   gap: 16px;
   height: 56px;
-  padding: 0 40px;
+  padding: 0 var(--gx);
   background: rgba(234, 227, 210, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1.5px solid rgba(45, 54, 96, 0.12);
@@ -173,20 +175,20 @@ body::after {
 }
 .corner.tl {
   top: 34px;
-  left: 40px;
+  left: var(--gx);
 }
 .corner.tr {
   top: 34px;
-  right: 40px;
+  right: var(--gx);
   text-align: right;
 }
 .corner.bl {
   bottom: 34px;
-  left: 40px;
+  left: var(--gx);
 }
 .corner.br {
   bottom: 34px;
-  right: 40px;
+  right: var(--gx);
   text-align: right;
 }
 .corner .accent {
@@ -986,12 +988,17 @@ body::after {
    des colonnes étiquetées comme le détail d'un projet. Même marge et même
    en-tête que la section projets juste au-dessus. */
 .colo {
-  --gx: clamp(24px, 4.5vw, 64px);
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 56px);
-  min-height: calc(100svh - 56px);
-  padding: clamp(40px, 8vh, 72px) var(--gx);
+  padding: clamp(56px, 9vh, 96px) var(--gx);
+  border-top: 1.5px solid rgba(45, 54, 96, 0.12);
+}
+/* le numéro de section, à la main, devant le titre (projets, à propos,
+   contact) */
+.sec-num {
+  margin-right: 0.45em;
+  font-family: var(--font-hand);
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--color-burgundy);
 }
 .colo-title {
   font-family: var(--font-title);
@@ -1045,7 +1052,6 @@ body::after {
   display: grid;
   grid-template-columns: 1.3fr 1.3fr 1fr 1fr;
   gap: clamp(24px, 3.3vw, 48px);
-  margin-top: auto;
   padding-top: 24px;
   border-top: 1.5px solid rgba(45, 54, 96, 0.2);
 }
@@ -1084,7 +1090,7 @@ body::after {
    sa position par rapport au projet affiché dans --offset (-1, 0, 1).
    Sans JS, la liste s'affiche à plat. */
 .ecran {
-  --gx: clamp(24px, 4.5vw, 64px);
+  border-top: 1.5px solid rgba(45, 54, 96, 0.12);
   --ease-screen: cubic-bezier(0.65, 0, 0.35, 1);
   /* l'ancre #projets s'arrête pile sous la barre (56px), là où la scène se
      colle, et non aux 64px des autres sections (scroll-padding-top) */
@@ -1731,12 +1737,9 @@ body::after {
 /* Comme les projets et l'à propos : petit en-tête, puis « parlons-en. » à
    gauche avec la suite des étapes, le formulaire à droite. */
 .contact-section {
-  --gx: clamp(24px, 4.5vw, 64px);
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 56px);
-  min-height: calc(100svh - 56px);
-  padding: clamp(40px, 8vh, 72px) var(--gx);
+  padding: clamp(56px, 9vh, 96px) var(--gx);
+  background: var(--color-paper);
+  border-top: 1.5px solid rgba(45, 54, 96, 0.12);
 }
 .contact-eyebrow {
   font-family: var(--font-title);
@@ -1749,7 +1752,6 @@ body::after {
   color: var(--color-ink-soft);
 }
 .contact-grid {
-  flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 620px);
   gap: clamp(48px, 6.7vw, 96px);
@@ -2127,9 +2129,7 @@ body::after {
   /* ── à propos et contact : des blocs séparés par un filet ── */
   .colo,
   .contact-section {
-    min-height: 0;
     padding: 56px 22px;
-    border-top: 1.5px solid rgba(45, 54, 96, 0.12);
   }
   .colo-hero {
     gap: 16px;

@@ -11,7 +11,12 @@ export function Contact() {
   return (
     <section id="contact" className="contact-section" aria-labelledby="contact-titre">
       <header>
-        <p className="contact-eyebrow">contact</p>
+        <p className="contact-eyebrow">
+          <span className="sec-num" aria-hidden="true">
+            03
+          </span>
+          contact
+        </p>
         <p className="contact-sub">web, mobile, API, infra</p>
       </header>
 

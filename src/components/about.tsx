@@ -8,6 +8,9 @@ export function About() {
     <section id="a-propos" className="colo" aria-labelledby="a-propos-titre">
       <header>
         <h2 id="a-propos-titre" className="colo-title">
+          <span className="sec-num" aria-hidden="true">
+            02
+          </span>
           à propos
         </h2>
         <p className="colo-sub">la personne derrière les projets</p>
