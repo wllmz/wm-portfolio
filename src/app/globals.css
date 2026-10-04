@@ -981,25 +981,97 @@ body::after {
   gap: 7px;
 }
 
-.about-slide {
-  display: flex;
-}
-/* bloc de la section à propos : sans bordure, seul le hero garde un cadre */
-.about-frame {
-  position: relative;
-  flex: 1;
-  /* `min-width: auto` sur un flex-item en ligne fait grandir le cadre jusqu'à
-     la largeur minimale de son contenu, qui déborde alors de l'écran */
-  min-width: 0;
-  min-height: 0;
+/* ══════════════ À PROPOS — le colophon ══════════════
+   Le nom en très grand, la photo glissée à côté comme une signature, puis
+   des colonnes étiquetées comme le détail d'un projet. Même marge et même
+   en-tête que la section projets juste au-dessus. */
+.colo {
+  --gx: clamp(24px, 4.5vw, 64px);
   display: flex;
   flex-direction: column;
-  margin: 18px;
-  padding: clamp(24px, 3.5vw, 52px) clamp(22px, 3.5vw, 52px);
+  min-height: calc(100vh - 56px);
+  min-height: calc(100svh - 56px);
+  padding: clamp(40px, 8vh, 72px) var(--gx);
 }
-.about-head {
-  flex-shrink: 0;
-  margin-bottom: clamp(18px, 3vh, 38px);
+.colo-title {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.colo-sub {
+  margin-top: 4px;
+  font-size: 0.88rem;
+  color: var(--color-ink-soft);
+}
+.colo-hero {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(20px, 2.2vw, 32px);
+  margin: clamp(40px, 8vh, 72px) 0 clamp(40px, 6vh, 64px);
+}
+.colo-name {
+  font-family: var(--font-title);
+  font-size: clamp(3.4rem, 10.4vw, 9.4rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+}
+.colo-name span {
+  color: var(--color-burgundy);
+}
+.colo-photo {
+  flex: none;
+  width: clamp(110px, 10.4vw, 150px);
+  padding-bottom: 10px;
+}
+.colo-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 6;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.colo-photo figcaption {
+  margin-top: 10px;
+  font-family: var(--font-hand);
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+.colo-cols {
+  display: grid;
+  grid-template-columns: 1.3fr 1.3fr 1fr 1fr;
+  gap: clamp(24px, 3.3vw, 48px);
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1.5px solid rgba(45, 54, 96, 0.2);
+}
+/* le libellé des colonnes, des étapes du contact et des champs : celui du
+   détail des projets */
+.colo-label,
+.contact-label,
+.cfield label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-burgundy);
+}
+.colo-cols p {
+  margin-top: 10px;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.colo-cols strong {
+  font-weight: 600;
+}
+.colo-cols .colo-fact {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 /* ══════════════ PROJETS — un écran à la fois ══════════════
@@ -1423,127 +1495,6 @@ body::after {
   }
 }
 
-/* ══ à propos ══ */
-.about-grid {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 56px);
-  align-items: center;
-}
-/* la photo reprend la matière d'une face du cube : contour fin, même rayon */
-.about-photo {
-  align-self: center;
-  aspect-ratio: 4 / 5;
-  max-height: 100%;
-  overflow: hidden;
-  border: 1.5px solid rgba(45, 54, 96, 0.42);
-  border-radius: 10px;
-}
-.about-text p {
-  max-width: 58ch;
-  line-height: 1.7;
-  color: var(--color-ink-soft, rgba(45, 54, 96, 0.78));
-}
-/* l'accroche : reprend l'échelle des titres de section, en plus léger */
-.about-lead {
-  font-family: var(--font-title);
-  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
-  font-weight: 600;
-  line-height: 1.28;
-  letter-spacing: -0.01em;
-  color: var(--color-navy);
-  margin-bottom: clamp(14px, 2vh, 22px);
-}
-.about-text p + p {
-  margin-top: 14px;
-}
-.about-text strong {
-  font-weight: 600;
-  color: var(--color-navy);
-}
-.about-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 34px;
-  margin-top: clamp(20px, 3vh, 34px);
-  padding-top: clamp(18px, 2.5vh, 28px);
-  border-top: 1.5px solid rgba(45, 54, 96, 0.15);
-}
-.about-facts dt {
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(45, 54, 96, 0.75); /* 4,7:1 sur le crème */
-}
-.about-facts dd {
-  margin-top: 4px;
-  font-family: var(--font-title);
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: var(--color-burgundy);
-}
-@media (max-width: 820px) {
-  /* encadré resserré pour laisser de la place à la photo + au texte */
-  .about-frame {
-    margin: 12px;
-    padding: clamp(16px, 4.5vw, 26px);
-  }
-  /* photo en haut, à GAUCHE, puis le texte aligné à gauche dessous —
-     rien n'est centré. Le texte est compacté pour que la photo reste
-     visible sans devoir scroller. */
-  .about-grid {
-    grid-template-columns: 1fr;
-    justify-items: start;
-    gap: 18px;
-    align-content: start;
-  }
-  .about-photo {
-    width: 150px;
-  }
-  .about-text {
-    text-align: left;
-  }
-  .about-lead {
-    font-size: clamp(1.05rem, 4.2vw, 1.35rem);
-    margin-bottom: 12px;
-  }
-  .about-text p {
-    margin-inline: 0;
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-  .about-text p + p {
-    margin-top: 10px;
-  }
-  .about-facts {
-    justify-content: flex-start;
-    margin-top: 16px;
-    padding-top: 14px;
-    gap: 8px 20px;
-  }
-  .about-facts dt {
-    font-size: 0.7rem;
-  }
-}
-/* tablette portrait : la photo passe à gauche du texte, au lieu de laisser
-   tout le bas de l'écran vide sous un texte empilé */
-@media (min-width: 561px) and (max-width: 820px) {
-  .about-grid {
-    grid-template-columns: 190px minmax(0, 1fr);
-    align-items: start;
-    /* safe : si le texte dépasse (téléphone en paysage), le haut reste
-       atteignable au scroll au lieu de sortir du conteneur */
-    align-content: safe center;
-    gap: 32px;
-  }
-  .about-photo {
-    width: 190px;
-  }
-}
-
 .pp-chip {
   flex: none;
   white-space: nowrap;
@@ -1775,42 +1726,71 @@ body::after {
 }
 
 /* ══════════════ CONTACT — section + formulaire ══════════════ */
-/* Fond clair, simple et pro. */
+/* Comme les projets et l'à propos : petit en-tête, puis « parlons-en. » à
+   gauche avec la suite des étapes, le formulaire à droite. */
 .contact-section {
-  padding: clamp(40px, 8vh, 96px) 20px;
-}
-/* bloc du contact : sans bordure, seul le hero garde un cadre */
-.contact-frame {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: clamp(22px, 3.2vh, 40px) clamp(20px, 3.2vw, 44px);
-}
-.contact-head {
-  text-align: center;
-  margin-bottom: clamp(18px, 2.6vh, 28px);
+  --gx: clamp(24px, 4.5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  min-height: calc(100svh - 56px);
+  padding: clamp(40px, 8vh, 72px) var(--gx);
 }
 .contact-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: rgba(45, 54, 96, 0.75);
-}
-.contact-title {
-  margin-top: 8px;
   font-family: var(--font-title);
-  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
-  font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  color: var(--color-navy);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 .contact-sub {
-  margin: 10px auto 0;
-  max-width: 42ch;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  margin-top: 4px;
+  font-size: 0.88rem;
   color: var(--color-ink-soft);
+}
+.contact-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 620px);
+  gap: clamp(48px, 6.7vw, 96px);
+  align-items: center;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+.contact-title {
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+.contact-hand {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-hand);
+  font-size: clamp(3.5rem, 6.7vw, 6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-burgundy);
+}
+.contact-next {
+  max-width: 420px;
+  margin-top: clamp(28px, 5vh, 48px);
+  padding-top: 22px;
+  border-top: 1.5px solid rgba(45, 54, 96, 0.2);
+}
+.contact-next ol {
+  margin-top: 10px;
+}
+.contact-next li {
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.contact-next li + li {
+  margin-top: 6px;
+}
+.contact-next li span {
+  margin-right: 8px;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  color: var(--color-burgundy);
 }
 
 .cform {
@@ -1819,38 +1799,35 @@ body::after {
 .cform-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 26px 36px;
 }
 .cfield {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 .cfield + .cfield,
 .cform-row + .cfield {
-  margin-top: 14px;
+  margin-top: 26px;
 }
 /* dans la ligne Prénom/Nom, pas de décalage : les deux champs alignés */
 .cform-row .cfield + .cfield {
   margin-top: 0;
 }
-.cfield label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-navy);
-}
 .cfield input,
 .cfield select,
 .cfield textarea {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 0;
   font-family: var(--font-body);
-  font-size: 0.94rem;
+  font-size: 1.05rem;
+  font-weight: 500;
   color: var(--color-navy);
   background: transparent;
-  border: 1.5px solid rgba(45, 54, 96, 0.2);
-  border-radius: 10px;
+  border: none;
+  border-bottom: 1.5px solid rgba(45, 54, 96, 0.35);
+  border-radius: 0;
   transition:
     border-color 0.2s var(--ease-out),
     box-shadow 0.2s var(--ease-out);
@@ -1870,25 +1847,26 @@ body::after {
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232d3660' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 40px;
+  background-position: right 2px center;
+  padding-right: 28px;
 }
 .cfield input:hover,
 .cfield select:hover,
 .cfield textarea:hover {
-  border-color: rgba(45, 54, 96, 0.35);
+  border-bottom-color: rgba(45, 54, 96, 0.6);
 }
 .cfield input:focus,
 .cfield select:focus,
 .cfield textarea:focus {
   outline: none;
-  border-color: var(--color-burgundy);
-  box-shadow: 0 0 0 3px rgba(92, 14, 32, 0.12);
+  border-bottom-color: var(--color-navy);
+  /* le trait s'épaissit : le focus reste visible sans cadre */
+  box-shadow: 0 1.5px 0 var(--color-navy);
 }
 .cfield input[aria-invalid="true"],
 .cfield select[aria-invalid="true"],
 .cfield textarea[aria-invalid="true"] {
-  border-color: var(--color-burgundy);
+  border-bottom-color: var(--color-burgundy);
 }
 .cfield-error {
   font-size: 0.82rem;
@@ -1910,22 +1888,27 @@ body::after {
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 20px;
-  margin-top: clamp(16px, 2.4vh, 24px);
+  margin-top: 32px;
 }
 .cform-submit {
-  padding: 11px 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 28px;
   font-family: var(--font-title);
-  font-size: 0.98rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-cream);
   background: var(--color-navy);
-  border-radius: 10px;
+  border-radius: 999px;
   transition:
     background-color 0.2s var(--ease-out),
     transform 0.2s var(--ease-out);
 }
 .cform-submit:hover:not(:disabled) {
-  background: var(--color-navy-deep);
+  background: var(--color-burgundy);
   transform: translateY(-1px);
 }
 .cform-submit:focus-visible {
@@ -1986,9 +1969,9 @@ body::after {
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .about-head,
-    .about-grid,
-    .contact-frame {
+    .colo-hero,
+    .colo-cols,
+    .contact-grid {
       animation: reveal linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 45%;
@@ -2139,28 +2122,33 @@ body::after {
     right: 14px;
   }
 
-  /* ── sections : plus de cadres, des blocs séparés par un filet ── */
-  .about-slide {
-    display: block;
-  }
-  .about-frame {
-    margin: 0;
+  /* ── à propos et contact : des blocs séparés par un filet ── */
+  .colo,
+  .contact-section {
+    min-height: 0;
     padding: 56px 22px;
     border-top: 1.5px solid rgba(45, 54, 96, 0.12);
   }
-  .about-head {
-    margin-bottom: 28px;
+  .colo-hero {
+    gap: 16px;
+    margin: 32px 0 36px;
   }
-
-  /* ── contact : formulaire entier, sans cadre ── */
+  .colo-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 20px;
+  }
+  /* le métier et la façon, du texte : toute la largeur */
+  .colo-cols > div:nth-child(-n + 2) {
+    grid-column: 1 / -1;
+  }
   .contact-section {
-    padding: 56px 22px 40px;
-    border-top: 1.5px solid rgba(45, 54, 96, 0.12);
+    padding-bottom: 40px;
   }
-  .contact-frame {
-    padding: 0;
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: start;
   }
-  .contact-head {
-    text-align: left;
-  }
-}
+  .contact-hand {
+    font-size: clamp(3rem, 14vw, 4.5rem);
+  }}

@@ -1,22 +1,38 @@
 import { ContactForm } from "@/components/contact-form";
 
+/* ce qui se passe après l'envoi */
+const STEPS = [
+  "Vous écrivez.",
+  "Je réponds sous 24 h.",
+  "Un premier échange, gratuit et sans engagement.",
+];
+
 export function Contact() {
   return (
-    <section id="contact" className="contact-section">
-      <div className="contact-frame">
-        <header className="contact-head">
-          <p className="contact-eyebrow">Contact</p>
-          <h2 className="contact-title">
+    <section id="contact" className="contact-section" aria-labelledby="contact-titre">
+      <header>
+        <p className="contact-eyebrow">contact</p>
+        <p className="contact-sub">web, mobile, API, infra</p>
+      </header>
+
+      <div className="contact-grid">
+        <div className="contact-intro">
+          <h2 id="contact-titre" className="contact-title">
             un projet en tête&nbsp;?{" "}
-            <span className="font-hand whitespace-nowrap text-burgundy">
-              parlons-en.
-            </span>
+            <span className="contact-hand">parlons-en.</span>
           </h2>
-          <p className="contact-sub">
-            Web, mobile, API, infra. Réponse sous 24&nbsp;h, premier échange
-            gratuit et sans engagement.
-          </p>
-        </header>
+          <div className="contact-next">
+            <p className="contact-label">Ensuite</p>
+            <ol>
+              {STEPS.map((step, i) => (
+                <li key={step}>
+                  <span aria-hidden="true">{`0${i + 1}`}</span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
 
         <ContactForm />
       </div>
