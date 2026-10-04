@@ -13,14 +13,11 @@ export type Project = {
   slug: string;
   num: string;
   title: string;
-  /* logotype du client, quand il y en a un : il remplace le titre écrit
-     sur la carte. `title` reste la source pour l'alt et les métadonnées. */
-  logo?: { src: string; w: number; h: number };
   /* icône de la tuile sur la page de détail. Les logotypes posés sur fond
      transparent (Freïa, Alcma sont noirs) disparaîtraient sur le pavé
      dégradé : seuls ceux qui embarquent leur propre fond tiennent ici, d'où
-     la couleur déclarée avec (au format #rrggbb : la carte de l'accueil en
-     déduit la couleur du texte). À défaut, la tuile garde son pictogramme. */
+     la couleur déclarée avec (au format #rrggbb). À défaut, la tuile garde
+     son pictogramme. */
   tileIcon?: { src: string; w: number; h: number; bg: string };
   faces: FaceKey[];
   /* trois livrables courts, pour l'accueil (la liste complète, `livre`,
@@ -40,7 +37,7 @@ export type Project = {
   // TODO: ajouter `url` quand les sites sont accessibles publiquement
 };
 
-/* l'accueil les présente dans cet ordre, un panneau par projet */
+/* l'accueil les présente dans cet ordre, un écran par projet */
 export const projects: Project[] = [
   {
     slug: "freia-paris",
@@ -48,7 +45,6 @@ export const projects: Project[] = [
     title: "Freïa Paris",
     kind: "E-commerce",
     status: "En production",
-    logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
     highlights: [
       "La boutique, le panier et la commande.",
@@ -155,7 +151,6 @@ export const projects: Project[] = [
     title: "Alcma",
     kind: "ERP",
     status: "Mission livrée",
-    logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     faces: ["front", "back", "quality", "deploy", "suivi"],
     highlights: [
       "La facturation conforme 2026.",
@@ -228,7 +223,6 @@ export const projects: Project[] = [
     title: "Dernier Mot",
     kind: "Jeu mobile",
     status: "En cours",
-    logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
     // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
     // lequel le liseré crème du logotype a été dessiné.
     tileIcon: {
@@ -373,7 +367,6 @@ export const projects: Project[] = [
     title: "MyLizy",
     kind: "Santé B2B",
     status: "En production",
-    logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
     tileIcon: {

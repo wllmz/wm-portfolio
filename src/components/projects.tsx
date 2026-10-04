@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FACES, FACE_ORDER } from "@/data/cube-faces";
@@ -40,8 +47,13 @@ export function Projects() {
   const [index, setIndex] = useState(0);
   const count = projects.length;
 
-  useEffect(() => {
+  /* avant le premier affichage : la section prend tout de suite sa hauteur
+     collée, la position restaurée au retour d'une page projet ne saute pas */
+  useLayoutEffect(() => {
     setPinned(true);
+  }, []);
+
+  useEffect(() => {
     let raf = 0;
     const update = () => {
       raf = 0;
@@ -155,7 +167,10 @@ export function Projects() {
                   {project.num}
                 </p>
                 <h3>{project.title}</h3>
-                <p className="ec-kind">{project.kind}</p>
+                {/* répété dans le détail : lu une seule fois */}
+                <p className="ec-kind" aria-hidden="true">
+                  {project.kind}
+                </p>
               </div>
 
               <div className="ec-detail">
@@ -188,19 +203,24 @@ export function Projects() {
             <button
               type="button"
               aria-label="Projet précédent"
-              disabled={index === 0}
-              onClick={() => goTo(index - 1)}
+              /* aria-disabled plutôt que disabled : le bouton garde le
+                 focus en arrivant au bout de la liste */
+              aria-disabled={index === 0}
+              onClick={() => index > 0 && goTo(index - 1)}
             >
               ↑
             </button>
             <button
               type="button"
               aria-label="Projet suivant"
-              disabled={index === count - 1}
-              onClick={() => goTo(index + 1)}
+              aria-disabled={index === count - 1}
+              onClick={() => index < count - 1 && goTo(index + 1)}
             >
               ↓
             </button>
+            <p className="sr-only" aria-live="polite">
+              Projet {index + 1} sur {count} : {active.title}
+            </p>
             <span className="ec-hint" aria-hidden="true">
               ou faites défiler
             </span>

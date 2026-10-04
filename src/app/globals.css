@@ -1261,6 +1261,14 @@ body::after {
     display: none;
   }
 }
+/* très peu haut (téléphone en paysage) : le détail se réduit au résumé et
+   au lien, comme sur mobile */
+@media (max-height: 560px) and (min-width: 821px) {
+  .is-pinned .ec-label,
+  .is-pinned .ec-detail ul {
+    display: none;
+  }
+}
 
 /* ── les flèches : elles font défiler jusqu'au projet voulu ── */
 .ec-nav {
@@ -1288,7 +1296,7 @@ body::after {
   background: transparent;
   color: var(--color-navy);
 }
-.ec-nav button:disabled {
+.ec-nav button[aria-disabled="true"] {
   opacity: 0.35;
   cursor: default;
 }
