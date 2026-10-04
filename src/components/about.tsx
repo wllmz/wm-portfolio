@@ -20,13 +20,14 @@ export function About() {
           Martinez<span>.</span>
         </p>
         <figure className="colo-photo">
-          <Image
-            src="/profile.jpg"
-            alt="Portrait de William Martinez"
-            width={1242}
-            height={1457}
-            sizes="(max-width: 820px) 110px, 150px"
-          />
+          <div className="colo-photo-frame">
+            <Image
+              src="/profile.jpg"
+              alt="Portrait de William Martinez"
+              fill
+              sizes="(max-width: 820px) 110px, 150px"
+            />
+          </div>
           <figcaption>c&apos;est moi.</figcaption>
         </figure>
       </div>

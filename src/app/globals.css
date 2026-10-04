@@ -1024,13 +1024,15 @@ body::after {
   width: clamp(110px, 10.4vw, 150px);
   padding-bottom: 10px;
 }
-.colo-photo img {
-  display: block;
-  width: 100%;
-  height: auto;
+/* le cadre fixe le format, l'image (`fill`) le remplit */
+.colo-photo-frame {
+  position: relative;
   aspect-ratio: 5 / 6;
-  object-fit: cover;
+  overflow: hidden;
   border-radius: 14px;
+}
+.colo-photo-frame img {
+  object-fit: cover;
 }
 .colo-photo figcaption {
   margin-top: 10px;
