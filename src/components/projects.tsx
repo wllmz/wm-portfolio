@@ -162,7 +162,7 @@ export function Projects() {
                   src={cover.src}
                   alt=""
                   fill
-                  sizes="(max-width: 820px) 90vw, 600px"
+                  sizes="(max-width: 820px) 90vw, (max-width: 1100px) and (orientation: portrait) 80vw, 600px"
                 />
               );
             })}

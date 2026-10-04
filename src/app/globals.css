@@ -1345,7 +1345,7 @@ body::after {
 }
 /* très peu haut (téléphone en paysage) : le détail se réduit au résumé et
    au lien, comme sur mobile */
-@media (max-height: 560px) and (min-width: 821px) {
+@media (max-height: 560px) and (min-width: 821px) and (max-width: 1279px) {
   .is-pinned .ec-label,
   .is-pinned .ec-detail ul,
   .is-pinned .ec-sub {
@@ -1710,7 +1710,7 @@ body::after {
 /* Écran court mais large (portable, fenêtre réduite, téléphone en paysage) :
    la carte détachée reste régie par le carré strict (--card est borné par
    42vh) et rognait son propre texte. Elle s'étire vers le bas.
-   Scopé au-delà de 820px : en dessous, la carte est déjà plein écran. */
+   Scopé au-delà de 820px (et hors tablette en portrait) : en dessous, la carte est déjà plein écran. */
 @media (max-height: 640px) and (min-width: 821px) {
   .face-card {
     --card: min(calc(var(--face) * 1.15), 390px, 88vw);
@@ -2111,10 +2111,11 @@ body::after {
   }
 }
 
-/* ══════════════ MOBILE (≤ 820px) ══════════════
-   Sur un téléphone, les sections perdent leurs cadres et le hero passe en
-   colonne : l'intro dans le flux, le cube en dessous. Rien ici ne
-   s'applique au-delà de 820px. */
+/* ══════════════ MOBILE (≤ 820px, ou tablette en portrait ≤ 1100px) ══════
+   Sur un téléphone ou une tablette en portrait, les sections perdent leurs
+   cadres et le hero passe en colonne : l'intro dans le flux, le cube en
+   dessous. Même requête que MOBILE_QUERY (hooks/use-mobile.ts) et que le
+   défilement par écran (screen-scroll.tsx), à garder synchronisées. */
 
 /* élément propre au mobile : absent du desktop */
 .hero-pitch {
