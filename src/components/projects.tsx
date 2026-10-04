@@ -108,6 +108,17 @@ export function Projects() {
       style={{ "--count": count } as CSSProperties}
       aria-labelledby="projets-titre"
     >
+      {/* un point d'arrêt du défilement par projet (cf. le défilement par
+          écran, globals.css) */}
+      {pinned &&
+        Array.from({ length: count }, (_, i) => (
+          <span
+            key={i}
+            className="ec-snap"
+            style={{ "--i": i } as CSSProperties}
+            aria-hidden="true"
+          />
+        ))}
       <div className="ecran-stage" ref={stageRef}>
         <header className="ec-head">
           <h2 id="projets-titre" className="ec-title">

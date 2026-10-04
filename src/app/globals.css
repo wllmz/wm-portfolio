@@ -1090,6 +1090,7 @@ body::after {
    sa position par rapport au projet affiché dans --offset (-1, 0, 1).
    Sans JS, la liste s'affiche à plat. */
 .ecran {
+  position: relative;
   border-top: 1.5px solid rgba(45, 54, 96, 0.12);
   --ease-screen: cubic-bezier(0.65, 0, 0.35, 1);
   /* l'ancre #projets s'arrête pile sous la barre (56px), là où la scène se
@@ -1957,6 +1958,55 @@ body::after {
   .cfield select,
   .cfield textarea {
     transition: none;
+  }
+}
+
+/* ══════════════ DÉFILEMENT PAR ÉCRAN (desktop) ══════════════
+   Comme un slider : un coup de molette mène à l'écran suivant. Le hero, un
+   écran par projet (les points .ec-snap), l'à propos, puis le contact et
+   le pied de page. Le défilement reste celui du navigateur : clavier,
+   pavé tactile et barre de défilement marchent comme d'habitude. Sur
+   mobile, les sections gardent leur hauteur et le défilement est libre. */
+.ec-snap {
+  position: absolute;
+  top: calc((100vh - 56px) * var(--i));
+  top: calc((100svh - 56px) * var(--i));
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+@media (min-width: 821px) {
+  html:has(.home) {
+    scroll-snap-type: y mandatory;
+    /* les écrans s'arrêtent pile sous la barre du haut */
+    scroll-padding-top: 56px;
+  }
+  .hero,
+  .ec-snap,
+  .colo,
+  .contact-section {
+    scroll-snap-align: start;
+  }
+  .home + footer {
+    scroll-snap-align: end;
+  }
+  .ecran {
+    scroll-margin-top: 0;
+  }
+  /* l'à propos et le contact font chacun un écran */
+  .colo,
+  .contact-section {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 56px);
+    min-height: calc(100svh - 56px);
+  }
+  .colo-cols {
+    margin-top: auto;
+  }
+  .contact-grid {
+    flex: 1;
   }
 }
 
