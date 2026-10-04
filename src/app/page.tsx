@@ -4,6 +4,7 @@ import { Projects } from "@/components/projects";
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
+import { ScreenScroll } from "@/components/screen-scroll";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
+      <ScreenScroll />
     </>
   );
 }
