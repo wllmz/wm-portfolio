@@ -13,19 +13,19 @@ export type Project = {
   slug: string;
   num: string;
   title: string;
-  /* logotype du client, quand il y en a un : il remplace le titre écrit
-     sur la carte. `title` reste la source pour l'alt et les métadonnées. */
-  logo?: { src: string; w: number; h: number };
   /* icône de la tuile sur la page de détail. Les logotypes posés sur fond
      transparent (Freïa, Alcma sont noirs) disparaîtraient sur le pavé
      dégradé : seuls ceux qui embarquent leur propre fond tiennent ici, d'où
-     la couleur déclarée avec (au format #rrggbb : la carte de l'accueil en
-     déduit la couleur du texte). À défaut, la tuile garde son pictogramme. */
+     la couleur déclarée avec (au format #rrggbb). À défaut, la tuile garde
+     son pictogramme. */
   tileIcon?: { src: string; w: number; h: number; bg: string };
   faces: FaceKey[];
-  /* les deux mentions courtes de la carte sur l'accueil */
+  /* trois livrables courts, pour l'accueil (la liste complète, `livre`,
+     reste sur la page projet) */
+  highlights: [string, string, string];
+  /* les deux mentions courtes du projet sur l'accueil */
   kind: string;
-  status: "En production" | "Mission livrée" | "En cours";
+  status: "En production" | "Mission livrée" | "En cours" | "Projet perso";
 
   /* ── page de détail ── */
   tagline: string;
@@ -37,8 +37,7 @@ export type Project = {
   // TODO: ajouter `url` quand les sites sont accessibles publiquement
 };
 
-/* la grille de l'accueil place les projets selon leur rang et est dessinée
-   pour quatre : en ajouter un demande de revoir `.bento` */
+/* l'accueil les présente dans cet ordre, un écran par projet */
 export const projects: Project[] = [
   {
     slug: "freia-paris",
@@ -46,8 +45,12 @@ export const projects: Project[] = [
     title: "Freïa Paris",
     kind: "E-commerce",
     status: "En production",
-    logo: { src: "/projets/freia/logo.png", w: 822, h: 257 },
     faces: ["design", "front", "back", "quality", "deploy", "suivi"],
+    highlights: [
+      "La boutique, le panier et la commande.",
+      "Le paiement Stripe et la livraison Mondial Relay.",
+      "L'hébergement de bout en bout, et le suivi.",
+    ],
     tagline: "La boutique en ligne d'une marque de sacs faits main à Paris.",
     contexte:
       "Freïa fabrique à la main des sacs en paracorde à Paris. La marque vend en direct : il lui fallait une vraie boutique en ligne, avec sa propre identité.",
@@ -148,8 +151,12 @@ export const projects: Project[] = [
     title: "Alcma",
     kind: "ERP",
     status: "Mission livrée",
-    logo: { src: "/projets/alcma/logo.png", w: 1035, h: 224 },
     faces: ["front", "back", "quality", "deploy", "suivi"],
+    highlights: [
+      "La facturation conforme 2026.",
+      "La gestion de projet en kanban.",
+      "Le back-office des licences, trois environnements Docker.",
+    ],
     tagline:
       "Un ERP de facturation et de gestion de projet, vendu en licence à des entreprises.",
     contexte:
@@ -216,7 +223,6 @@ export const projects: Project[] = [
     title: "Dernier Mot",
     kind: "Jeu mobile",
     status: "En cours",
-    logo: { src: "/projets/dernier-mot/logo.png", w: 480, h: 227 },
     // #032fac : le bleu relevé sur l'écran d'accueil de l'app, celui pour
     // lequel le liseré crème du logotype a été dessiné.
     tileIcon: {
@@ -226,6 +232,11 @@ export const projects: Project[] = [
       bg: "#032fac",
     },
     faces: ["front", "back", "quality"],
+    highlights: [
+      "Des parties de 2 à 8 joueurs.",
+      "Le temps réel, sans rechargement.",
+      "Deux modes : classique et time-bomb.",
+    ],
     tagline: "Un jeu de mots multijoueur en temps réel, sur mobile.",
     contexte:
       "Projet personnel mené seul et toujours en cours : le jeu est jouable de bout en bout, dans ses deux modes, et se teste sur iPhone. La direction artistique m'a été fournie ; je l'ai intégrée écran par écran.",
@@ -356,7 +367,6 @@ export const projects: Project[] = [
     title: "MyLizy",
     kind: "Santé B2B",
     status: "En production",
-    logo: { src: "/projets/mylizy/logo.png", w: 500, h: 500 },
     /* le logotype porte ses propres couleurs sur fond transparent : il lui
        faut un fond clair pour tenir sur la tuile */
     tileIcon: {
@@ -366,6 +376,11 @@ export const projects: Project[] = [
       bg: "#fbfaf7",
     },
     faces: ["front", "back", "quality", "suivi"],
+    highlights: [
+      "Des contenus selon l'âge de chaque enfant.",
+      "Les ateliers et les rendez-vous.",
+      "L'abonnement et l'offre de l'employeur.",
+    ],
     tagline: "Flow : l'accompagnement à la parentalité, famille par famille.",
     contexte:
       "MyLizy accompagne la parentalité et la périnatalité, et vend cet accompagnement aux entreprises pour leurs salariés. Flow est le produit que voient les parents : le contenu s'ajuste à la situation de la famille et à l'âge de chaque enfant, et l'abonnement bascule automatiquement en offre partenaire quand l'employeur a souscrit. Les données de santé imposaient leurs propres règles.",
@@ -450,6 +465,79 @@ export const projects: Project[] = [
         h: 708,
         caption:
           "L'abonnement — et l'offre partenaire qui prend le relais quand l'employeur a souscrit.",
+      },
+    ],
+  },
+  {
+    slug: "rigueur",
+    num: "05",
+    title: "Rigueur",
+    kind: "App desktop",
+    status: "Projet perso",
+    // le logo embarque son propre fond clair, coins transparents compris
+    tileIcon: {
+      src: "/projets/rigueur/logo.png",
+      w: 512,
+      h: 512,
+      bg: "#edebe6",
+    },
+    faces: ["design", "front", "back", "quality", "deploy"],
+    highlights: [
+      "La journée jouée comme une partie classée.",
+      "Le mentor IA qui note les missions.",
+      "L'app Windows, installée en un clic.",
+    ],
+    tagline:
+      "Un mentor IA qui cadre la journée de travail, relance au bon moment et fait rendre des comptes.",
+    contexte:
+      "Projet personnel. Seul devant l'écran, on décroche vite : il me fallait un cadre, des relances et quelqu'un à qui rendre des comptes. Rigueur joue la journée de travail comme une partie classée : des missions le matin, des relances au fil des pauses, un compte rendu le soir, et un classement façon jeu compétitif pour garder de l'enjeu.",
+    livre: [
+      "La journée en partie classée : 1 à 3 missions, sessions de 50 minutes, relances aux pauses, compte rendu en fin de partie.",
+      "Le mentor IA : il reformule les missions floues, les note de 1 à 5 et répond aux relances (Claude en local, un mentor à règles en secours).",
+      "Le classement : niveau caché, points gagnés ou perdus selon l'écart, rangs de Stagiaire à Légende, séries de promotion et saisons mensuelles.",
+      "Deux modes sans enjeu : la partie rapide au chrono et la liste perso.",
+      "Le journal, le profil, les badges et la boutique de skins.",
+      "L'application Windows : un installeur qui lance l'API et le front en local, la base sauvegardée avant chaque mise à jour.",
+    ],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Fastify",
+      "SQLite",
+      "Drizzle",
+      "Electron",
+      "Claude Code",
+      "Vitest",
+    ],
+    shots: [
+      {
+        src: "/projets/rigueur/menu.jpg",
+        alt: "Menu principal de Rigueur : partie rapide, ranked et partie perso",
+        w: 1568,
+        h: 698,
+        caption: "Le menu principal, comme celui d'un jeu.",
+      },
+      {
+        src: "/projets/rigueur/ranked-themes.jpg",
+        alt: "Préparation d'une Ranked : le choix des thèmes de la journée",
+        w: 1568,
+        h: 698,
+        caption: "La préparation : thèmes, terrain, missions, horaire.",
+      },
+      {
+        src: "/projets/rigueur/partie-rapide.jpg",
+        alt: "Partie rapide en cours : la mission et un grand chrono",
+        w: 1568,
+        h: 698,
+        caption: "En jeu : une mission, un chrono.",
+      },
+      {
+        src: "/projets/rigueur/regles.jpg",
+        alt: "Les règles de la Ranked présentées à l'accueil",
+        w: 1568,
+        h: 698,
+        caption: "Les règles, posées dès l'accueil.",
       },
     ],
   },

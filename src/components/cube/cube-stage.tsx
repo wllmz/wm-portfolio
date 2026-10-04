@@ -15,7 +15,7 @@ import {
   type FaceKey,
 } from "@/data/cube-faces";
 import { Clock } from "./clock";
-import { useFlow } from "@/hooks/use-flow";
+import { useMobile } from "@/hooks/use-mobile";
 
 /** État mutable de l'animation — hors React pour la boucle rAF. */
 type CubeState = {
@@ -54,9 +54,9 @@ export function CubeStage() {
   const centerRef = useRef<HTMLDivElement>(null);
 
   const [loaded, setLoaded] = useState(false);
-  /* page qui défile (mobile) : la carte d'une face y est une surcouche plein
+  /* mobile : la carte d'une face est une surcouche plein
      écran, le focus doit y entrer et y rester */
-  const flow = useFlow();
+  const mobile = useMobile();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [openKey, setOpenKey] = useState<FaceKey | null>(null);
   // dernière face sélectionnée — garde le contenu pendant l'animation de sortie
@@ -162,10 +162,10 @@ export function CubeStage() {
      apparition, et un élément caché refuse le focus : on attend qu'elle
      soit visible. */
   useEffect(() => {
-    if (!flow || !openKey) return;
+    if (!mobile || !openKey) return;
     const id = window.setTimeout(() => closeBtnRef.current?.focus(), 260);
     return () => window.clearTimeout(id);
-  }, [flow, openKey]);
+  }, [mobile, openKey]);
 
   /* ── listeners globaux ── */
   useEffect(() => {
@@ -270,11 +270,11 @@ export function CubeStage() {
       if (running) rafId = requestAnimationFrame(tick);
     };
 
-    /* la boucle ne tourne que quand le hero est à l'écran : sur les autres
-       écrans du slider, elle écrirait des styles pour rien à chaque frame */
+    /* la boucle ne tourne que quand le hero est à l'écran : plus bas dans la
+       page, elle écrirait des styles pour rien à chaque frame */
     const observer = new IntersectionObserver(
       (entries) => {
-        /* un ratio plutôt que isIntersecting : sur l'écran suivant, le hero
+        /* un ratio plutôt que isIntersecting : une fois le hero quitté, il
            touche le haut du viewport bord à bord, ce qui compte encore
            comme une intersection (d'aire nulle) */
         const visible = entries[entries.length - 1].intersectionRatio >= 0.01;
@@ -330,7 +330,7 @@ export function CubeStage() {
           Dispo <span className="accent">Freelance · Paris / remote</span>
         </p>
 
-        {/* mobile uniquement (masqué sur desktop) : la page y défile, le hero
+        {/* mobile uniquement (masqué sur desktop) : le hero y est compact et
             a besoin d'une accroche lisible. La navigation, elle, reste dans
             la barre du haut. */}
         <p className="hero-pitch">
@@ -386,7 +386,7 @@ export function CubeStage() {
              dans la page cachée dessous */
           onBlur={(e) => {
             if (
-              flow &&
+              mobile &&
               openKey &&
               !e.currentTarget.contains(e.relatedTarget as Node | null)
             )

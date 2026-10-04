@@ -1,117 +1,231 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { FACES, FACE_ORDER } from "@/data/cube-faces";
 import { projects, type Project } from "@/data/projects";
 
-/* TypeScript est partout : il ne distingue aucun projet, la carte montre le
-   reste de la stack */
-const stackOf = (project: Project) =>
-  project.stack.filter((tool) => tool !== "TypeScript").slice(0, 4);
+/* hauteur de la barre du haut : la scène se colle juste dessous */
+const TOP_BAR = 56;
 
-/* une app posée sur un aplat foncé passe le texte de la carte en crème
-   (couleur au format #rrggbb, cf. `tileIcon` dans les données) */
-const isDark = (hex: string) => {
-  const n = parseInt(hex.slice(1), 16);
-  const lum = 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
-  return lum < 128;
+/* capture portrait → l'écran prend la forme d'un téléphone, paysage → celle
+   d'un navigateur */
+const isPhone = (project: Project) => {
+  const cover = project.shots[0];
+  return !!cover && cover.h > cover.w;
 };
 
-/* La grille bento donne sa place à chaque projet selon son rang : le premier
-   en grande carte, le deuxième en carte large, les suivants en petites
-   cartes. Le CSS lit le rang (nth-child), le balisage reste le même. */
+/* « Design, front, back. » : les faces du cube que couvre le projet */
+const facesOf = (project: Project) => {
+  const titles = FACE_ORDER.filter((face) => project.faces.includes(face)).map(
+    (face) => FACES[face].title,
+  );
+  if (titles.length === FACE_ORDER.length) return "Les six, du design au suivi.";
+  const text = titles.join(", ");
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
+};
+
+/** Les projets, un écran à la fois. La scène reste collée sous la barre du
+    haut le temps d'un écran de défilement par projet. À gauche, le nom du
+    projet défile ; au centre, un écran prend la forme du projet (téléphone
+    ou navigateur) et en montre la capture ; à droite, le détail. Le
+    défilement choisit le projet affiché, les flèches font défiler jusqu'au
+    suivant (une seule source de vérité : la position dans la page). Sans
+    JS, la liste s'affiche simplement à plat. */
 export function Projects() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [pinned, setPinned] = useState(false);
+  const [index, setIndex] = useState(0);
+  const count = projects.length;
+
+  /* avant le premier affichage : la section prend tout de suite sa hauteur
+     collée, la position restaurée au retour d'une page projet ne saute pas */
+  useLayoutEffect(() => {
+    setPinned(true);
+  }, []);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const section = sectionRef.current;
+      const stage = stageRef.current;
+      if (!section || !stage) return;
+      const step = stage.offsetHeight;
+      const scrolled = TOP_BAR - section.getBoundingClientRect().top;
+      const next = Math.round(scrolled / step);
+      setIndex(Math.min(count - 1, Math.max(0, next)));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [count]);
+
+  /* les flèches défilent jusqu'au projet voulu : le défilement fait le
+     reste, comme à la molette */
+  const goTo = useCallback((target: number) => {
+    const section = sectionRef.current;
+    const stage = stageRef.current;
+    if (!section || !stage) return;
+    const top =
+      window.scrollY +
+      section.getBoundingClientRect().top -
+      TOP_BAR +
+      target * stage.offsetHeight;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
+  }, []);
+
+  /* position de chaque projet par rapport au projet affiché : -1 déjà vu,
+     0 affiché, 1 à venir. Sans JS (scène non collée), tous sont à plat. */
+  const offsetOf = (i: number) =>
+    !pinned ? 0 : i < index ? -1 : i === index ? 0 : 1;
+  const active = projects[index];
+
   return (
-    <section id="projets" className="proj-slide">
-      {/* encadré en écho au hero */}
-      <div className="proj-frame">
-        <header className="proj-head">
-          <span className="block text-[0.72rem] font-semibold tracking-[0.24em] text-burgundy uppercase">
-            Projets livrés et en cours
-          </span>
-          <h2 className="mt-3 font-title text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.08] tracking-tight">
-            quatre projets,{" "}
-            <span className="font-hand text-burgundy">
-              du design à la prod.
-            </span>
+    <section
+      id="projets"
+      ref={sectionRef}
+      className={`ecran${pinned ? " is-pinned" : ""}`}
+      style={{ "--count": count } as CSSProperties}
+      aria-labelledby="projets-titre"
+    >
+      <div className="ecran-stage" ref={stageRef}>
+        <header className="ec-head">
+          <h2 id="projets-titre" className="ec-title">
+            projets
           </h2>
+          <p className="ec-sub">livrés et en cours · du design à la prod</p>
+          <div className="ec-dashes" aria-hidden="true">
+            {projects.map((project, i) => (
+              <span
+                key={project.slug}
+                className={i === index ? "on" : undefined}
+              />
+            ))}
+          </div>
         </header>
 
-        <ul className="bento">
-          {projects.map((project, i) => {
-            const cover = project.shots[0];
-            /* capture portrait → écran de téléphone ; paysage → fenêtre de
-               navigateur. Seule la capture affichée compte : MyLizy mêle
-               les deux, sa première est un écran mobile. */
-            const phone = !!cover && cover.h > cover.w;
-            /* l'aplat de l'app (celui de sa tuile) habille la carte des
-               projets mobiles ; les sites gardent le papier */
-            const bg = phone ? project.tileIcon?.bg : undefined;
-            /* largeur réellement affichée : un écran de téléphone est
-               étroit, la carte large en prend un peu plus de la moitié */
-            const sizes = phone
-              ? "(max-width: 820px) 30vw, 220px"
-              : i === 0
-                ? "(max-width: 820px) 92vw, 45vw"
-                : "(max-width: 820px) 92vw, 26vw";
-            return (
-              <li
-                key={project.slug}
-                className={`bento-card${phone ? " is-phone" : ""}${
-                  bg && isDark(bg) ? " is-dark" : ""
-                }`}
-                style={bg ? { background: bg } : undefined}
-              >
-                <Link href={`/projets/${project.slug}`} className="bc-link">
-                  {cover && (
-                    <div className="bc-media" aria-hidden="true">
-                      {!phone && (
-                        <span className="bc-bar">
-                          <span />
-                          <span />
-                          <span />
-                        </span>
-                      )}
-                      <span className="bc-shot">
-                        <Image src={cover.src} alt="" fill sizes={sizes} />
-                      </span>
-                    </div>
-                  )}
-                  <div className="bc-body">
-                    <div className="bc-top">
-                      {/* le nom du projet est un titre : on navigue de
-                          projet en projet au lecteur d'écran */}
-                      <h3 className="bc-name">
-                        {project.logo ? (
-                          <Image
-                            className={`bc-logo${
-                              project.logo.w / project.logo.h < 1.4
-                                ? " bc-logo--square"
-                                : ""
-                            }`}
-                            src={project.logo.src}
-                            alt={project.title}
-                            width={project.logo.w}
-                            height={project.logo.h}
-                          />
-                        ) : (
-                          <span className="bc-title">{project.title}</span>
-                        )}
-                      </h3>
-                      <span className="bc-status">{project.status}</span>
-                    </div>
-                    <span className="bc-kind">{project.kind}</span>
-                    <span className="bc-tagline">{project.tagline}</span>
-                    <span className="bc-stack">
-                      {stackOf(project).join(" · ")}
-                    </span>
-                  </div>
-                  <span className="bc-arrow" aria-hidden="true">
-                    →
-                  </span>
+        {/* au centre : l'écran, qui prend la forme du projet affiché */}
+        <div
+          className={`ec-screen ${isPhone(active) ? "is-phone" : "is-web"}`}
+          aria-hidden="true"
+        >
+          <span className="ec-bar">
+            <span />
+            <span />
+            <span />
+          </span>
+          <div className="ec-view">
+            {projects.map((project, i) => {
+              const cover = project.shots[0];
+              if (!cover) return null;
+              return (
+                <Image
+                  key={project.slug}
+                  className={i === index ? "on" : undefined}
+                  src={cover.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 820px) 90vw, 600px"
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {projects.map((project, i) => {
+          const offset = offsetOf(i);
+          return (
+            <article
+              key={project.slug}
+              className={`ec-item${offset === 0 ? " is-on" : ""}`}
+              style={{ "--offset": offset } as CSSProperties}
+              /* scène collée : seul le projet affiché est atteignable au
+                 clavier et au lecteur d'écran */
+              inert={pinned && offset !== 0}
+            >
+              <div className="ec-name">
+                <p className="ec-num" aria-hidden="true">
+                  {project.num}
+                </p>
+                <h3>{project.title}</h3>
+                {/* répété dans le détail : lu une seule fois */}
+                <p className="ec-kind" aria-hidden="true">
+                  {project.kind}
+                </p>
+              </div>
+
+              <div className="ec-detail">
+                <p className="ec-role">{project.kind}</p>
+                <p className="ec-status">
+                  ({project.num}) · {project.status}
+                </p>
+                <p className="ec-label">Le projet</p>
+                <p>{project.tagline}</p>
+                <p className="ec-label">Ce que j&apos;ai livré</p>
+                <ul>
+                  {project.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <div className="ec-faces">
+                  <p className="ec-label">Faces couvertes</p>
+                  <p>{facesOf(project)}</p>
+                </div>
+                <Link href={`/projets/${project.slug}`} className="ec-link">
+                  Voir le projet <span aria-hidden="true">→</span>
                 </Link>
-              </li>
-            );
-          })}
-        </ul>
+              </div>
+            </article>
+          );
+        })}
+
+        {pinned && (
+          <div className="ec-nav">
+            <button
+              type="button"
+              aria-label="Projet précédent"
+              /* aria-disabled plutôt que disabled : le bouton garde le
+                 focus en arrivant au bout de la liste */
+              aria-disabled={index === 0}
+              onClick={() => index > 0 && goTo(index - 1)}
+            >
+              ↑
+            </button>
+            <button
+              type="button"
+              aria-label="Projet suivant"
+              aria-disabled={index === count - 1}
+              onClick={() => index < count - 1 && goTo(index + 1)}
+            >
+              ↓
+            </button>
+            <p className="sr-only" aria-live="polite">
+              Projet {index + 1} sur {count} : {active.title}
+            </p>
+            <span className="ec-hint" aria-hidden="true">
+              ou faites défiler
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );
