@@ -9,7 +9,11 @@ const STEPS = [
 
 export function Contact() {
   return (
-    <section id="contact" className="contact-section" aria-labelledby="contact-titre">
+    <section
+      id="contact"
+      className="contact-section"
+      aria-labelledby="contact-titre"
+    >
       <header>
         <p className="contact-eyebrow">
           <span className="sec-num" aria-hidden="true">

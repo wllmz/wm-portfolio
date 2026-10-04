@@ -28,7 +28,8 @@ const facesOf = (project: Project) => {
   const titles = FACE_ORDER.filter((face) => project.faces.includes(face)).map(
     (face) => FACES[face].title,
   );
-  if (titles.length === FACE_ORDER.length) return "Les six, du design au suivi.";
+  if (titles.length === FACE_ORDER.length)
+    return "Les six, du design au suivi.";
   const text = titles.join(", ");
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
 };
@@ -89,7 +90,9 @@ export function Projects() {
       section.getBoundingClientRect().top -
       TOP_BAR +
       target * stage.offsetHeight;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
   }, []);
 
@@ -228,7 +231,9 @@ export function Projects() {
             {/* au dernier projet, la flèche mène à la section suivante */}
             <button
               type="button"
-              aria-label={last ? "Section suivante : à propos" : "Projet suivant"}
+              aria-label={
+                last ? "Section suivante : à propos" : "Projet suivant"
+              }
               onClick={() =>
                 last
                   ? document.getElementById("a-propos")?.scrollIntoView()

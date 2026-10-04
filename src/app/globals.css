@@ -1834,7 +1834,8 @@ body::after {
   color: var(--color-navy);
   background: transparent;
   border: none;
-  border-bottom: 1.5px solid rgba(45, 54, 96, 0.35);
+  /* le trait est la seule limite du champ : 3:1 au moins sur le papier */
+  border-bottom: 1.5px solid rgba(45, 54, 96, 0.6);
   border-radius: 0;
   transition:
     border-color 0.2s var(--ease-out),
@@ -1847,7 +1848,7 @@ body::after {
 }
 .cfield input::placeholder,
 .cfield textarea::placeholder {
-  color: rgba(45, 54, 96, 0.62);
+  color: rgba(45, 54, 96, 0.75);
 }
 /* flèche custom pour le select */
 .cfield select {
@@ -1861,12 +1862,14 @@ body::after {
 .cfield input:hover,
 .cfield select:hover,
 .cfield textarea:hover {
-  border-bottom-color: rgba(45, 54, 96, 0.6);
+  border-bottom-color: var(--color-navy);
 }
 .cfield input:focus,
 .cfield select:focus,
 .cfield textarea:focus {
-  outline: none;
+  /* transparent plutôt que none : en contraste élevé, le contour revient */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   border-bottom-color: var(--color-navy);
   /* le trait s'épaissit : le focus reste visible sans cadre */
   box-shadow: 0 1.5px 0 var(--color-navy);
@@ -2005,6 +2008,12 @@ body::after {
   }
   .contact-grid {
     flex: 1;
+  }
+  /* comme #projets : les ancres de la barre du haut tombent pile sur
+     l'écran, sous la barre (56px), et non aux 64px de scroll-padding-top */
+  .colo,
+  .contact-section {
+    scroll-margin-top: -8px;
   }
 }
 
@@ -2201,4 +2210,5 @@ body::after {
   }
   .contact-hand {
     font-size: clamp(3rem, 14vw, 4.5rem);
-  }}
+  }
+}

@@ -54,9 +54,7 @@ export default function RootLayout({
       className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning>
-        {children}
-      </body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
