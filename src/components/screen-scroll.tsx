@@ -5,7 +5,7 @@ import { useEffect } from "react";
 /* hauteur de la barre du haut : chaque écran s'arrête juste dessous */
 const TOP_BAR = 56;
 /* durée du glissé d'un écran à l'autre */
-const DURATION = 750;
+const DURATION = 450;
 /* cumul de défilement à partir duquel un geste compte comme un cran */
 const THRESHOLD = 40;
 /* après un glissé, l'inertie d'un pavé tactile continue d'envoyer des crans :

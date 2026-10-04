@@ -24,6 +24,9 @@
   --face: min(40vh, 38vw);
   /* la marge latérale commune : barre du haut, hero, sections, pied de page */
   --gx: clamp(24px, 4.5vw, 64px);
+  /* hauteur du pied de page sur desktop : il tient sur le dernier écran,
+     sous le contact */
+  --footer-h: 72px;
 }
 
 html {
@@ -1976,13 +1979,26 @@ body::after {
   pointer-events: none;
 }
 @media (min-width: 821px) {
-  /* l'à propos et le contact font chacun un écran */
+  /* l'à propos fait un écran ; le contact aussi, pied de page compris :
+     les deux tiennent ensemble sur le dernier écran */
   .colo,
   .contact-section {
     display: flex;
     flex-direction: column;
     min-height: calc(100vh - 56px);
     min-height: calc(100svh - 56px);
+  }
+  .contact-section {
+    min-height: calc(100vh - 56px - var(--footer-h));
+    min-height: calc(100svh - 56px - var(--footer-h));
+    padding-bottom: clamp(32px, 5vh, 56px);
+  }
+  .home + footer {
+    height: var(--footer-h);
+  }
+  .home + footer > div {
+    height: 100%;
+    padding-block: 0;
   }
   .colo-cols {
     margin-top: auto;
