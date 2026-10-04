@@ -1962,11 +1962,10 @@ body::after {
 }
 
 /* ══════════════ DÉFILEMENT PAR ÉCRAN (desktop) ══════════════
-   Comme un slider : un coup de molette mène à l'écran suivant. Le hero, un
-   écran par projet (les points .ec-snap), l'à propos, puis le contact et
-   le pied de page. Le défilement reste celui du navigateur : clavier,
-   pavé tactile et barre de défilement marchent comme d'habitude. Sur
-   mobile, les sections gardent leur hauteur et le défilement est libre. */
+   Comme un slider : un cran de molette mène à l'écran suivant (cf.
+   screen-scroll.tsx) — le hero, un écran par projet (les repères .ec-snap),
+   l'à propos, puis le contact et le pied de page. Sur mobile, les sections
+   gardent leur hauteur et le défilement est libre. */
 .ec-snap {
   position: absolute;
   top: calc((100vh - 56px) * var(--i));
@@ -1977,23 +1976,6 @@ body::after {
   pointer-events: none;
 }
 @media (min-width: 821px) {
-  html:has(.home) {
-    scroll-snap-type: y mandatory;
-    /* les écrans s'arrêtent pile sous la barre du haut */
-    scroll-padding-top: 56px;
-  }
-  .hero,
-  .ec-snap,
-  .colo,
-  .contact-section {
-    scroll-snap-align: start;
-  }
-  .home + footer {
-    scroll-snap-align: end;
-  }
-  .ecran {
-    scroll-margin-top: 0;
-  }
   /* l'à propos et le contact font chacun un écran */
   .colo,
   .contact-section {
