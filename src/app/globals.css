@@ -983,13 +983,32 @@ body::after {
   gap: 7px;
 }
 
-/* ══════════════ À PROPOS — le colophon ══════════════
-   Le nom en très grand, la photo glissée à côté comme une signature, puis
-   des colonnes étiquetées comme le détail d'un projet. Même marge et même
-   en-tête que la section projets juste au-dessus. */
-.colo {
-  padding: clamp(56px, 9vh, 96px) var(--gx);
+/* ══════════════ À PROPOS — le manifeste ══════════════
+   Avec JS (`is-pinned`, cf. about.tsx), la section fait deux écrans et demi
+   de haut : la scène reste collée sous la barre et le défilement allume le
+   texte mot par mot, du pâle au navy. Sans JS, tout est allumé, à plat. */
+.mani {
   border-top: 1.5px solid rgba(45, 54, 96, 0.12);
+  /* comme #projets : l'ancre s'arrête pile sous la barre */
+  scroll-margin-top: -8px;
+}
+.mani.is-pinned {
+  height: calc((100vh - 56px) * 2.5);
+  height: calc((100svh - 56px) * 2.5);
+}
+.mani-stage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 6vh, 56px);
+  padding: clamp(56px, 9vh, 96px) var(--gx);
+}
+.mani.is-pinned .mani-stage {
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  height: calc(100svh - 56px);
+  padding-block: clamp(28px, 7vh, 64px) clamp(24px, 6vh, 56px);
+  overflow: hidden;
 }
 /* le numéro de section, à la main, devant le titre (projets, à propos,
    contact) */
@@ -1000,64 +1019,96 @@ body::after {
   font-weight: 700;
   color: var(--color-burgundy);
 }
-.colo-title {
+.mani-title {
   font-family: var(--font-title);
   font-size: 1.5rem;
   font-weight: 700;
 }
-.colo-sub {
+.mani-sub {
   margin-top: 4px;
   font-size: 0.88rem;
   color: var(--color-ink-soft);
 }
-.colo-hero {
-  display: flex;
-  align-items: flex-end;
-  gap: clamp(20px, 2.2vw, 32px);
-  margin: clamp(40px, 8vh, 72px) 0 clamp(40px, 6vh, 64px);
-}
-.colo-name {
+.mani-text {
+  margin-block: auto;
+  max-width: 1180px;
   font-family: var(--font-title);
-  font-size: clamp(3.4rem, 10.4vw, 9.4rem);
-  font-weight: 800;
-  line-height: 0.86;
-  letter-spacing: -0.05em;
-}
-.colo-name span {
-  color: var(--color-burgundy);
-}
-.colo-photo {
-  flex: none;
-  width: clamp(110px, 10.4vw, 150px);
-  padding-bottom: 10px;
-}
-/* le cadre fixe le format, l'image (`fill`) le remplit */
-.colo-photo-frame {
-  position: relative;
-  aspect-ratio: 5 / 6;
-  overflow: hidden;
-  border-radius: 14px;
-}
-.colo-photo-frame img {
-  object-fit: cover;
-}
-.colo-photo figcaption {
-  margin-top: 10px;
-  font-family: var(--font-hand);
-  font-size: 0.94rem;
+  font-size: clamp(1.9rem, 3.9vw, 3.5rem);
   font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+}
+/* un mot éteint : pâle ; allumé : navy, ou bordeaux pour la main */
+.mani-word {
+  color: rgba(45, 54, 96, 0.16);
+  transition: color 0.3s ease;
+}
+.mani-word.on {
+  color: var(--color-navy);
+}
+.mani-word.is-hand {
+  font-family: var(--font-hand);
+  letter-spacing: -0.01em;
+}
+.mani-word.is-hand.on {
   color: var(--color-burgundy);
 }
-.colo-cols {
-  display: grid;
-  grid-template-columns: 1.3fr 1.3fr 1fr 1fr;
-  gap: clamp(24px, 3.3vw, 48px);
-  padding-top: 24px;
-  border-top: 1.5px solid rgba(45, 54, 96, 0.2);
+/* la pastille d'image glissée dans la phrase : elle grandit en s'allumant */
+.mani-pill {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.95em;
+  height: 0.95em;
+  margin: -0.12em 0 0 0.25em;
+  overflow: hidden;
+  border-radius: 999px;
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity 0.35s ease,
+    scale 0.5s var(--ease-out);
 }
-/* le libellé des colonnes, des étapes du contact et des champs : celui du
-   détail des projets */
-.colo-label,
+.mani-pill.is-wide {
+  width: 1.8em;
+}
+.mani-pill img {
+  object-fit: cover;
+  object-position: center 25%;
+}
+.mani-word.on .mani-pill {
+  opacity: 1;
+  scale: 1;
+}
+.mani-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 56px;
+  padding-top: 20px;
+  border-top: 1.5px solid rgba(45, 54, 96, 0.18);
+}
+.mani-facts dt {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-burgundy);
+}
+.mani-facts dd {
+  margin-top: 6px;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mani-word,
+  .mani-pill {
+    transition: none;
+  }
+}
+
+/* le libellé des étapes du contact et des champs : celui du détail des
+   projets */
 .contact-label,
 .cfield label {
   font-family: var(--font-body);
@@ -1067,21 +1118,6 @@ body::after {
   text-transform: uppercase;
   color: var(--color-burgundy);
 }
-.colo-cols p {
-  margin-top: 10px;
-  font-size: 0.94rem;
-  line-height: 1.55;
-}
-.colo-cols strong {
-  font-weight: 600;
-}
-.colo-cols .colo-fact {
-  font-family: var(--font-title);
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
 /* ══════════════ PROJETS — un écran à la fois ══════════════
    Avec JS (`is-pinned`, cf. projects.tsx), la section fait un écran de haut
    par projet : la scène reste collée sous la barre du haut. À gauche le nom
@@ -1973,8 +2009,6 @@ body::after {
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .colo-hero,
-    .colo-cols,
     .contact-grid {
       animation: reveal linear both;
       animation-timeline: view();
@@ -2127,21 +2161,24 @@ body::after {
   }
 
   /* ── à propos et contact : des blocs séparés par un filet ── */
-  .colo,
   .contact-section {
     padding: 56px 22px;
   }
-  .colo-hero {
-    gap: 16px;
-    margin: 32px 0 36px;
+  /* à propos : le texte un peu plus petit, les repères sur deux colonnes */
+  .mani-stage {
+    padding-inline: 22px;
   }
-  .colo-cols {
+  .mani-text {
+    font-size: clamp(1.55rem, 7vw, 2.1rem);
+    line-height: 1.25;
+  }
+  .mani-facts {
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px 20px;
+    gap: 14px 20px;
   }
-  /* le métier et la façon, du texte : toute la largeur */
-  .colo-cols > div:nth-child(-n + 2) {
-    grid-column: 1 / -1;
+  .mani-facts dd {
+    font-size: 1.02rem;
   }
   .contact-section {
     padding-bottom: 40px;
