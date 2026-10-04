@@ -1,13 +1,13 @@
 export function Footer() {
   return (
-    <footer className="relative z-10 bg-cream px-6 sm:px-9">
-      <div className="mx-auto flex max-w-[1100px] flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/75 sm:flex-row">
+    <footer className="relative z-10 bg-paper px-[var(--gx)]">
+      <div className="flex flex-col items-center justify-between gap-3 border-t-[1.5px] border-navy/15 py-7 text-[0.78rem] font-semibold text-navy/75 sm:flex-row">
         <p>
           © {new Date().getFullYear()}{" "}
           <span className="font-logo text-[0.95rem] font-extrabold text-navy uppercase">
             wm<span className="text-burgundy">.</span>
-          </span> · William
-          Martinez, fullstack freelance
+          </span>{" "}
+          · William Martinez, fullstack freelance
         </p>
         <div className="flex gap-6">
           <a

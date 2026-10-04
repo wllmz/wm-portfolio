@@ -180,6 +180,7 @@ export function ContactForm() {
       <div className="cform-foot">
         <button type="submit" disabled={isSubmitting} className="cform-submit">
           {isSubmitting ? "Envoi…" : "Envoyer le message"}
+          <span aria-hidden="true">→</span>
         </button>
 
         <p aria-live="polite" className="cform-status">

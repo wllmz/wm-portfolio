@@ -28,7 +28,8 @@ const facesOf = (project: Project) => {
   const titles = FACE_ORDER.filter((face) => project.faces.includes(face)).map(
     (face) => FACES[face].title,
   );
-  if (titles.length === FACE_ORDER.length) return "Les six, du design au suivi.";
+  if (titles.length === FACE_ORDER.length)
+    return "Les six, du design au suivi.";
   const text = titles.join(", ");
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
 };
@@ -89,7 +90,9 @@ export function Projects() {
       section.getBoundingClientRect().top -
       TOP_BAR +
       target * stage.offsetHeight;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
   }, []);
 
@@ -98,6 +101,7 @@ export function Projects() {
   const offsetOf = (i: number) =>
     !pinned ? 0 : i < index ? -1 : i === index ? 0 : 1;
   const active = projects[index];
+  const last = index === count - 1;
 
   return (
     <section
@@ -107,9 +111,23 @@ export function Projects() {
       style={{ "--count": count } as CSSProperties}
       aria-labelledby="projets-titre"
     >
+      {/* un point d'arrêt du défilement par projet (cf. le défilement par
+          écran, globals.css) */}
+      {pinned &&
+        Array.from({ length: count }, (_, i) => (
+          <span
+            key={i}
+            className="ec-snap"
+            style={{ "--i": i } as CSSProperties}
+            aria-hidden="true"
+          />
+        ))}
       <div className="ecran-stage" ref={stageRef}>
         <header className="ec-head">
           <h2 id="projets-titre" className="ec-title">
+            <span className="sec-num" aria-hidden="true">
+              01
+            </span>
             projets
           </h2>
           <p className="ec-sub">livrés et en cours · du design à la prod</p>
@@ -210,11 +228,17 @@ export function Projects() {
             >
               ↑
             </button>
+            {/* au dernier projet, la flèche mène à la section suivante */}
             <button
               type="button"
-              aria-label="Projet suivant"
-              aria-disabled={index === count - 1}
-              onClick={() => index < count - 1 && goTo(index + 1)}
+              aria-label={
+                last ? "Section suivante : à propos" : "Projet suivant"
+              }
+              onClick={() =>
+                last
+                  ? document.getElementById("a-propos")?.scrollIntoView()
+                  : goTo(index + 1)
+              }
             >
               ↓
             </button>
@@ -222,7 +246,7 @@ export function Projects() {
               Projet {index + 1} sur {count} : {active.title}
             </p>
             <span className="ec-hint" aria-hidden="true">
-              ou faites défiler
+              {last ? "puis, à propos" : "ou faites défiler"}
             </span>
           </div>
         )}

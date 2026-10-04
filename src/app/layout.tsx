@@ -45,13 +45,16 @@ export default function RootLayout({
     // des attributs sur <html>/<body> avant l'hydratation (ex.
     // data-scribe-recorder-ready, cz-shortcut-listen), ce qui déclenche un
     // faux mismatch. On l'ignore UNIQUEMENT sur ces deux balises.
-    <html lang="fr" suppressHydrationWarning>
-      <body
-        className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
-        suppressHydrationWarning
-      >
-        {children}
-      </body>
+    // les variables des polices vont sur <html> : le thème (`--font-title`,
+    // `--font-hand`…) est déclaré sur :root et y résout `var(--font-…)` ;
+    // posées sur <body>, elles n'existaient pas encore à ce niveau et tous
+    // les titres retombaient sur Hanken
+    <html
+      lang="fr"
+      className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
