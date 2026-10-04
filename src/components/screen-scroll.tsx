@@ -29,7 +29,9 @@ const ease = (t: number) =>
     mouvement réduit, ni dans un champ ou une fenêtre qui défile elle-même. */
 export function ScreenScroll() {
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 821px)");
+    const desktop = window.matchMedia(
+      "(min-width: 1101px), (min-width: 821px) and (orientation: landscape)",
+    );
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     const html = document.documentElement;
     let moving = false;

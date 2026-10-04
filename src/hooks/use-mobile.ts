@@ -2,9 +2,11 @@
 
 import { useSyncExternalStore } from "react";
 
-/** Sous ce seuil, le hero passe en mise en page mobile et la carte d'une face
-    s'ouvre en plein écran (même seuil que le bloc mobile de globals.css). */
-export const MOBILE_QUERY = "(max-width: 820px)";
+/** Sous ce seuil (ou sur une tablette en portrait), le hero passe en mise en
+    page mobile et la carte d'une face s'ouvre en plein écran (même seuil que
+    le bloc mobile de globals.css). */
+export const MOBILE_QUERY =
+  "(max-width: 820px), (max-width: 1100px) and (orientation: portrait)";
 
 function subscribe(onChange: () => void) {
   const mq = window.matchMedia(MOBILE_QUERY);
