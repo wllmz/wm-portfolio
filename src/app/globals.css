@@ -2087,6 +2087,68 @@ body::after {
     scroll-margin-top: -8px;
   }
 }
+/* écran bas (portable) : le formulaire dépassait du dernier écran, on
+   resserre les espacements ; au-delà de 880px de haut, tout tient déjà.
+   Seule exception au desktop validé (≥ 1280px) : elle ne joue qu'en hauteur */
+@media (min-width: 1101px) and (max-height: 880px),
+  (min-width: 821px) and (orientation: landscape) and (max-height: 880px) {
+  .contact-section {
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+  .contact-grid {
+    margin-top: 20px;
+  }
+  .cfield + .cfield,
+  .cform-row + .cfield {
+    margin-top: 14px;
+  }
+  .cfield input,
+  .cfield select,
+  .cfield textarea {
+    padding-block: 6px;
+  }
+  .cfield textarea {
+    height: 72px;
+    min-height: 56px;
+  }
+  .cform-foot {
+    margin-top: 18px;
+  }
+}
+/* très bas (≤ 700px) : « parlons-en. » se coupait au trait d'union et
+   la colonne de gauche dépassait ; le formulaire se resserre encore */
+@media (min-width: 1101px) and (max-height: 700px),
+  (min-width: 821px) and (orientation: landscape) and (max-height: 700px) {
+  .contact-hand {
+    /* jamais plus gros que sous 1280px (6vw), où la colonne est étroite */
+    font-size: clamp(3rem, min(10vh, 6vw), 6rem);
+    white-space: nowrap;
+  }
+  .contact-next {
+    margin-top: 20px;
+    padding-top: 14px;
+  }
+  .cfield + .cfield,
+  .cform-row + .cfield {
+    margin-top: 10px;
+  }
+  .cfield input,
+  .cfield select,
+  .cfield textarea {
+    padding-block: 4px;
+  }
+  .cfield textarea {
+    height: 60px;
+    min-height: 60px;
+  }
+  .cform-foot {
+    margin-top: 12px;
+  }
+  .cform-submit {
+    min-height: 44px;
+  }
+}
 
 /* ══════════════ APPARITION AU SCROLL ══════════════
    Les blocs des sections montent en fondu en entrant dans l'écran. Piloté
