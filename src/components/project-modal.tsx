@@ -35,6 +35,7 @@ const fromOrigin = (panel: DOMRect, origin: DOMRect) =>
 export function ProjectModal({ project, origin, onClosed }: Props) {
   const [i, setI] = useState(0);
   const closing = useRef(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -153,6 +154,46 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
     };
   }, [go, n, origin]);
 
+  /* le défilement ne sort jamais de la popup : une molette ou un glissé
+     qui ne fait pas défiler son texte est bloqué, au lieu de passer au
+     site dessous (overflow: hidden sur la page ne suffit pas partout) */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    /* le bloc qui défile sous le pointeur : le texte (desktop) ou toute la
+       popup (mobile) */
+    const scrollerOf = (target: EventTarget | null) => {
+      let el = target instanceof Element ? target : null;
+      while (el && el !== root) {
+        if (
+          el instanceof HTMLElement &&
+          el.scrollHeight > el.clientHeight + 1 &&
+          /auto|scroll/.test(getComputedStyle(el).overflowY)
+        )
+          return el;
+        el = el.parentElement;
+      }
+      return null;
+    };
+    const onWheel = (e: WheelEvent) => {
+      const el = scrollerOf(e.target);
+      const atTop = !el || el.scrollTop <= 0;
+      const atEnd =
+        !el || el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+      if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atEnd))
+        e.preventDefault();
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!scrollerOf(e.target)) e.preventDefault();
+    };
+    root.addEventListener("wheel", onWheel, { passive: false });
+    root.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      root.removeEventListener("wheel", onWheel);
+      root.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
   // swipe horizontal sur les captures
   const startX = useRef(0);
   const onTouchStart = (e: React.TouchEvent) => {
@@ -167,6 +208,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
 
   return createPortal(
     <div
+      ref={rootRef}
       className="pm"
       role="dialog"
       aria-modal="true"
