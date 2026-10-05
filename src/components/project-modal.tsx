@@ -9,7 +9,6 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { FACES, FACE_ORDER } from "@/data/cube-faces";
 import type { Project } from "@/data/projects";
 
 /* durée de l'agrandissement depuis l'écran, et du retour */
@@ -29,9 +28,9 @@ const fromOrigin = (panel: DOMRect, origin: DOMRect) =>
   `translate(${origin.left - panel.left}px, ${origin.top - panel.top}px) scale(${origin.width / panel.width}, ${origin.height / panel.height})`;
 
 /** Le détail d'un projet en popup : elle s'agrandit depuis l'écran cliqué
-    (scale in) et s'y rétracte à la fermeture (scale out). À gauche les
-    captures, à droite le texte, qui défile seul s'il est long. Échap, le
-    bouton ✕ ou un clic sur le fond la ferment. */
+    (scale in) et s'y rétracte à la fermeture (scale out). En haut, la
+    capture en grand et ses vignettes ; dessous, le texte sur deux colonnes.
+    Échap, le bouton ✕ ou un clic sur le fond la ferment. */
 export function ProjectModal({ project, origin, onClosed }: Props) {
   const [i, setI] = useState(0);
   const closing = useRef(false);
@@ -204,8 +203,6 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
     if (n > 1 && Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
   };
 
-  const faces = FACE_ORDER.filter((face) => project.faces.includes(face));
-
   return createPortal(
     <div
       ref={rootRef}
@@ -229,100 +226,110 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
 
         <div className="pm-body">
           {shot && (
-            <div className="pm-media">
+            <div className="pm-hero">
               <div
-                className={isPhone ? "pm-frame is-phone" : "pm-frame is-web"}
-                style={{ "--ratio": shot.w / shot.h } as React.CSSProperties}
+                className="pm-stage"
                 onTouchStart={onTouchStart}
                 onTouchEnd={onTouchEnd}
               >
-                {!isPhone && (
-                  <span className="pm-bar" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
-                )}
-                <div className="pm-view">
+                <div
+                  key={shot.src}
+                  className={isPhone ? "pm-shot is-phone" : "pm-shot"}
+                  style={{ "--ratio": shot.w / shot.h } as React.CSSProperties}
+                >
                   <Image
-                    key={shot.src}
                     src={shot.src}
                     alt={shot.alt}
                     fill
-                    sizes="(max-width: 820px) 92vw, 640px"
+                    loading="eager"
+                    sizes="(max-width: 820px) 92vw, 1000px"
                   />
                 </div>
+                {n > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      className="pm-arrow is-prev"
+                      aria-label="Écran précédent"
+                      onClick={() => go(-1)}
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className="pm-arrow is-next"
+                      aria-label="Écran suivant"
+                      onClick={() => go(1)}
+                    >
+                      ›
+                    </button>
+                  </>
+                )}
               </div>
 
-              <p className="pm-caption">{shot.caption}</p>
-
-              {n > 1 && (
-                <div className="pm-nav">
-                  <button
-                    type="button"
-                    aria-label="Écran précédent"
-                    onClick={() => go(-1)}
-                  >
-                    ‹
-                  </button>
-                  <div className="pm-dots">
+              <div className="pm-strip">
+                {n > 1 && (
+                  <div className="pm-thumbs">
                     {shots.map((s, idx) => (
                       <button
                         type="button"
                         key={s.src}
-                        className={idx === i ? "on" : undefined}
+                        className={
+                          (isPhone ? "pm-thumb is-phone" : "pm-thumb") +
+                          (idx === i ? " on" : "")
+                        }
                         aria-label={`Écran ${idx + 1} sur ${n}`}
                         aria-current={idx === i}
                         onClick={() => setI(idx)}
-                      />
+                      >
+                        <Image src={s.src} alt="" fill sizes="104px" />
+                      </button>
                     ))}
                   </div>
-                  <button
-                    type="button"
-                    aria-label="Écran suivant"
-                    onClick={() => go(1)}
-                  >
-                    ›
-                  </button>
-                </div>
-              )}
+                )}
+                <p className="pm-caption">
+                  {n > 1 && (
+                    <span className="pm-counter">
+                      {i + 1} / {n}
+                    </span>
+                  )}
+                  {shot.caption}
+                </p>
+              </div>
             </div>
           )}
 
           <div className="pm-text">
-            <p className="pm-num" aria-hidden="true">
-              {project.num}
-            </p>
-            <h2 id="pm-title" className="pm-title">
-              {project.title}
-            </h2>
-            <p className="pm-meta">
-              {project.kind} · {project.status}
-            </p>
-            <p className="pm-tagline">{project.tagline}</p>
+            <div>
+              <p className="pm-num" aria-hidden="true">
+                {project.num}
+              </p>
+              <h2 id="pm-title" className="pm-title">
+                {project.title}
+              </h2>
+              <p className="pm-meta">
+                {project.kind} · {project.status}
+              </p>
+              <p className="pm-tagline">{project.tagline}</p>
 
-            <p className="pm-label">Le contexte</p>
-            <p>{project.contexte}</p>
+              <p className="pm-label">Le contexte</p>
+              <p>{project.contexte}</p>
 
-            <p className="pm-label">Ce que j&apos;ai livré</p>
-            <ul className="pm-list">
-              {project.livre.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-
-            <p className="pm-label">Côté technique</p>
-            <div className="pm-chips">
-              {project.stack.map((tech) => (
-                <span key={tech}>{tech}</span>
-              ))}
+              <p className="pm-label">Côté technique</p>
+              <div className="pm-chips">
+                {project.stack.map((tech) => (
+                  <span key={tech}>{tech}</span>
+                ))}
+              </div>
             </div>
 
-            <p className="pm-label">Faces couvertes</p>
-            <div className="pm-chips is-faces">
-              {faces.map((face) => (
-                <span key={face}>{FACES[face].title}</span>
-              ))}
+            <div>
+              <p className="pm-label is-first">Ce que j&apos;ai livré</p>
+              <ul className="pm-list">
+                {project.livre.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
