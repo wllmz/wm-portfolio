@@ -41,7 +41,12 @@ export function ScreenScroll() {
     let lastWheel = 0;
     let frame = 0;
 
-    const active = () => desktop.matches && !reduce.matches;
+    /* une popup ouverte garde la main : le clavier ou la molette ne font
+       jamais défiler la page dessous, même focus sorti de la popup */
+    const active = () =>
+      desktop.matches &&
+      !reduce.matches &&
+      !document.querySelector('[aria-modal="true"]');
 
     /* le haut de chaque écran dans la page, plus le bas de la page (pied) */
     const stops = () => {

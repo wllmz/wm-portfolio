@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -27,6 +28,9 @@ type Props = {
 const fromOrigin = (panel: DOMRect, origin: DOMRect) =>
   `translate(${origin.left - panel.left}px, ${origin.top - panel.top}px) scale(${origin.width / panel.width}, ${origin.height / panel.height})`;
 
+/* ce qui reçoit le focus dans la popup */
+const FOCUSABLE = 'a[href], button, [tabindex]:not([tabindex="-1"])';
+
 /** Le détail d'un projet en popup : elle s'agrandit depuis l'écran cliqué
     (scale in) et s'y rétracte à la fermeture (scale out). En haut, la
     capture en grand et ses vignettes ; dessous, le texte sur deux colonnes.
@@ -39,6 +43,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const thumbsRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   const shots = project.shots;
   const n = shots.length;
   const shot = shots[i];
@@ -58,24 +63,26 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
       panel.getBoundingClientRect(),
       origin.getBoundingClientRect(),
     );
-    panel.animate(
-      [
-        { transform: from, borderRadius: "14px" },
-        { transform: "none", borderRadius: "20px" },
-      ],
-      { duration: OPEN_MS, easing: EASE },
-    );
-    panel
-      .querySelector(".pm-body")
-      ?.animate(
-        [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
-        {
-          duration: OPEN_MS,
-        },
-      );
-    backdrop.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: OPEN_MS * 0.7,
-    });
+    const animations = [
+      panel.animate(
+        [
+          { transform: from, borderRadius: "14px" },
+          { transform: "none", borderRadius: "20px" },
+        ],
+        { duration: OPEN_MS, easing: EASE },
+      ),
+      /* le contenu (et le ✕, étiré sinon) apparaît à mi-course */
+      ...Array.from(panel.querySelectorAll(".pm-body, .pm-close"), (el) =>
+        el.animate(
+          [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
+          { duration: OPEN_MS },
+        ),
+      ),
+      backdrop.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: OPEN_MS * 0.7,
+      }),
+    ];
+    return () => animations.forEach((a) => a.cancel());
   }, [origin]);
 
   /* scale out : retour vers l'écran, puis la popup disparaît */
@@ -88,30 +95,40 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
       onClosed();
       return;
     }
-    const to = fromOrigin(
-      panel.getBoundingClientRect(),
-      origin.getBoundingClientRect(),
+    /* fermée pendant l'ouverture : on part de l'état final, sinon la mesure
+       lirait le panneau encore réduit */
+    panel.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+    backdrop.getAnimations().forEach((a) => a.cancel());
+    panel.querySelectorAll(".pm-body, .pm-close").forEach((el) =>
+      el.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: CLOSE_MS * 0.4,
+        fill: "forwards",
+      }),
     );
-    panel.querySelector(".pm-body")?.animate([{ opacity: 1 }, { opacity: 0 }], {
-      duration: CLOSE_MS * 0.4,
-      fill: "forwards",
-    });
     backdrop.animate([{ opacity: 1 }, { opacity: 0 }], {
       duration: CLOSE_MS,
       fill: "forwards",
     });
-    panel
-      .animate(
-        [
+    /* l'écran d'origine a disparu : un simple fondu, plutôt qu'un retour
+       vers le coin de la fenêtre */
+    const keyframes = origin.isConnected
+      ? [
           { transform: "none", borderRadius: "20px" },
-          { transform: to, borderRadius: "14px" },
-        ],
-        {
-          duration: CLOSE_MS,
-          easing: "cubic-bezier(0.55, 0, 0.45, 1)",
-          fill: "forwards",
-        },
-      )
+          {
+            transform: fromOrigin(
+              panel.getBoundingClientRect(),
+              origin.getBoundingClientRect(),
+            ),
+            borderRadius: "14px",
+          },
+        ]
+      : [{ opacity: 1 }, { opacity: 0 }];
+    panel
+      .animate(keyframes, {
+        duration: CLOSE_MS,
+        easing: "cubic-bezier(0.55, 0, 0.45, 1)",
+        fill: "forwards",
+      })
       .finished.then(onClosed, onClosed);
   }, [origin, onClosed]);
   /* le clavier lit toujours la dernière version, sans réabonner l'effet */
@@ -125,16 +142,24 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
     closeRef.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") latestClose.current();
-      else if (e.key === "ArrowRight" && n > 1) go(1);
-      else if (e.key === "ArrowLeft" && n > 1) go(-1);
-      else if (e.key === "Tab") {
+      else if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        /* Alt + ← reste le retour du navigateur ; rien ne bouge en fermant */
+        if (e.altKey || e.metaKey || e.ctrlKey || closing.current || n < 2)
+          return;
+        go(e.key === "ArrowRight" ? 1 : -1);
+      } else if (e.key === "Tab") {
+        const panel = panelRef.current;
         const focusables = Array.from(
-          panelRef.current?.querySelectorAll<HTMLElement>("button") ?? [],
+          panel?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [],
         ).filter((el) => el.getClientRects().length > 0);
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
-        if (!first || !last) return;
-        if (e.shiftKey && document.activeElement === first) {
+        if (!panel || !first || !last) return;
+        /* le focus était sorti (clic sur du texte) : il revient dedans */
+        if (!panel.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
@@ -160,8 +185,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    /* le bloc qui défile sous le pointeur : le texte (desktop) ou toute la
-       popup (mobile) */
+    /* le bloc qui défile sous le pointeur : le corps de la popup */
     const scrollerOf = (target: EventTarget | null) => {
       let el = target instanceof Element ? target : null;
       while (el && el !== root) {
@@ -175,19 +199,30 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
       }
       return null;
     };
-    const onWheel = (e: WheelEvent) => {
-      /* sur les vignettes, la molette les fait défiler de côté */
+    /* les vignettes, quand elles débordent, défilent de côté */
+    const onThumbs = (target: EventTarget | null) => {
       const thumbs = thumbsRef.current;
-      if (
-        thumbs &&
-        e.target instanceof Node &&
-        thumbs.contains(e.target) &&
-        thumbs.scrollWidth > thumbs.clientWidth &&
-        Math.abs(e.deltaY) > Math.abs(e.deltaX)
-      ) {
-        e.preventDefault();
-        thumbs.scrollLeft += e.deltaY;
-        return;
+      return thumbs &&
+        target instanceof Node &&
+        thumbs.contains(target) &&
+        thumbs.scrollWidth > thumbs.clientWidth
+        ? thumbs
+        : null;
+    };
+    const onWheel = (e: WheelEvent) => {
+      /* sur les vignettes, la molette les fait défiler de côté, puis rend
+         la main au défilement vertical une fois en butée */
+      const thumbs = onThumbs(e.target);
+      if (thumbs && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        const max = thumbs.scrollWidth - thumbs.clientWidth;
+        const blocked =
+          (e.deltaY < 0 && thumbs.scrollLeft <= 0) ||
+          (e.deltaY > 0 && thumbs.scrollLeft >= max - 1);
+        if (!blocked) {
+          e.preventDefault();
+          thumbs.scrollLeft += e.deltaY;
+          return;
+        }
       }
       const el = scrollerOf(e.target);
       const atTop = !el || el.scrollTop <= 0;
@@ -197,7 +232,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
         e.preventDefault();
     };
     const onTouchMove = (e: TouchEvent) => {
-      if (!scrollerOf(e.target)) e.preventDefault();
+      if (!scrollerOf(e.target) && !onThumbs(e.target)) e.preventDefault();
     };
     root.addEventListener("wheel", onWheel, { passive: false });
     root.addEventListener("touchmove", onTouchMove, { passive: false });
@@ -221,8 +256,12 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
   /* glisser la capture, au doigt comme à la souris, change d'écran */
   const startX = useRef<number | null>(null);
   const onPointerDown = (e: React.PointerEvent) => {
+    /* un geste repart de zéro : un relâché hors de la scène ne laisse rien */
+    startX.current = null;
     if (e.button !== 0 || (e.target as Element).closest("button")) return;
     startX.current = e.clientX;
+    /* le relâché revient à la scène même hors d'elle */
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerUp = (e: React.PointerEvent) => {
     if (startX.current === null) return;
@@ -237,7 +276,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
       className="pm"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="pm-title"
+      aria-labelledby={titleId}
     >
       <div ref={backdropRef} className="pm-backdrop" onClick={close} />
 
@@ -298,7 +337,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
               </div>
 
               <div className="pm-strip">
-                <p className="pm-caption">
+                <p className="pm-caption" aria-live="polite">
                   {n > 1 && (
                     <span className="pm-counter">
                       {i + 1} / {n}
@@ -319,7 +358,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
                           (idx === i ? " on" : "")
                         }
                         aria-label={`Écran ${idx + 1} sur ${n}`}
-                        aria-current={idx === i}
+                        aria-current={idx === i ? "true" : undefined}
                         onClick={() => setI(idx)}
                       >
                         <Image src={s.src} alt="" fill sizes="104px" />
@@ -336,7 +375,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
               <p className="pm-num" aria-hidden="true">
                 {project.num}
               </p>
-              <h2 id="pm-title" className="pm-title">
+              <h2 id={titleId} className="pm-title">
                 {project.title}
               </h2>
               <p className="pm-meta">

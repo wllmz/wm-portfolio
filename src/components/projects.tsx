@@ -160,7 +160,7 @@ export function Projects() {
         </header>
 
         {/* au centre : l'écran, qui prend la forme du projet affiché ; un
-            clic ouvre sa page */}
+            clic ouvre son détail en popup */}
         <Link
           href={`/projets/${active.slug}`}
           className={`ec-screen ${isPhone(active) ? "is-phone" : "is-web"}`}
