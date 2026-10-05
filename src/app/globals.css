@@ -2087,6 +2087,34 @@ body::after {
     scroll-margin-top: -8px;
   }
 }
+/* écran bas (portable) : le formulaire dépassait du dernier écran, on
+   resserre les espacements ; au-delà de 880px de haut, tout tient déjà */
+@media (min-width: 1101px) and (max-height: 880px),
+  (min-width: 821px) and (orientation: landscape) and (max-height: 880px) {
+  .contact-section {
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+  .contact-grid {
+    margin-top: 20px;
+  }
+  .cfield + .cfield,
+  .cform-row + .cfield {
+    margin-top: 14px;
+  }
+  .cfield input,
+  .cfield select,
+  .cfield textarea {
+    padding-block: 6px;
+  }
+  .cfield textarea {
+    height: 72px;
+    min-height: 56px;
+  }
+  .cform-foot {
+    margin-top: 18px;
+  }
+}
 
 /* ══════════════ APPARITION AU SCROLL ══════════════
    Les blocs des sections montent en fondu en entrant dans l'écran. Piloté
