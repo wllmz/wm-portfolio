@@ -2115,6 +2115,37 @@ body::after {
     margin-top: 18px;
   }
 }
+/* très bas (≤ 700px) : « parlons-en. » se coupait au trait d'union et
+   la colonne de gauche dépassait ; le formulaire se resserre encore */
+@media (min-width: 1101px) and (max-height: 700px),
+  (min-width: 821px) and (orientation: landscape) and (max-height: 700px) {
+  .contact-hand {
+    font-size: clamp(3rem, 10vh, 6rem);
+    white-space: nowrap;
+  }
+  .contact-next {
+    margin-top: 20px;
+    padding-top: 14px;
+  }
+  .cfield + .cfield,
+  .cform-row + .cfield {
+    margin-top: 10px;
+  }
+  .cfield input,
+  .cfield select,
+  .cfield textarea {
+    padding-block: 4px;
+  }
+  .cfield textarea {
+    height: 56px;
+  }
+  .cform-foot {
+    margin-top: 12px;
+  }
+  .cform-submit {
+    min-height: 44px;
+  }
+}
 
 /* ══════════════ APPARITION AU SCROLL ══════════════
    Les blocs des sections montent en fondu en entrant dans l'écran. Piloté
