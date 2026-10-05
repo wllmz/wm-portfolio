@@ -38,6 +38,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const thumbsRef = useRef<HTMLDivElement>(null);
   const shots = project.shots;
   const n = shots.length;
   const shot = shots[i];
@@ -175,6 +176,19 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
       return null;
     };
     const onWheel = (e: WheelEvent) => {
+      /* sur les vignettes, la molette les fait défiler de côté */
+      const thumbs = thumbsRef.current;
+      if (
+        thumbs &&
+        e.target instanceof Node &&
+        thumbs.contains(e.target) &&
+        thumbs.scrollWidth > thumbs.clientWidth &&
+        Math.abs(e.deltaY) > Math.abs(e.deltaX)
+      ) {
+        e.preventDefault();
+        thumbs.scrollLeft += e.deltaY;
+        return;
+      }
       const el = scrollerOf(e.target);
       const atTop = !el || el.scrollTop <= 0;
       const atEnd =
@@ -193,13 +207,27 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
     };
   }, []);
 
-  // swipe horizontal sur les captures
-  const startX = useRef(0);
-  const onTouchStart = (e: React.TouchEvent) => {
-    startX.current = e.touches[0].clientX;
+  /* la vignette affichée revient au centre de la rangée */
+  useEffect(() => {
+    const thumbs = thumbsRef.current;
+    const active = thumbs?.children[i];
+    if (!thumbs || !(active instanceof HTMLElement)) return;
+    thumbs.scrollTo({
+      left: active.offsetLeft - (thumbs.clientWidth - active.offsetWidth) / 2,
+      behavior: reduce() ? "auto" : "smooth",
+    });
+  }, [i]);
+
+  /* glisser la capture, au doigt comme à la souris, change d'écran */
+  const startX = useRef<number | null>(null);
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0 || (e.target as Element).closest("button")) return;
+    startX.current = e.clientX;
   };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - startX.current;
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (startX.current === null) return;
+    const dx = e.clientX - startX.current;
+    startX.current = null;
     if (n > 1 && Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
   };
 
@@ -228,9 +256,10 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
           {shot && (
             <div className="pm-hero">
               <div
-                className="pm-stage"
-                onTouchStart={onTouchStart}
-                onTouchEnd={onTouchEnd}
+                className={n > 1 ? "pm-stage is-swipeable" : "pm-stage"}
+                onPointerDown={onPointerDown}
+                onPointerUp={onPointerUp}
+                onPointerCancel={() => (startX.current = null)}
               >
                 <div
                   key={shot.src}
@@ -242,6 +271,7 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
                     alt={shot.alt}
                     fill
                     loading="eager"
+                    draggable={false}
                     sizes="(max-width: 820px) 92vw, 1000px"
                   />
                 </div>
@@ -268,14 +298,24 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
               </div>
 
               <div className="pm-strip">
+                <p className="pm-caption">
+                  {n > 1 && (
+                    <span className="pm-counter">
+                      {i + 1} / {n}
+                    </span>
+                  )}
+                  {shot.caption}
+                </p>
                 {n > 1 && (
-                  <div className="pm-thumbs">
+                  <div ref={thumbsRef} className="pm-thumbs">
                     {shots.map((s, idx) => (
                       <button
                         type="button"
                         key={s.src}
                         className={
-                          (isPhone ? "pm-thumb is-phone" : "pm-thumb") +
+                          /* chaque vignette a la forme de sa capture : un
+                             projet peut mêler écrans larges et pages hautes */
+                          (s.h > s.w ? "pm-thumb is-phone" : "pm-thumb") +
                           (idx === i ? " on" : "")
                         }
                         aria-label={`Écran ${idx + 1} sur ${n}`}
@@ -287,14 +327,6 @@ export function ProjectModal({ project, origin, onClosed }: Props) {
                     ))}
                   </div>
                 )}
-                <p className="pm-caption">
-                  {n > 1 && (
-                    <span className="pm-counter">
-                      {i + 1} / {n}
-                    </span>
-                  )}
-                  {shot.caption}
-                </p>
               </div>
             </div>
           )}
