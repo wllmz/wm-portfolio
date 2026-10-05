@@ -25,3 +25,7 @@ npm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# artefact Windows : une redirection vers « nul » crée ce fichier, et Tailwind
+# plante en le lisant (nom réservé) ; ignoré, il sort aussi du scan des sources
+/nul
