@@ -1,32 +1,13 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  Shantell_Sans,
-  Hanken_Grotesk,
-} from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-// Bricolage Grotesque : logo (800) et titres (600/700) — découpes franches
-// en écho aux arêtes du cube, registre atelier contemporain.
-const bricolage = Bricolage_Grotesque({
+// Instrument Sans, seule famille du site : le contraste vient des tailles et
+// des graisses (400 à 700), pas d'un mélange de polices.
+const instrument = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-bricolage",
-  display: "swap",
-});
-
-const shantell = Shantell_Sans({
-  subsets: ["latin"],
-  weight: "700",
-  variable: "--font-shantell",
-  display: "swap",
-});
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-hanken",
+  variable: "--font-instrument",
   display: "swap",
 });
 
@@ -49,12 +30,8 @@ export default function RootLayout({
     // les variables des polices vont sur <html> : le thème (`--font-title`,
     // `--font-hand`…) est déclaré sur :root et y résout `var(--font-…)` ;
     // posées sur <body>, elles n'existaient pas encore à ce niveau et tous
-    // les titres retombaient sur Hanken
-    <html
-      lang="fr"
-      className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
-      suppressHydrationWarning
-    >
+    // les titres retombaient sur la police par défaut
+    <html lang="fr" className={instrument.variable} suppressHydrationWarning>
       <body suppressHydrationWarning>
         {children}
         <Analytics />

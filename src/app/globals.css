@@ -11,11 +11,12 @@
   --color-burgundy-soft: #7a1a30;
   --color-ink-soft: #4a5178;
 
-  /* Typo — 3 voix : Bricolage (structure), Shantell (main), Hanken (info) */
-  --font-title: var(--font-bricolage);
-  --font-logo: var(--font-bricolage);
-  --font-hand: var(--font-shantell);
-  --font-body: var(--font-hanken);
+  /* Typo — une seule famille, Instrument Sans : les rôles (titre, logo,
+     accent, texte) ne diffèrent que par la taille et la graisse */
+  --font-title: var(--font-instrument);
+  --font-logo: var(--font-instrument);
+  --font-hand: var(--font-instrument);
+  --font-body: var(--font-instrument);
 }
 
 :root {
@@ -38,7 +39,7 @@ html:has(.top-bar) {
 }
 
 body {
-  font-family: var(--font-hanken);
+  font-family: var(--font-body);
   background: var(--color-cream);
   color: var(--color-navy);
   /* aucun texte n'est sélectionnable / copiable sur le site… */
@@ -92,7 +93,8 @@ body::after {
 .top-bar-logo {
   font-family: var(--font-logo);
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
   color: var(--color-navy);
 }
@@ -219,7 +221,7 @@ body::after {
 .wm-mini {
   display: inline-block;
   font-family: var(--font-logo);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.6rem;
   line-height: 1.1;
   letter-spacing: 0.02em;
@@ -437,7 +439,7 @@ body::after {
 }
 /* le numéro vit juste au-dessus du titre, dans le flux du texte */
 .face-card .num {
-  font-family: var(--font-shantell);
+  font-family: var(--font-hand);
   font-weight: 700;
   font-size: 1.8rem;
   line-height: 1;
@@ -446,7 +448,7 @@ body::after {
   margin-bottom: 2px;
 }
 .face-card .fc-title {
-  font-family: var(--font-bricolage);
+  font-family: var(--font-title);
   font-weight: 700;
   font-size: clamp(1.3rem, 2.5vw, 1.75rem);
   line-height: 1.05;
@@ -509,7 +511,7 @@ body::after {
   position: absolute;
   top: 10px;
   left: 14px;
-  font-family: var(--font-shantell);
+  font-family: var(--font-hand);
   font-size: calc(var(--face) * 0.05);
   color: var(--color-burgundy);
   opacity: 0.7;
@@ -539,7 +541,7 @@ body::after {
   opacity: 1;
 }
 .facenav button {
-  font-family: var(--font-hanken);
+  font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -994,7 +996,7 @@ body::after {
   padding: clamp(56px, 9vh, 96px) var(--gx);
   border-top: 1.5px solid rgba(45, 54, 96, 0.12);
 }
-/* le numéro de section, à la main, devant le titre (projets, à propos,
+/* le numéro de section, en accent, devant le titre (projets, à propos,
    contact) */
 .sec-num {
   margin-right: 0.45em;
@@ -1022,9 +1024,9 @@ body::after {
 .colo-name {
   font-family: var(--font-title);
   font-size: clamp(3.4rem, 10.4vw, 9.4rem);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 0.86;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.055em;
 }
 .colo-name span {
   color: var(--color-burgundy);
@@ -1785,8 +1787,9 @@ body::after {
   margin-top: 4px;
   font-family: var(--font-hand);
   font-size: clamp(3.5rem, 6.7vw, 6rem);
+  font-weight: 600;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.045em;
   color: var(--color-burgundy);
 }
 .contact-next {
