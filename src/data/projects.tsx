@@ -556,19 +556,19 @@ export const projects: Project[] = [
     },
     faces: ["front", "back", "quality", "deploy"],
     highlights: [
-      "Trois plateformes scannées toutes les 30 minutes.",
+      "Les plateformes freelance scannées toutes les 30 minutes.",
       "Chaque offre notée sur 10, raisons à l'appui.",
-      "Les réponses rédigées par Claude Code.",
+      "Les brouillons de réponse rédigés par Claude Code.",
     ],
     tagline:
       "Un radar qui repère les missions freelance faites pour moi, les note et prépare la réponse.",
     contexte:
-      "Projet personnel. Les missions freelance sont éparpillées sur plusieurs plateformes, et les meilleures partent en quelques heures. Radar freelance les rassemble, écarte celles qui ne collent pas à mon profil, note les autres et prépare un premier jet de réponse : il ne reste qu'à relire et postuler.",
+      "Projet personnel. Les missions freelance sont éparpillées sur plusieurs plateformes, et les meilleures partent vite. Radar freelance les rassemble, écarte celles qui ne collent pas à mon profil, note les autres et prépare un premier jet de réponse : il ne reste qu'à relire et postuler.",
     livre: [
-      "Le scan de trois sources : Free-Work, Codeur.com et les marchés publics du BOAMP, toutes les 30 minutes, et la première page de Codeur toutes les 10 minutes pour répondre avant les autres.",
+      "Le scan automatique des plateformes freelance, dont Free-Work, et des marchés publics du BOAMP, toutes les 30 minutes.",
       "Le scoring réglable : mots-clés et poids par groupe, niveau d'expérience, termes éliminatoires, zone (Paris ou full remote) et freelance uniquement. Chaque note affiche son calcul.",
-      "La boîte de réception : liste filtrable, offre complète à côté, like et dislike, et les mots à éviter appris au dislike.",
-      "Les brouillons de réponse rédigés par Claude Code en local, à partir de l'annonce et de ma présentation, versionnés et retouchables.",
+      "La boîte de réception : liste filtrable, offre complète à côté, like et dislike, et les mots à éviter choisis au dislike.",
+      "Les brouillons de réponse rédigés par Claude Code en local, à partir de l'annonce et de ma présentation, versionnés et modifiables.",
       "Le suivi des candidatures en kanban, avec la date de relance à 5 jours.",
       "L'application Windows : l'API et le front tournent en arrière-plan, dans la zone de notification, et une notification signale les offres notées 8/10 et plus.",
       "Un scraping respectueux : robots.txt suivis, pause automatique quand une plateforme limite les requêtes, et une API locale fermée aux autres sites.",
@@ -591,8 +591,7 @@ export const projects: Project[] = [
         alt: "Tableau de bord de Radar freelance : offres à traiter, nouvelles du jour et meilleures offres notées 10/10",
         w: 1920,
         h: 1075,
-        caption:
-          "Le tableau de bord : ce qui attend une réponse, et les meilleures offres du moment.",
+        caption: "Le tableau de bord : par quoi commencer la journée.",
       },
       {
         src: "/projets/radar-freelance/missions.png",
@@ -604,7 +603,7 @@ export const projects: Project[] = [
       },
       {
         src: "/projets/radar-freelance/brouillon.png",
-        alt: "Fiche d'une mission Codeur.com avec la réponse rédigée par Claude Code et ses quatre versions",
+        alt: "Fiche d'une mission avec la réponse rédigée par Claude Code et ses quatre versions",
         w: 1920,
         h: 1400,
         caption:
