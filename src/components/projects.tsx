@@ -7,11 +7,13 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type MouseEvent,
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FACES, FACE_ORDER } from "@/data/cube-faces";
 import { projects, type Project } from "@/data/projects";
+import { ProjectModal } from "@/components/project-modal";
 
 /* hauteur de la barre du haut : la scène se colle juste dessous */
 const TOP_BAR = 56;
@@ -46,6 +48,12 @@ export function Projects() {
   const stageRef = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(false);
   const [index, setIndex] = useState(0);
+  /* le projet ouvert en popup, figé au clic : le défilement derrière ne le
+     change pas */
+  const [opened, setOpened] = useState<{
+    project: Project;
+    origin: HTMLElement;
+  } | null>(null);
   const count = projects.length;
 
   /* avant le premier affichage : la section prend tout de suite sa hauteur
@@ -96,6 +104,16 @@ export function Projects() {
     window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
   }, []);
 
+  /* un clic sur l'écran ouvre le détail en popup, qui s'agrandit depuis
+     lui. Ctrl/Cmd + clic et clic molette gardent le lien vers la page
+     projet (nouvel onglet). */
+  const openProject = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+      return;
+    e.preventDefault();
+    setOpened({ project: projects[index], origin: e.currentTarget });
+  };
+
   /* position de chaque projet par rapport au projet affiché : -1 déjà vu,
      0 affiché, 1 à venir. Sans JS (scène non collée), tous sont à plat. */
   const offsetOf = (i: number) =>
@@ -141,10 +159,13 @@ export function Projects() {
           </div>
         </header>
 
-        {/* au centre : l'écran, qui prend la forme du projet affiché */}
-        <div
+        {/* au centre : l'écran, qui prend la forme du projet affiché ; un
+            clic ouvre sa page */}
+        <Link
+          href={`/projets/${active.slug}`}
           className={`ec-screen ${isPhone(active) ? "is-phone" : "is-web"}`}
-          aria-hidden="true"
+          aria-label={`Ouvrir le projet ${active.title}`}
+          onClick={openProject}
         >
           <span className="ec-bar">
             <span />
@@ -167,7 +188,7 @@ export function Projects() {
               );
             })}
           </div>
-        </div>
+        </Link>
 
         {projects.map((project, i) => {
           const offset = offsetOf(i);
@@ -208,9 +229,6 @@ export function Projects() {
                   <p className="ec-label">Faces couvertes</p>
                   <p>{facesOf(project)}</p>
                 </div>
-                <Link href={`/projets/${project.slug}`} className="ec-link">
-                  Voir le projet <span aria-hidden="true">→</span>
-                </Link>
               </div>
             </article>
           );
@@ -251,6 +269,14 @@ export function Projects() {
           </div>
         )}
       </div>
+
+      {opened && (
+        <ProjectModal
+          project={opened.project}
+          origin={opened.origin}
+          onClosed={() => setOpened(null)}
+        />
+      )}
     </section>
   );
 }

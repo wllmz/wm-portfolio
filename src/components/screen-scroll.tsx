@@ -94,11 +94,12 @@ export function ScreenScroll() {
       glide(next);
     };
 
-    /* un champ, une liste ou une carte de face qui défile elle-même gardent
-       leur défilement */
+    /* un champ, une liste, une popup ou une carte de face qui défile
+       elle-même gardent leur défilement */
     const free = (target: EventTarget | null) => {
       if (!(target instanceof Element)) return false;
-      if (target.closest("input, textarea, select")) return true;
+      if (target.closest('input, textarea, select, [aria-modal="true"]'))
+        return true;
       const card = target.closest<HTMLElement>(".face-card");
       return !!card && card.scrollHeight > card.clientHeight;
     };
