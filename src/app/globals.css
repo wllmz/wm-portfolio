@@ -17,6 +17,10 @@
   --font-logo: var(--font-instrument);
   --font-hand: var(--font-instrument);
   --font-body: var(--font-instrument);
+  /* sauf les titres de section, qui gardent leur style d'origine : le mot
+     en Bricolage, le numéro à la main en Shantell */
+  --font-section: var(--font-bricolage);
+  --font-section-num: var(--font-shantell);
 }
 
 :root {
@@ -1330,17 +1334,17 @@ body::after {
   padding: clamp(56px, 9vh, 96px) var(--gx);
   border-top: 1.5px solid rgba(45, 54, 96, 0.12);
 }
-/* le numéro de section, en accent, devant le titre (projets, à propos,
+/* le numéro de section, à la main, devant le titre (projets, à propos,
    contact) */
 .sec-num {
   margin-right: 0.45em;
-  font-family: var(--font-hand);
+  font-family: var(--font-section-num);
   font-size: 0.8em;
   font-weight: 700;
   color: var(--color-burgundy);
 }
 .colo-title {
-  font-family: var(--font-title);
+  font-family: var(--font-section);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -1455,7 +1459,7 @@ body::after {
 
 /* ── en-tête : la section et la progression ── */
 .ec-title {
-  font-family: var(--font-title);
+  font-family: var(--font-section);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -2082,7 +2086,7 @@ body::after {
   border-top: 1.5px solid rgba(45, 54, 96, 0.12);
 }
 .contact-eyebrow {
-  font-family: var(--font-title);
+  font-family: var(--font-section);
   font-size: 1.5rem;
   font-weight: 700;
 }
