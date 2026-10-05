@@ -4,6 +4,7 @@ import {
   Shantell_Sans,
   Hanken_Grotesk,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Bricolage Grotesque : logo (800) et titres (600/700) — découpes franches
@@ -54,7 +55,10 @@ export default function RootLayout({
       className={`${bricolage.variable} ${shantell.variable} ${hanken.variable}`}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
