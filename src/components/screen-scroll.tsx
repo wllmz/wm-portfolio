@@ -41,7 +41,12 @@ export function ScreenScroll() {
     let lastWheel = 0;
     let frame = 0;
 
-    const active = () => desktop.matches && !reduce.matches;
+    /* une popup ouverte garde la main : le clavier ou la molette ne font
+       jamais défiler la page dessous, même focus sorti de la popup */
+    const active = () =>
+      desktop.matches &&
+      !reduce.matches &&
+      !document.querySelector('[aria-modal="true"]');
 
     /* le haut de chaque écran dans la page, plus le bas de la page (pied) */
     const stops = () => {
@@ -94,11 +99,12 @@ export function ScreenScroll() {
       glide(next);
     };
 
-    /* un champ, une liste ou une carte de face qui défile elle-même gardent
-       leur défilement */
+    /* un champ, une liste, une popup ou une carte de face qui défile
+       elle-même gardent leur défilement */
     const free = (target: EventTarget | null) => {
       if (!(target instanceof Element)) return false;
-      if (target.closest("input, textarea, select")) return true;
+      if (target.closest('input, textarea, select, [aria-modal="true"]'))
+        return true;
       const card = target.closest<HTMLElement>(".face-card");
       return !!card && card.scrollHeight > card.clientHeight;
     };

@@ -979,6 +979,338 @@ body::after {
     animation: none;
   }
 }
+/* ══════════════ PROJETS — le détail en popup ══════════════
+   Ouvert depuis l'écran de la section projets (project-modal.tsx) : le
+   panneau s'agrandit depuis l'écran cliqué et s'y rétracte. En haut la
+   capture en grand et ses vignettes, dessous le texte sur deux colonnes ;
+   le tout défile d'un tenant. */
+.pm {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vh, 40px) clamp(16px, 3vw, 40px);
+}
+.pm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 30, 56, 0.72);
+  backdrop-filter: blur(6px);
+}
+.pm-panel {
+  position: relative;
+  width: min(1080px, 100%);
+  height: min(800px, 100%);
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--color-cream);
+  box-shadow: 0 40px 100px rgba(10, 14, 30, 0.45);
+  transform-origin: top left;
+}
+.pm-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(45, 54, 96, 0.25);
+  background: var(--color-cream);
+  color: var(--color-navy);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.pm-close:hover {
+  border-color: var(--color-navy);
+}
+.pm-close:focus-visible,
+.pm-arrow:focus-visible,
+.pm-thumb:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 3px;
+}
+.pm-body {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(45, 54, 96, 0.3) transparent;
+}
+
+/* ── la capture en grand : elle tient dans la scène, quelle que soit sa
+   forme, et garde son ratio (rien n'est rogné) ── */
+.pm-hero {
+  padding: 32px 40px 22px;
+  background: var(--color-paper);
+}
+.pm-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(470px, 52vh);
+  container-type: size;
+}
+.pm-shot {
+  position: relative;
+  width: min(100cqw, 100cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+  overflow: hidden;
+  border-radius: 12px;
+  background: #1a1a1a;
+  box-shadow: 0 24px 50px rgba(35, 43, 78, 0.28);
+  animation: pm-shot 0.35s ease;
+}
+.pm-shot.is-phone {
+  border-radius: 28px;
+}
+.pm-shot img {
+  object-fit: cover;
+}
+/* plusieurs écrans : la capture se glisse, au doigt comme à la souris */
+.pm-stage.is-swipeable {
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+.pm-stage.is-swipeable:active {
+  cursor: grabbing;
+}
+@keyframes pm-shot {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+.pm-arrow {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(234, 227, 210, 0.92);
+  color: var(--color-navy);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(35, 43, 78, 0.18);
+  transition: background 0.2s ease;
+}
+.pm-arrow:hover {
+  background: var(--color-cream);
+}
+.pm-arrow.is-prev {
+  left: 0;
+}
+.pm-arrow.is-next {
+  right: 0;
+}
+
+/* ── la légende, puis les vignettes sur toute la largeur : centrées quand
+   elles tiennent, qui défilent (molette, glissé) quand elles débordent,
+   fondues sur les bords ── */
+.pm-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+.pm-thumbs {
+  display: flex;
+  justify-content: safe center;
+  gap: 8px;
+  padding: 2px var(--fade);
+  overflow-x: auto;
+  scrollbar-width: none;
+  --fade: 28px;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 var(--fade),
+    #000 calc(100% - var(--fade)),
+    transparent
+  );
+}
+.pm-thumb {
+  position: relative;
+  flex: none;
+  width: 104px;
+  height: 48px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #1a1a1a;
+  opacity: 0.55;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+.pm-thumb.is-phone {
+  width: 40px;
+  height: 86px;
+}
+.pm-thumb img {
+  object-fit: cover;
+  object-position: top;
+}
+.pm-thumb:hover {
+  opacity: 0.9;
+}
+.pm-thumb.on {
+  opacity: 1;
+  border-color: var(--color-navy);
+}
+.pm-caption {
+  min-height: 1.45em;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+.pm-counter {
+  margin-right: 6px;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+.pm-counter::after {
+  content: " ·";
+}
+
+/* ── le texte : deux colonnes, tailles de lecture ── */
+.pm-text {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px;
+  padding: 36px 44px 44px;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--color-navy);
+}
+.pm-num {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+.pm-title {
+  margin-top: 4px;
+  font-family: var(--font-title);
+  font-size: clamp(1.7rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.pm-meta {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--color-ink-soft);
+}
+.pm-tagline {
+  margin-top: 16px;
+  font-size: 1.06rem;
+  line-height: 1.5;
+}
+.pm-label {
+  margin-top: 26px;
+  margin-bottom: 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-burgundy);
+}
+.pm-label.is-first {
+  margin-top: 0;
+}
+.pm-list li {
+  position: relative;
+  padding-left: 18px;
+}
+.pm-list li + li {
+  margin-top: 6px;
+}
+.pm-list li::before {
+  content: "";
+  position: absolute;
+  top: 0.78em;
+  left: 0;
+  width: 8px;
+  height: 1.5px;
+  background: var(--color-burgundy);
+}
+.pm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pm-chips span {
+  padding: 4px 10px;
+  border: 1.5px solid rgba(45, 54, 96, 0.2);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* mobile : la popup prend l'écran, le texte passe sur une colonne, la
+   légende sous les vignettes */
+@media (max-width: 820px), (max-width: 1100px) and (orientation: portrait) {
+  .pm {
+    padding: 0;
+  }
+  .pm-panel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+  .pm-hero {
+    padding: 60px 16px 18px;
+  }
+  /* la scène épouse la capture : une capture large ne laisse plus de vide
+     au-dessus et au-dessous */
+  .pm-stage {
+    height: auto;
+    container-type: normal;
+  }
+  .pm-shot {
+    width: min(100%, min(46svh, 420px) * var(--ratio));
+  }
+  .pm-arrow {
+    display: none;
+  }
+  .pm-strip {
+    gap: 12px;
+  }
+  .pm-thumbs {
+    --fade: 16px;
+  }
+  .pm-text {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 24px 22px 40px;
+  }
+  .pm-label.is-first {
+    margin-top: 26px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-shot {
+    animation: none;
+  }
+}
+
 /* ══════════════ PROJETS — pastilles et grille ══════════════ */
 .pp-faces {
   display: flex;
@@ -1161,12 +1493,25 @@ body::after {
   border: 0 solid #1a1a1a;
   background: #1a1a1a;
   box-shadow: 0 40px 90px rgba(35, 43, 78, 0.22);
+  cursor: pointer;
   transition:
     width 0.75s var(--ease-screen),
     height 0.75s var(--ease-screen),
     border-radius 0.75s var(--ease-screen),
-    border-width 0.75s ease;
+    border-width 0.75s ease,
+    scale 0.35s var(--ease-out);
 }
+/* l'écran ouvre le détail du projet en popup : il se soulève au survol */
+@media (hover: hover) {
+  .ec-screen:hover {
+    scale: 1.03;
+  }
+}
+.ec-screen:focus-visible {
+  outline: 2px dashed var(--color-burgundy);
+  outline-offset: 6px;
+}
+
 .ec-screen.is-web {
   width: min(600px, 40vw);
   height: calc(min(600px, 40vw) * 0.625);
@@ -1287,27 +1632,6 @@ body::after {
 .ec-detail li + li {
   margin-top: 4px;
 }
-.ec-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  margin-top: clamp(14px, 3vh, 24px);
-  font-family: var(--font-title);
-  font-weight: 600;
-  color: var(--color-navy);
-  transition: color 0.2s ease;
-}
-@media (hover: hover) {
-  .ec-link:hover {
-    color: var(--color-burgundy);
-  }
-}
-.ec-link:focus-visible {
-  outline: 2px dashed var(--color-burgundy);
-  outline-offset: 3px;
-  border-radius: 6px;
-}
 /* scène collée : le nom et le détail se placent de part et d'autre de
    l'écran ; ceux qui ne sont pas affichés attendent, effacés, au-dessus
    (déjà vus) ou au-dessous (à venir) */
@@ -1343,8 +1667,8 @@ body::after {
     display: none;
   }
 }
-/* très peu haut (téléphone en paysage) : le détail se réduit au résumé et
-   au lien, comme sur mobile */
+/* très peu haut (téléphone en paysage) : le détail se réduit au résumé,
+   comme sur mobile */
 @media (max-height: 560px) and (min-width: 821px) and (max-width: 1279px) {
   .is-pinned .ec-label,
   .is-pinned .ec-detail ul,
@@ -1492,9 +1816,6 @@ body::after {
   }
   .is-pinned .ec-detail p:not(.ec-status) {
     margin-top: 6px;
-  }
-  .ec-link {
-    margin-top: 4px;
   }
   .ec-nav {
     right: 18px;
