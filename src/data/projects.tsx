@@ -541,4 +541,83 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    slug: "radar-freelance",
+    num: "06",
+    title: "Radar freelance",
+    kind: "Outil de veille",
+    status: "Projet perso",
+    // #2563eb : le bleu du fond de l'icône, coins transparents compris
+    tileIcon: {
+      src: "/projets/radar-freelance/logo.png",
+      w: 512,
+      h: 512,
+      bg: "#2563eb",
+    },
+    faces: ["front", "back", "quality", "deploy"],
+    highlights: [
+      "Trois plateformes scannées toutes les 30 minutes.",
+      "Chaque offre notée sur 10, raisons à l'appui.",
+      "Les réponses rédigées par Claude Code.",
+    ],
+    tagline:
+      "Un radar qui repère les missions freelance faites pour moi, les note et prépare la réponse.",
+    contexte:
+      "Projet personnel. Les missions freelance sont éparpillées sur plusieurs plateformes, et les meilleures partent en quelques heures. Radar freelance les rassemble, écarte celles qui ne collent pas à mon profil, note les autres et prépare un premier jet de réponse : il ne reste qu'à relire et postuler.",
+    livre: [
+      "Le scan de trois sources : Free-Work, Codeur.com et les marchés publics du BOAMP, toutes les 30 minutes, et la première page de Codeur toutes les 10 minutes pour répondre avant les autres.",
+      "Le scoring réglable : mots-clés et poids par groupe, niveau d'expérience, termes éliminatoires, zone (Paris ou full remote) et freelance uniquement. Chaque note affiche son calcul.",
+      "La boîte de réception : liste filtrable, offre complète à côté, like et dislike, et les mots à éviter appris au dislike.",
+      "Les brouillons de réponse rédigés par Claude Code en local, à partir de l'annonce et de ma présentation, versionnés et retouchables.",
+      "Le suivi des candidatures en kanban, avec la date de relance à 5 jours.",
+      "L'application Windows : l'API et le front tournent en arrière-plan, dans la zone de notification, et une notification signale les offres notées 8/10 et plus.",
+      "Un scraping respectueux : robots.txt suivis, pause automatique quand une plateforme limite les requêtes, et une API locale fermée aux autres sites.",
+    ],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Fastify",
+      "SQLite",
+      "Drizzle",
+      "Zod",
+      "Electron",
+      "Claude Code",
+      "Vitest",
+    ],
+    shots: [
+      {
+        src: "/projets/radar-freelance/dashboard.png",
+        alt: "Tableau de bord de Radar freelance : offres à traiter, nouvelles du jour et meilleures offres notées 10/10",
+        w: 1920,
+        h: 1075,
+        caption:
+          "Le tableau de bord : ce qui attend une réponse, et les meilleures offres du moment.",
+      },
+      {
+        src: "/projets/radar-freelance/missions.png",
+        alt: "Liste des missions à gauche, offre sélectionnée à droite avec sa note sur 10 et le détail des points",
+        w: 1920,
+        h: 1075,
+        caption:
+          "La boîte de réception : la liste à gauche, l'offre et sa note expliquée à droite.",
+      },
+      {
+        src: "/projets/radar-freelance/brouillon.png",
+        alt: "Fiche d'une mission Codeur.com avec la réponse rédigée par Claude Code et ses quatre versions",
+        w: 1920,
+        h: 1400,
+        caption:
+          "La réponse rédigée par Claude Code, en plusieurs versions, prête à copier.",
+      },
+      {
+        src: "/projets/radar-freelance/profil.png",
+        alt: "Profil de scoring : explication du calcul, technos du cœur de métier, à éviter et éliminatoires",
+        w: 1920,
+        h: 1500,
+        caption:
+          "Le profil de scoring : chaque techno a son poids, certaines écartent l'offre d'office.",
+      },
+    ],
+  },
 ];
