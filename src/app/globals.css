@@ -2088,7 +2088,8 @@ body::after {
   }
 }
 /* écran bas (portable) : le formulaire dépassait du dernier écran, on
-   resserre les espacements ; au-delà de 880px de haut, tout tient déjà */
+   resserre les espacements ; au-delà de 880px de haut, tout tient déjà.
+   Seule exception au desktop validé (≥ 1280px) : elle ne joue qu'en hauteur */
 @media (min-width: 1101px) and (max-height: 880px),
   (min-width: 821px) and (orientation: landscape) and (max-height: 880px) {
   .contact-section {
@@ -2120,7 +2121,8 @@ body::after {
 @media (min-width: 1101px) and (max-height: 700px),
   (min-width: 821px) and (orientation: landscape) and (max-height: 700px) {
   .contact-hand {
-    font-size: clamp(3rem, 10vh, 6rem);
+    /* jamais plus gros que sous 1280px (6vw), où la colonne est étroite */
+    font-size: clamp(3rem, min(10vh, 6vw), 6rem);
     white-space: nowrap;
   }
   .contact-next {
@@ -2137,7 +2139,8 @@ body::after {
     padding-block: 4px;
   }
   .cfield textarea {
-    height: 56px;
+    height: 60px;
+    min-height: 60px;
   }
   .cform-foot {
     margin-top: 12px;
