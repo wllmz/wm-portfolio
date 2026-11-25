@@ -11,6 +11,14 @@ export function Footer() {
         </p>
         <div className="flex gap-6">
           <a
+            href="/cv-william-martinez.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-burgundy focus-visible:rounded focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-burgundy"
+          >
+            CV
+          </a>
+          <a
             href="https://github.com/wllmz"
             target="_blank"
             rel="noopener noreferrer"
